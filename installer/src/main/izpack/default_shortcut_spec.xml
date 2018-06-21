@@ -3,16 +3,16 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://izpack.org/schema/shortcuts http://izpack.org/schema/5.0/izpack-shortcuts-5.0.xsd">
     <shortcuts>
-        <programGroup defaultName="Zen Team" location="applications"/>
+        <programGroup defaultName="TheTrunk" location="applications"/>
         <lateShortcutInstall/>
         <skipIfNotSupported/>
         <shortcut
-                name = "Zencash Wallet"
-                target = "$INSTALL_PATH\zencashwallet.bat"
+                name = "Zcash Wallet"
+                target = "$INSTALL_PATH\zcashwallet.bat"
                 commandLine = ""
                 workingDirectory= "$INSTALL_PATH\app"
-                description="Zencash Wallet Launch"
-                iconFile="$INSTALL_PATH\zencash.ico"
+                description="Zcash Wallet Launch"
+                iconFile="$INSTALL_PATH\zcash.ico"
                 iconIndex="0"
                 initialState="normal"
                 programGroup="yes"

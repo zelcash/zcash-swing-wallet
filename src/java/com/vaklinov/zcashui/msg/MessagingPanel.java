@@ -420,10 +420,10 @@ public class MessagingPanel
 			
 			String preparedMessage = null;
 			
-			if (this.isZENIdentityMessage(msg.getMessage()))
+			if (this.isZCashIdentityMessage(msg.getMessage()))
 			{
 				MessagingIdentity msgID = new MessagingIdentity(
-					Util.parseJsonObject(msg.getMessage()).get("zenmessagingidentity").asObject());
+					Util.parseJsonObject(msg.getMessage()).get("zcashmessagingidentity").asObject());
 				
 				preparedMessage = "<span style=\"color:green;\">" +
 					"Special identity carrying message; Contains details of contact: " +
@@ -527,7 +527,7 @@ public class MessagingPanel
 			{
 		        JOptionPane.showMessageDialog(
 	                this.parentFrame,
-	                "Welcome to ZENCash messaging. As a start you will need to create a new messaging\n" + 
+	                "Welcome to ZCash messaging. As a start you will need to create a new messaging\n" + 
 	                "identity for yourself. As a part of this mesaging identity a pair of T+Z addresses\n" +
 	                "will be created. The T address is to be used for identifying you to other users.\n" +
 	                "It must never be used for other financial transactions since this might reduce or\n" +
@@ -571,14 +571,14 @@ public class MessagingPanel
 					
 			        JOptionPane.showMessageDialog(
 				        this.parentFrame,
-				        "The Z address used to send/receive messages needs to be supplied with ZEN: \n" +
+				        "The Z address used to send/receive messages needs to be supplied with ZEC: \n" +
 				        ownIdentity.getSendreceiveaddress() + "\n" +
-				        "You will be redirected to the UI tab for sending ZEN to add some balance to it. You need only\n" +
-				        "a small amount e.g. typically 0.1 ZEN is suffucient to send 500 messages. After sending some\n" +
-				        "ZEN you need to wait for the transaction to be confirmed (typically takes 2.5 minutes). It is\n" +
-				        "recommended to send ZEN to this Z address in two or more separate transactions (though one \n" +
+				        "You will be redirected to the UI tab for sending ZEC to add some balance to it. You need only\n" +
+				        "a small amount e.g. typically 0.1 ZEC is suffucient to send 500 messages. After sending some\n" +
+				        "ZEC you need to wait for the transaction to be confirmed (typically takes 2.5 minutes). It is\n" +
+				        "recommended to send ZEC to this Z address in two or more separate transactions (though one \n" +
 				        "transaction is sufficient).", 
-					    "Z address to send/receive messages needs to be supplied with ZEN...", 
+					    "Z address to send/receive messages needs to be supplied with ZEC...", 
 					    JOptionPane.INFORMATION_MESSAGE);
 					        
 						sendCashPanel.prepareForSending(ownIdentity.getSendreceiveaddress());
@@ -612,12 +612,12 @@ public class MessagingPanel
 		    	{
 			        JOptionPane.showMessageDialog(
 					    this.parentFrame,
-					    "The T address used to identify you in messaging must have NO ZEN balance: \n" +
+					    "The T address used to identify you in messaging must have NO ZEC balance: \n" +
 					    ownIdentity.getSenderidaddress() + "\n" +
 					    "However it currently has a non-zero balance! This might mean that you \n" +
 					    "accidentally used this T address in non-messaging transactions. It might\n" +
-					    "also mean that someone sent ZEN to it deliberately. To minimize the chance\n" +
-					    "of compromising your privacy you must transfer all ZEN from this T address\n" +
+					    "also mean that someone sent ZEC to it deliberately. To minimize the chance\n" +
+					    "of compromising your privacy you must transfer all ZEC from this T address\n" +
 					    "to some Z address ASAP!", 
 						"Messaging identification address has balance!", 
 						JOptionPane.WARNING_MESSAGE);
@@ -760,7 +760,7 @@ public class MessagingPanel
 			File f = fileChooser.getSelectedFile();
 			
 			JsonObject identityObject = new JsonObject();
-			identityObject.set("zenmessagingidentity", ownIdentity.toJSONObject(true));
+			identityObject.set("zcashmessagingidentity", ownIdentity.toJSONObject(true));
 			String identityString = identityObject.toString(WriterConfig.PRETTY_PRINT);
 			
 			FileOutputStream fos = null;
@@ -830,7 +830,7 @@ public class MessagingPanel
 			
 			// Validate the fields inside the objects, make sure this is indeed an identity
 			// verify mandatory etc.
-			JsonValue innerValue = topIdentityObject.get("zenmessagingidentity");
+			JsonValue innerValue = topIdentityObject.get("zcashmessagingidentity");
 			JsonObject innerIdentity = (innerValue != null) ? innerValue.asObject() : null;
 			
 			if ((innerValue == null) || (innerIdentity == null) ||
@@ -1219,10 +1219,10 @@ public class MessagingPanel
 	        	this.parentFrame,
 	        	"The Z address used to send/receive messages has insufficient balance: \n" +
 	        	ownIdentity.getSendreceiveaddress() + "\n" +
-	        	"You will be redirected to the UI tab for sending ZEN to add some balance to it. You need only\n" +
-	        	"a small amount e.g. typically 0.1 ZEN is suffucient to send 500 messages. After sending some\n" +
-	        	"ZEN you need to wait for the transaciton to be confirmed (typically takes 2.5 minutes). It is\n" +
-	        	"recommended to send ZEN to this Z address in two or more separate transactions (though one \n" +
+	        	"You will be redirected to the UI tab for sending C to add some balance to it. You need only\n" +
+	        	"a small amount e.g. typically 0.1 ZEC is suffucient to send 500 messages. After sending some\n" +
+	        	"ZEC you need to wait for the transaciton to be confirmed (typically takes 2.5 minutes). It is\n" +
+	        	"recommended to send ZEC to this Z address in two or more separate transactions (though one \n" +
 	        	"transaction is sufficient).", 
 		        "Z address to send/receive messages has insufficient balance...", JOptionPane.ERROR_MESSAGE);
 		        
@@ -1245,8 +1245,8 @@ public class MessagingPanel
 	        	ownIdentity.getSendreceiveaddress() + "\n" +
 	        	"This usually means that the previous mesasaging transaction is not yet confirmed. You\n" +
 	        	"need to wait for the transaciton to be confirmed (typically takes 2.5 minutes). This\n" +
-	        	"problem may be avoided if you send ZEN to this Z address in two or more separate \n" +
-	        	"transactions (when you supply the ZEN balance to be used for messaging).", 
+	        	"problem may be avoided if you send ZEC to this Z address in two or more separate \n" +
+	        	"transactions (when you supply the ZEC balance to be used for messaging).", 
 		        "Z address to send/receive messages has insufficient confirmed balance...", JOptionPane.ERROR_MESSAGE);
 		        
 	            // Restore controls and move to the send cash tab etc.
@@ -1273,7 +1273,7 @@ public class MessagingPanel
 			}
 			
 			JsonObject jsonOuterMessage = new JsonObject();
-			jsonOuterMessage.set("zenmsg", jsonInnerMessage);
+			jsonOuterMessage.set("zcashmsg", jsonInnerMessage);
 			memoString = jsonOuterMessage.toString();			
 		} else
 		{
@@ -1287,7 +1287,7 @@ public class MessagingPanel
 			jsonInnerMessage.set("message", textToSend);
 			jsonInnerMessage.set("sign", signature);
 			JsonObject jsonOuterMessage = new JsonObject();
-			jsonOuterMessage.set("zenmsg", jsonInnerMessage);
+			jsonOuterMessage.set("zcashmsg", jsonInnerMessage);
 			memoString = jsonOuterMessage.toString();
 		}
 		
@@ -1307,7 +1307,7 @@ public class MessagingPanel
         		"packaged as a memo it comes up to " + overallSendingLength + 
         		" bytes (maximum is " + maxSendingLength + " bytes)\n\n" + 
         		"Advice: try to reduce the message length by " + difference + " characters. The current\n" +
-        		"version of the ZEN messaging protocol supports approximately 330\n" +
+        		"version of the ZEC messaging protocol supports approximately 330\n" +
         		"characters per message (number is not exact - depends on character\n" + 
         		"encoding specifics).", 
 	        	"Message size exceeds currently supported limits...", JOptionPane.ERROR_MESSAGE);
@@ -1545,7 +1545,7 @@ public class MessagingPanel
 					"The messaging identity send/receive address: \n" +
 					ownZAddress + "\n" +
 					"is not found in the wallet.dat. The reason may be that after a mesaging identity\n" +
-					"was created the wallet.dat was changed or the ZEN node configuration was changed\n" +
+					"was created the wallet.dat was changed or the ZEC node configuration was changed\n" +
 					"(e.g. mainnet -> testnet). If such a change was made, the messaging identity can no\n" +
 					"longer be used. To avoid this error mesage, you may rename the directory:\n" +
 					OSUtil.getSettingsDirectory() + File.separator + "messaging" + "\n" +
@@ -1610,14 +1610,14 @@ public class MessagingPanel
 				}
 				
 				if ((jsonMessage != null) &&
-				   ((jsonMessage.get("zenmsg") != null) &&
+				   ((jsonMessage.get("zcashmsg") != null) &&
 				   (!storedTransactionIDs.contains(transactionID))))
 				{
-					JsonObject innerZenmsg = jsonMessage.get("zenmsg").asObject();
-					if (Message.isValidZENMessagingProtocolMessage(innerZenmsg))
+					JsonObject innerZCashmsg = jsonMessage.get("zcashmsg").asObject();
+					if (Message.isValidZCashMessagingProtocolMessage(innerZCashmsg))
 					{
 						// Finally test that the message has all attributes required
-						Message message = new Message(innerZenmsg);
+						Message message = new Message(innerZCashmsg);
 						// Set additional message attributes not available over the wire
 						message.setDirection(DIRECTION_TYPE.RECEIVED);
 						message.setTransactionID(transactionID);
@@ -1693,7 +1693,7 @@ public class MessagingPanel
 				                                Util.encodeHexString(message.getMessage()).toUpperCase()))
 			{
 				// Handle the special case of a messaging identity sent as payload - update identity then
-				if ((groupIdentity == null) && this.isZENIdentityMessage(message.getMessage()))
+				if ((groupIdentity == null) && this.isZCashIdentityMessage(message.getMessage()))
 				{
 					this.updateAndStoreExistingIdentityFromIDMessage(contactID, message.getMessage());
 				}
@@ -1815,13 +1815,13 @@ public class MessagingPanel
 	
 	
 	/**
-	 * Checks if a message contains a ZEN messaging identity in it.
+	 * Checks if a message contains a ZEC messaging identity in it.
 	 * 
 	 * @param message
 	 * 
-	 * @return true if a ZEN identity is inside
+	 * @return true if a ZEC identity is inside
 	 */
-	public boolean isZENIdentityMessage(String message)
+	public boolean isZCashIdentityMessage(String message)
 	{
 		if (message == null)
 		{
@@ -1842,12 +1842,12 @@ public class MessagingPanel
 			return false;
 		}
 		
-		if (jsonMessage.get("zenmessagingidentity") == null)
+		if (jsonMessage.get("zcashmessagingidentity") == null)
 		{
 			return false;
 		}
 		
-		JsonObject innerMessage = jsonMessage.get("zenmessagingidentity").asObject();
+		JsonObject innerMessage = jsonMessage.get("zcashmessagingidentity").asObject();
 		if ((innerMessage.get("nickname") == null)           ||
 			(innerMessage.get("sendreceiveaddress") == null) ||
 			(innerMessage.get("senderidaddress") == null))
@@ -1866,7 +1866,7 @@ public class MessagingPanel
 		throws IOException
 	{
 		MessagingIdentity newID = new MessagingIdentity(
-			Util.parseJsonObject(idMessage).get("zenmessagingidentity").asObject());
+			Util.parseJsonObject(idMessage).get("zcashmessagingidentity").asObject());
 
 		if (!Util.stringIsEmpty(newID.getSenderidaddress()))
 		{
@@ -1939,7 +1939,7 @@ public class MessagingPanel
 				innerIDObject.set("senderidaddress",    ownIdentity.getSenderidaddress());
 				innerIDObject.set("sendreceiveaddress", ownIdentity.getSendreceiveaddress());
 				JsonObject outerObject = new JsonObject();
-				outerObject.set("zenmessagingidentity", innerIDObject);
+				outerObject.set("zcashmessagingidentity", innerIDObject);
 				String identityString = outerObject.toString();
 				
 				// Check and send the messaging identity as a message
@@ -1979,12 +1979,12 @@ public class MessagingPanel
 		Map<String, MessagingIdentity> knownSenders = new HashMap<String, MessagingIdentity>();
 		for (Message msg : messages)
 		{
-			if (isZENIdentityMessage(msg.getMessage()) && 
+			if (isZCashIdentityMessage(msg.getMessage()) && 
 				((msg.getDirection() == DIRECTION_TYPE.SENT) || 
 				 (msg.getVerification() == VERIFICATION_TYPE.VERIFICATION_OK)))
 			{
 				MessagingIdentity senderIdentity = new MessagingIdentity(
-						Util.parseJsonObject(msg.getMessage()).get("zenmessagingidentity").asObject());
+						Util.parseJsonObject(msg.getMessage()).get("zcashmessagingidentity").asObject());
 				knownSenders.put(senderIdentity.getSenderidaddress(), senderIdentity);
 			}
 		}
@@ -2006,7 +2006,7 @@ public class MessagingPanel
 		innerIDObject.set("senderidaddress",    ownIdentity.getSenderidaddress());
 		innerIDObject.set("sendreceiveaddress", ownIdentity.getSendreceiveaddress());
 		JsonObject outerObject = new JsonObject();
-		outerObject.set("zenmessagingidentity", innerIDObject);
+		outerObject.set("zcashmessagingidentity", innerIDObject);
 		String identityString = outerObject.toString();
 		
 		// Check and send the messaging identity as a message

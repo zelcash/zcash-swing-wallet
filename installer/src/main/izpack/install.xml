@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <installation version="5.0">
   <info>
-    <appname>ZencashOfficialSwingWalletUI</appname>
+    <appname>ZcashUNOfficialSwingWalletUI</appname>
     <appversion>0.82.9</appversion>
-    <url>https://zencash.com</url>
+    <url>https://z.cash</url>
     <authors>
         <author name="Ivan Vaklinov" email="ivan@vaklinov.com"/>
         <author name="Armand Ballaci" email="aballaci@gmail.com"/>
+        <author name="Tadeas Kmenza" email="tadeas.kmenta@zel.cash"/>
     </authors>
   </info>
   <guiprefs height="400" resizable="no" width="640">
@@ -29,10 +30,10 @@
     <res id="LicencePanel.licence" src="@{main.basedir}/../LICENSE"/>
     <res id="HTMLHelloPanel.welcome" src="welcome.html"/>
     <res id="HTMLInfoPanel.welcome" src="welcome.html"/>
-    <res id="ZencashLogo" src="images/zencash-logo.png"/>
+    <res id="ZcashLogo" src="images/zcash-logo.png"/>
 
     <res id="TargetPanel.dir.windows" src="TargetDirWindows.txt"/>
-    <res id="packsLang.xml_eng" src="i18n/zencashPacksLang.xml_eng"/>
+    <res id="packsLang.xml_eng" src="i18n/zcashPacksLang.xml_eng"/>
     <res id="CustomLangPack.xml_eng" src="i18n/customLangPack.xml_eng" />
 
     <res id="Installer.image.0" src=""/>
@@ -46,7 +47,7 @@
   </resources>
   <variables>
     <variable name="InstallerFrame.logfilePath" value="Default"/>
-    <variable name="WELCOME_TEXT" value="Zencash Swing Wallet Installation"/>
+    <variable name="WELCOME_TEXT" value="Zcash Swing Wallet Installation"/>
     <variable name="WELCOME_VERSION" value="Version: 0.82.9"/>
     <variable name="WELCOME_BG_COLOR" value="#404B62"/>
     <variable name="WELCOME_TEXT_COLOR" value="#ffffff"/>
@@ -65,7 +66,7 @@
           </configuration>
     </panel>
     <!-- this is our custom panel, loaded from the izpack-panels.jar file -->
-    <!--panel classname="com.zencash.installer.panels.ZencashInstallerPanel" id="zencash-installer-panel"/-->
+    <!--panel classname="com.zcash.installer.panels.ZcashInstallerPanel" id="zcash-installer-panel"/-->
     <panel classname="TargetPanel" id="install_dir"/>
     <panel classname="PacksPanel" id="sdk_pack_select"/>
     <panel classname="InstallPanel" id="install"/>
@@ -115,9 +116,9 @@
     </fileset>
     <fileset dir="@{staging.dir}/licences" targetdir="${INSTALL_PATH}/licences"/>
     </pack>
-    <pack name="Zen Binaries" preselected="yes" required="yes">
-          <description>Zencash Binaries</description>
-          <fileset dir="@{staging.dir}/zen-win-binaries" targetdir="$INSTALL_PATH/app"/>
+    <pack name="Zcash Binaries" preselected="yes" required="yes">
+          <description>Zcash Binaries</description>
+          <fileset dir="@{staging.dir}/zcash-win-binaries" targetdir="$INSTALL_PATH/app"/>
     </pack>
   </packs>
 </installation>

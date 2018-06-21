@@ -180,7 +180,7 @@ public class SendCashPanel
 		tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(destinationAmountField = new JTextField(13));
 		destinationAmountField.setHorizontalAlignment(SwingConstants.RIGHT);
-		tempPanel.add(new JLabel(" ZEN    "));
+		tempPanel.add(new JLabel(" ZEC    "));
 		amountPanel.add(tempPanel, BorderLayout.SOUTH);
 
 		JPanel feePanel = new JPanel(new BorderLayout());
@@ -189,7 +189,7 @@ public class SendCashPanel
 		tempPanel.add(transactionFeeField = new JTextField(13));
 		transactionFeeField.setText("0.0001"); // Default value
 		transactionFeeField.setHorizontalAlignment(SwingConstants.RIGHT);		
-		tempPanel.add(new JLabel(" ZEN"));
+		tempPanel.add(new JLabel(" ZEC"));
 		feePanel.add(tempPanel, BorderLayout.SOUTH);
 		
 		JPanel sendChangeBoxPanel = new JPanel(new BorderLayout());
@@ -469,13 +469,13 @@ public class SendCashPanel
 			return;
 		}
 		
-		// Prevent accidental sending to non-ZEN addresses (which zend supports) probably because of
+		// Prevent accidental sending to non-ZEC addresses (which zcashd supports) probably because of
 		// ZClassic compatibility
 		if (!installationObserver.isOnTestNet())
 		{
 			if (!(destinationAddress.startsWith("zc") || 
-				  destinationAddress.startsWith("zn") ||
-				  destinationAddress.startsWith("zs")))
+				  destinationAddress.startsWith("t1") ||
+				  destinationAddress.startsWith("t3")))
 			{
 				Object[] options = { "OK" };
 
@@ -884,10 +884,10 @@ public class SendCashPanel
 		    	// Open block explorer
 				Log.info("Transaction ID for block explorer is: " + TXID);
 				// TODO: code duplication with transactions table
-				String urlPrefix = "https://explorer.zensystem.io/tx/";
+				String urlPrefix = "https://zcash.blockexplorer.com/tx/";
 				if (installationObserver.isOnTestNet())
 				{
-					urlPrefix = "https://explorer-testnet.zen-solutions.io/tx/";
+					urlPrefix = "https://explorer.testnet.z.cash/tx/";
 				}
 				Desktop.getDesktop().browse(new URL(urlPrefix + TXID).toURI());
 		    }
@@ -909,7 +909,7 @@ public class SendCashPanel
 	}
 	
 	
-	// Checks if a number has more than 8 fractional digits. This is not normally allowed for ZEN
+	// Checks if a number has more than 8 fractional digits. This is not normally allowed for ZEC
 	// Input must be a decimal number!
 	private boolean hasExcessiveFractionalDigits(String field)
 	{

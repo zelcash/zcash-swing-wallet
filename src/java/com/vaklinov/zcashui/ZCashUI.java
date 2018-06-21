@@ -63,7 +63,7 @@ import com.vaklinov.zcashui.msg.MessagingPanel;
 
 
 /**
- * Main ZENCash Window.
+ * Main ZCash Window.
  */
 public class ZCashUI
     extends JFrame
@@ -116,7 +116,7 @@ public class ZCashUI
         
         ClassLoader cl = this.getClass().getClassLoader();
 
-        this.setIconImage(new ImageIcon(cl.getResource("images/ZEN-yellow.orange-logo.png")).getImage());
+        this.setIconImage(new ImageIcon(cl.getResource("images/ZCash-yellow.orange-logo.png")).getImage());
 
         Container contentPane = this.getContentPane();
 
@@ -191,8 +191,8 @@ public class ZCashUI
         menuItemShowPrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelaratorKeyMask));
         wallet.add(menuItemImportOnePrivateKey = new JMenuItem(langUtil.getString("menu.label.import.one.private.key"), KeyEvent.VK_N));
         menuItemImportOnePrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelaratorKeyMask));
-        wallet.add(menuItemExportToArizen = new JMenuItem(langUtil.getString("menu.label.export.to.arizen"), KeyEvent.VK_A));
-        menuItemExportToArizen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelaratorKeyMask));
+        //wallet.add(menuItemExportToArizen = new JMenuItem(langUtil.getString("menu.label.export.to.arizen"), KeyEvent.VK_A));
+        //menuItemExportToArizen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelaratorKeyMask));
         mb.add(wallet);
 
         JMenu messaging = new JMenu(langUtil.getString("menu.label.messaging"));
@@ -435,7 +435,7 @@ public class ZCashUI
                    }
                }
        );
-
+        /*
         menuItemExportToArizen.addActionListener(
                 new ActionListener()
                 {
@@ -446,7 +446,7 @@ public class ZCashUI
                     }
                 }
         );
-
+        */
         // Close operation
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter()
@@ -573,12 +573,12 @@ public class ZCashUI
         	
         	if ((os == OS_TYPE.WINDOWS) || (os == OS_TYPE.MAC_OS))
         	{
-        		possiblyCreateZENConfigFile();
+        		possiblyCreateZCashConfigFile();
         	}
 
         	LanguageUtil langUtil = LanguageUtil.instance();
         	
-        	Log.info("Starting ZENCash Swing Wallet ...");
+        	Log.info("Starting ZCash Swing Wallet ...");
         	Log.info("OS: " + System.getProperty("os.name") + " = " + os);
         	Log.info("Current directory: " + new File(".").getCanonicalPath());
         	Log.info("Class path: " + System.getProperty("java.class.path"));
@@ -612,7 +612,7 @@ public class ZCashUI
 	            }
             }
             
-            // If zend is currently not running, do a startup of the daemon as a child process
+            // If zcashd is currently not running, do a startup of the daemon as a child process
             // It may be started but not ready - then also show dialog
             ZCashInstallationObserver initialInstallationObserver = 
             	new ZCashInstallationObserver(OSUtil.getProgramDirectory());
@@ -639,7 +639,7 @@ public class ZCashUI
                 if ((wce.getMessage().indexOf("{\"code\":-28") != -1) || // Started but not ready
                 	(wce.getMessage().indexOf("error code: -28") != -1))
                 {
-                	Log.info("zend is currently starting...");
+                	Log.info("zcashd is currently starting...");
                 	daemonStartInProgress = true;
                 }
             }
@@ -648,7 +648,7 @@ public class ZCashUI
             if ((zcashdInfo.status != DAEMON_STATUS.RUNNING) || (daemonStartInProgress))
             {
             	Log.info(
-            		"zend is not runing at the moment or has not started/synchronized 100% - showing splash...");
+            		"zcashd is not runing at the moment or has not started/synchronized 100% - showing splash...");
 	            startupBar = new StartupProgressDialog(initialClientCaller);
 	            startupBar.setVisible(true);
 	            startupBar.waitForStartup();
@@ -715,7 +715,7 @@ public class ZCashUI
     }
     
     
-     public static void possiblyCreateZENConfigFile()
+     public static void possiblyCreateZCashConfigFile()
         throws IOException
     {
     	String blockchainDir = OSUtil.getBlockchainDirectory();
@@ -730,27 +730,27 @@ public class ZCashUI
 			}
 		}
 		
-		File zenConfigFile = new File(dir, "zen.conf");
+		File zcashConfigFile = new File(dir, "zcash.conf");
 		
-		if (!zenConfigFile.exists())
+		if (!zcashConfigFile.exists())
 		{
-			Log.info("ZEN configuration file " + zenConfigFile.getCanonicalPath() + 
+			Log.info("ZCash configuration file " + zcashConfigFile.getCanonicalPath() + 
 					 " does not exist. It will be created with default settings.");
 			
 			Random r = new Random(System.currentTimeMillis());
 			
-			PrintStream configOut = new PrintStream(new FileOutputStream(zenConfigFile));
+			PrintStream configOut = new PrintStream(new FileOutputStream(zcashConfigFile));
 			
 			configOut.println("#############################################################################");
-			configOut.println("#                         ZEN configuration file                            #");
+			configOut.println("#                         ZCash configuration file                            #");
 			configOut.println("#############################################################################");
-			configOut.println("# This file has been automatically generated by the ZENCash GUI wallet with #");
+			configOut.println("# This file has been automatically generated by the ZCash GUI wallet with #");
 			configOut.println("# default settings. It may be further cutsomized by hand only.              #");
 			configOut.println("#############################################################################");
 			configOut.println("# Creation date: " + new Date().toString());
 			configOut.println("#############################################################################");
 			configOut.println("");
-			configOut.println("# The rpcuser/rpcpassword are used for the local call to zend");
+			configOut.println("# The rpcuser/rpcpassword are used for the local call to zcashd");
 			configOut.println("rpcuser=User" + Math.abs(r.nextInt()));
 			configOut.println("rpcpassword=Pass" + Math.abs(r.nextInt()) + "" + 
 			                                       Math.abs(r.nextInt()) + "" + 

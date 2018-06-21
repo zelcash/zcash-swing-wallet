@@ -189,7 +189,7 @@ public class DashboardPanel
 
 		JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 16));
 		JLabel logoLabel = new JLabel(new ImageIcon(
-				this.getClass().getClassLoader().getResource("images/ZEN-yellow.orange-logo-small.png")));
+				this.getClass().getClassLoader().getResource("images/ZCash-yellow.orange-logo-small.png")));
 		tempPanel.add(logoLabel);
 		JLabel zcLabel = new JLabel(langUtil.getString("panel.dashboard.main.label"));
 		tempPanel.add(zcLabel);
@@ -606,7 +606,7 @@ public class DashboardPanel
 			return;
 		}
 		
-		// Format double numbers - else sometimes we get exponential notation 1E-4 ZEN
+		// Format double numbers - else sometimes we get exponential notation 1E-4 ZEC
 		DecimalFormat df = new DecimalFormat("########0.00######");
 		
 		String transparentBalance = df.format(balance.transparentBalance);
@@ -629,7 +629,7 @@ public class DashboardPanel
 			DecimalFormat usdDF = new DecimalFormat("########0.00");
 			String formattedUSDVal = usdDF.format(usdBalance);
 			
-			// make sure the ZEN and USD are aligned
+			// make sure the ZEC and USD are aligned
 			int diff = totalUCBalance.length() - formattedUSDVal.length();
 			while (diff-- > 0)
 			{
@@ -781,7 +781,7 @@ public class DashboardPanel
 	class ExchangeRatePanel
 		extends JPanel
 	{
-		private DataGatheringThread<JsonObject> zenDataGatheringThread = null;
+		private DataGatheringThread<JsonObject> zcashDataGatheringThread = null;
 		
 		private DataTable table;
 		private JScrollPane tablePane;
@@ -791,7 +791,7 @@ public class DashboardPanel
 		public ExchangeRatePanel(StatusUpdateErrorReporter errorReporter)
 		{			
 			// Start the thread to gather the exchange data
-			this.zenDataGatheringThread = new DataGatheringThread<JsonObject>(
+			this.zcashDataGatheringThread = new DataGatheringThread<JsonObject>(
 				new DataGatheringThread.DataGatherer<JsonObject>() 
 				{
 					public JsonObject gatherData()
@@ -800,7 +800,7 @@ public class DashboardPanel
 						long start = System.currentTimeMillis();
 						JsonObject exchangeData = ExchangeRatePanel.this.getExchangeDataFromRemoteService();
 						long end = System.currentTimeMillis();
-						Log.info("Gathering of ZEN Exchange data done in " + (end - start) + "ms." );
+						Log.info("Gathering of ZEC Exchange data done in " + (end - start) + "ms." );
 							
 						return exchangeData;
 					}
@@ -854,7 +854,7 @@ public class DashboardPanel
 		// Forms the exchange data for a table
 		private Object[][] getExchangeDataInTableForm()
 		{
-			JsonObject data = this.zenDataGatheringThread.getLastData();
+			JsonObject data = this.zcashDataGatheringThread.getLastData();
 			if (data == null)
 			{
 				data = new JsonObject();
@@ -895,20 +895,20 @@ public class DashboardPanel
 		}
 		
 				
-		// Obtains the ZEN exchange data as a JsonObject
+		// Obtains the ZEC exchange data as a JsonObject
 		private JsonObject getExchangeDataFromRemoteService()
 		{
 			JsonObject data = new JsonObject();
 			
 			try
 			{
-				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zencash");
+				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zcash");
 				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
 				JsonArray ar = Json.parse(r).asArray();
 				data = ar.get(0).asObject();
 			} catch (Exception ioe)
 			{
-				Log.warning("Could not obtain ZEN exchange information from coinmarketcap.com due to: {0} {1}", 
+				Log.warning("Could not obtain ZEC exchange information from coinmarketcap.com due to: {0} {1}", 
 						    ioe.getClass().getName(), ioe.getMessage());
 			}
 			

@@ -81,7 +81,7 @@ public class AddressBookPanel extends JPanel {
         newContactButton.addActionListener(new NewContactActionListener());
         panel.add(newContactButton);
                 
-        sendCashButton = new JButton(langUtil.getString("panel.address.book.send.zen.button.text"));
+        sendCashButton = new JButton(langUtil.getString("panel.address.book.send.zcash.button.text"));
         sendCashButton.addActionListener(new SendCashActionListener());
         sendCashButton.setEnabled(false);
         panel.add(sendCashButton);

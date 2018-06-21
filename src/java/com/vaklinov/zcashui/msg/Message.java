@@ -47,7 +47,7 @@ import com.vaklinov.zcashui.Util;
 
 
 /**
- * Encapsulates a zen message
+ * Encapsulates a zcash message
  */
 public class Message
 {
@@ -324,7 +324,7 @@ public class Message
 	 * @return true if a message represented as a JSON object is valid according to the
 	 * ZEN messaging protocol.
 	 */
-	public static boolean isValidZENMessagingProtocolMessage(JsonObject message)
+	public static boolean isValidZCashMessagingProtocolMessage(JsonObject message)
 	{
 		if ((message == null) || (message.isEmpty()))
 		{
