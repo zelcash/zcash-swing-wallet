@@ -9,21 +9,21 @@
     </parent>
 
   <artifactId>installer</artifactId>
-  <name>zcashcash Wallet Installer</name>
+  <name>ZCash Wallet Installer</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <staging.dir>${project.build.directory}/staging</staging.dir>
     <installer-output-filename>zcash-wallet-installer</installer-output-filename>
     <zcash.project.url>https://github.com</zcash.project.url>
-    <zcash.binaries.file.name.windows>thetrunk/zcash-swing-wallet/releases/download/v2.0.11/zcash_Win_binaries_v2.0.11.zip</zcash.binaries.file.name.windows>
+    <zcash.binaries.file.name.windows>TheTrunk/ZCashBin/releases/download/initial/windows.zip</zcash.binaries.file.name.windows>
     <izpack.version>5.0.6</izpack.version>
   </properties>
 
   <dependencies>
       <dependency>
           <groupId>z.cash</groupId>
-          <artifactId>zcashcash-wallet-swing</artifactId>
+          <artifactId>zcash-wallet-swing</artifactId>
           <version>${project.version}</version>
       </dependency>
   </dependencies>
@@ -177,7 +177,7 @@
                                     <goal>launch4j</goal>
                                 </goals>
                                 <configuration>
-                                    <icon>${staging.dir}/win-shortcut/zcashcash.ico</icon>
+                                    <icon>${staging.dir}/win-shortcut/zcash.ico</icon>
                                     <headerType>gui</headerType>
                                     <jar>${project.build.directory}/${installer-output-filename}.jar</jar>
                                     <outfile>${project.build.directory}/${installer-output-filename}.exe</outfile>
