@@ -70,13 +70,13 @@ The details of how to build it are described below (easy to follow).
    ```
    user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ ant -buildfile ./src/build/build.xml
    ```
-   This takes a few seconds and when it finishes, it builds a JAR file `./build/jars/ZelcashSwingWalletUI.jar`. 
+   This takes a few seconds and when it finishes, it builds a JAR file `./build/jars/ZelCashSwingWalletUI.jar`. 
    You need to make this file executable:
    ```
-   user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ chmod u+x ./build/jars/ZelcashSwingWalletUI.jar
+   user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ chmod u+x ./build/jars/ZelCashSwingWalletUI.jar
    ```
    At this point the build process is finished the built GUI wallet program is the JAR 
-   file `./build/jars/ZelcashSwingWalletUI.jar`. In addition the JAR file 
+   file `./build/jars/ZelCashSwingWalletUI.jar`. In addition the JAR file 
    `bitcoinj-core-0.14.5.jar` is also necessary to run the wallet. 
 
 3. Installing the built Zelcash GUI wallet
