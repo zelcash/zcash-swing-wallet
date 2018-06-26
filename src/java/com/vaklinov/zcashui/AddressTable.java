@@ -206,10 +206,10 @@ public class AddressTable
 						
 						Log.info("Address for block explorer is: " + address);
 						
-						String urlPrefix = "https://zcash.blockexplorer.com/address/";
+						String urlPrefix = "https://explorer.zel.cash/address/";
 						if (AddressTable.this.installationObserver.isOnTestNet())
 						{
-							urlPrefix = "https://explorer.testnet.z.cash/address/";
+							urlPrefix = "https://testnet.zelcash.online/address/";
 						}
 						
 						Desktop.getDesktop().browse(new URL(urlPrefix + address).toURI());

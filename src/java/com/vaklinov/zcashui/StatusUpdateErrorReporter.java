@@ -67,7 +67,7 @@ public class StatusUpdateErrorReporter
 			lastReportedErrroTime = time;
 		}
 		
-		String settingsDirectory = ".ZCashSwingWalletUI";
+		String settingsDirectory = ".ZelCashSwingWalletUI";
 		
 		try
 		{

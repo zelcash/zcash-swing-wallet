@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>z.cash</groupId>
-    <artifactId>ZCashUNOfficialSwingWalletUI</artifactId>
+    <groupId>zel.cash</groupId>
+    <artifactId>ZelCashOfficialSwingWalletUI</artifactId>
     <version>0.82.9-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>ZCash UNOfficial Swing Wallet UI</name>
+    <name>ZelCash Official Swing Wallet UI</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +25,7 @@
 
 
     <modules>
-        <module>zcash-wallet-swing</module>
+        <module>zelcash-wallet-swing</module>
         <module>installer</module>
     </modules>
 

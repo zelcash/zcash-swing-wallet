@@ -100,7 +100,7 @@ public class OSUtil
 	// Returns the name of the zcashd server - may vary depending on the OS.
 	public static String getZCashd()
 	{
-		String zcashd = "zcashd";
+		String zcashd = "zelcashd";
 		
 		OS_TYPE os = getOSType();
 		if (os == OS_TYPE.WINDOWS)
@@ -115,7 +115,7 @@ public class OSUtil
 	// Returns the name of the zcash-cli tool - may vary depending on the OS.
 	public static String getZCashCli()
 	{
-		String zcashcli = "zcash-cli";
+		String zcashcli = "zelcash-cli";
 		
 		OS_TYPE os = getOSType();
 		if (os == OS_TYPE.WINDOWS)
@@ -133,7 +133,7 @@ public class OSUtil
 	{
 		// TODO: this way of finding the dir is JAR name dependent - tricky, may not work
 		// if program is repackaged as different JAR!
-		final String JAR_NAME = "ZCashSwingWalletUI.jar";
+		final String JAR_NAME = "ZelCashSwingWalletUI.jar";
 		String cp = System.getProperty("java.class.path");
 		if ((cp != null) && (cp.indexOf(File.pathSeparator) == -1) &&
 			(cp.endsWith(JAR_NAME)))
@@ -216,13 +216,13 @@ public class OSUtil
 		
 		if (os == OS_TYPE.MAC_OS)
 		{
-			return new File(System.getProperty("user.home") + "/Library/Application Support/Zcash").getCanonicalPath();
+			return new File(System.getProperty("user.home") + "/Library/Application Support/Zelcash").getCanonicalPath();
 		} else if (os == OS_TYPE.WINDOWS)
 		{
-			return new File(System.getenv("APPDATA") + "\\Zcash").getCanonicalPath();
+			return new File(System.getenv("APPDATA") + "\\Zelcash").getCanonicalPath();
 		} else
 		{
-			return new File(System.getProperty("user.home") + "/.zcash").getCanonicalPath();
+			return new File(System.getProperty("user.home") + "/.zelcash").getCanonicalPath();
 		}
 	}
 
@@ -237,13 +237,13 @@ public class OSUtil
 	    
 	    if (os == OS_TYPE.MAC_OS)
 	    {
-	        dir = new File(userHome, "Library/Application Support/ZCashSwingWalletUI");
+	        dir = new File(userHome, "Library/Application Support/ZelCashSwingWalletUI");
 	    } else if (os == OS_TYPE.WINDOWS)
 		{
-			dir = new File(System.getenv("LOCALAPPDATA") + "\\ZCashSwingWalletUI");
+			dir = new File(System.getenv("LOCALAPPDATA") + "\\ZelCashSwingWalletUI");
 		} else
 	    {
-	        dir = new File(userHome.getCanonicalPath() + File.separator + ".ZCashSwingWalletUI");
+	        dir = new File(userHome.getCanonicalPath() + File.separator + ".ZelCashSwingWalletUI");
 	    }
 	    
 		if (!dir.exists())
@@ -280,7 +280,7 @@ public class OSUtil
 	}
 
 
-	// Can be used to find zcashd/zcash-cli if it is not found in the same place as the wallet JAR
+	// Can be used to find zelcashd/zelcash-cli if it is not found in the same place as the wallet JAR
 	// Null if not found
 	public static File findZCashCommand(String command)
 		throws IOException
@@ -288,7 +288,7 @@ public class OSUtil
 	    File f;
 	    
 	    // Try with system property zcash.location.dir - may be specified by caller
-	    String ZCashLocationDir = System.getProperty("zcash.location.dir");
+	    String ZCashLocationDir = System.getProperty("zelcash.location.dir");
 	    if ((ZCashLocationDir != null) && (ZCashLocationDir.trim().length() > 0))
 	    {
 	        f = new File(ZCashLocationDir + File.separator + command);
@@ -308,11 +308,11 @@ public class OSUtil
 				"/usr/bin/", // Typical Ubuntu
 				"/bin/",
 				"/usr/local/bin/",
-				"/usr/local/zcash/bin/",
-				"/usr/lib/zcash/bin/",
+				"/usr/local/zelcash/bin/",
+				"/usr/lib/zelcash/bin/",
 				"/opt/local/bin/",
-				"/opt/local/zcash/bin/",
-				"/opt/zcash/bin/"
+				"/opt/local/zelcash/bin/",
+				"/opt/zelcash/bin/"
 			};
 	
 			for (String d : dirs)
@@ -333,7 +333,7 @@ public class OSUtil
 	    		File pf = new File(programFiles);
 	    		if (pf.exists() && pf.isDirectory())
 	    		{
-	    			File ZDir = new File(pf, "Zcash");
+	    			File ZDir = new File(pf, "Zelcash");
 	    			if (ZDir.exists() && ZDir.isDirectory())
 	    			{
 	    				File cf = new File(ZDir, command);

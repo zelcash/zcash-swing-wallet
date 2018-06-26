@@ -28,4 +28,4 @@
 #  THE SOFTWARE.                                    
 # 
 
-java -jar /usr/lib/zcash-gui-wallet/ZCashSwingWalletUI.jar
+java -jar /usr/lib/zelcash-gui-wallet/ZelCashSwingWalletUI.jar

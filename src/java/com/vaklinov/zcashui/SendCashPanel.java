@@ -180,7 +180,7 @@ public class SendCashPanel
 		tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(destinationAmountField = new JTextField(13));
 		destinationAmountField.setHorizontalAlignment(SwingConstants.RIGHT);
-		tempPanel.add(new JLabel(" ZEC    "));
+		tempPanel.add(new JLabel(" ZEL    "));
 		amountPanel.add(tempPanel, BorderLayout.SOUTH);
 
 		JPanel feePanel = new JPanel(new BorderLayout());
@@ -189,7 +189,7 @@ public class SendCashPanel
 		tempPanel.add(transactionFeeField = new JTextField(13));
 		transactionFeeField.setText("0.0001"); // Default value
 		transactionFeeField.setHorizontalAlignment(SwingConstants.RIGHT);		
-		tempPanel.add(new JLabel(" ZEC"));
+		tempPanel.add(new JLabel(" ZEL"));
 		feePanel.add(tempPanel, BorderLayout.SOUTH);
 		
 		JPanel sendChangeBoxPanel = new JPanel(new BorderLayout());
@@ -469,7 +469,7 @@ public class SendCashPanel
 			return;
 		}
 		
-		// Prevent accidental sending to non-ZEC addresses (which zcashd supports) probably because of
+		// Prevent accidental sending to non-ZEL addresses (which zelcashd supports) probably because of
 		// ZClassic compatibility
 		if (!installationObserver.isOnTestNet())
 		{
@@ -884,10 +884,10 @@ public class SendCashPanel
 		    	// Open block explorer
 				Log.info("Transaction ID for block explorer is: " + TXID);
 				// TODO: code duplication with transactions table
-				String urlPrefix = "https://zcash.blockexplorer.com/tx/";
+				String urlPrefix = "https://explorer.zel.cash/tx/";
 				if (installationObserver.isOnTestNet())
 				{
-					urlPrefix = "https://explorer.testnet.z.cash/tx/";
+					urlPrefix = "https://testnet.zelcash.online/tx/";
 				}
 				Desktop.getDesktop().browse(new URL(urlPrefix + TXID).toURI());
 		    }
@@ -909,7 +909,7 @@ public class SendCashPanel
 	}
 	
 	
-	// Checks if a number has more than 8 fractional digits. This is not normally allowed for ZEC
+	// Checks if a number has more than 8 fractional digits. This is not normally allowed for ZEL
 	// Input must be a decimal number!
 	private boolean hasExcessiveFractionalDigits(String field)
 	{

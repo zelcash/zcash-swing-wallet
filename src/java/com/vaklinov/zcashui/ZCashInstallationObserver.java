@@ -73,7 +73,7 @@ public class ZCashInstallationObserver
 		if (!dir.exists() || dir.isFile())
 		{
 			throw new InstallationDetectionException(
-				"The ZCash installation directory " + installDir + " does not exist or is not " +
+				"The ZelCash installation directory " + installDir + " does not exist or is not " +
 			    "a directory or is otherwise inaccessible to the wallet!");
 		}
 
@@ -86,16 +86,16 @@ public class ZCashInstallationObserver
 			zcashcli = OSUtil.findZCashCommand(OSUtil.getZCashCli());
 		}
 
-		Log.info("Using ZCash utilities: " +
-		                   "zcashd: "    + ((zcashd != null) ? zcashd.getCanonicalPath() : "<MISSING>") + ", " +
-		                   "zcash-cli: " + ((zcashcli != null) ? zcashcli.getCanonicalPath() : "<MISSING>"));
+		Log.info("Using ZelCash utilities: " +
+		                   "zelcashd: "    + ((zcashd != null) ? zcashd.getCanonicalPath() : "<MISSING>") + ", " +
+		                   "zelcash-cli: " + ((zcashcli != null) ? zcashcli.getCanonicalPath() : "<MISSING>"));
 
 		if ((zcashd == null) || (zcashcli == null) || (!zcashd.exists()) || (!zcashcli.exists()))
 		{
 			throw new InstallationDetectionException(
-				"The ZCash GUI Wallet installation directory " + installDir + " needs\nto contain " +
-				"the command line utilities zcashd and zcash-cli. At least one of them is missing! \n" +
-				"Please place files ZCashSwingWalletUI.jar, " + OSUtil.getZCashCli() + ", " + 
+				"The ZelCash GUI Wallet installation directory " + installDir + " needs\nto contain " +
+				"the command line utilities zelcashd and zelcash-cli. At least one of them is missing! \n" +
+				"Please place files ZelCashSwingWalletUI.jar, " + OSUtil.getZCashCli() + ", " + 
 				OSUtil.getZCashd() + " in the same directory.");
 		}
 	}
@@ -119,7 +119,7 @@ public class ZCashInstallationObserver
 	private synchronized DaemonInfo getDaemonInfoForUNIXLikeOS()
 		throws IOException, InterruptedException
 	{
-		return getDaemonInfoForUNIXLikeOS("zcashd");
+		return getDaemonInfoForUNIXLikeOS("zelcashd");
 	}
 
 	// So far tested on Mac OS X and Linux - expected to work on other UNIXes as well
@@ -196,7 +196,7 @@ public class ZCashInstallationObserver
 	private synchronized DaemonInfo getDaemonInfoForWindowsOS()
 		throws IOException, InterruptedException
 	{
-		return getDaemonInfoForWindowsOS("zcashd");
+		return getDaemonInfoForWindowsOS("zelcashd");
 	}
 	
 	public static synchronized DaemonInfo getDaemonInfoForWindowsOS(String daemonName)
@@ -243,7 +243,7 @@ public class ZCashInstallationObserver
 					{
 						info.status = DAEMON_STATUS.RUNNING;
 						foundZCash = true;
-						//System.out.println("zcashd process data is: " + line);
+						//System.out.println("zelcashd process data is: " + line);
 					}
 				} else if ((i >= 4) && foundZCash)
 				{
@@ -294,14 +294,14 @@ public class ZCashInstallationObserver
 		}
 		
 		String blockChainDir = OSUtil.getBlockchainDirectory();
-		File zcashConf = new File(blockChainDir + File.separator + "zcash.conf");
-		if (zcashConf.exists())
+		File zelcashConf = new File(blockChainDir + File.separator + "zelcash.conf");
+		if (zelcashConf.exists())
 		{
 			Properties confProps = new Properties();
 			FileInputStream fis = null;
 			try
 			{
-				fis = new FileInputStream(zcashConf);
+				fis = new FileInputStream(zelcashConf);
 				confProps.load(fis);
 				String testNetStr = confProps.getProperty("testnet");
 				
@@ -317,7 +317,7 @@ public class ZCashInstallationObserver
 			}
 		} else
 		{
-			Log.warning("Could not find file: {0} to check configuration!", zcashConf.getAbsolutePath());
+			Log.warning("Could not find file: {0} to check configuration!", zelcashConf.getAbsolutePath());
 			return false;
 		}
 	}

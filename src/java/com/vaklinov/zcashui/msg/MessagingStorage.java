@@ -60,17 +60,17 @@ import com.vaklinov.zcashui.Util;
  * Stores the information about messages, identities etc in a dir structure. 
  * The standard directories are:
  * 
- * ~/.ZCashSwingWalletUI/messaging - root dir
- * ~/.ZCashSwingWalletUI/messaging/messagingoptions.json - options
- * ~/.ZCashSwingWalletUI/messaging/ownidentity.json - own identity
- * ~/.ZCashSwingWalletUI/messaging/ownidentity.json.bak.1 - own identity most recent backup
- * ~/.ZCashSwingWalletUI/messaging/ownidentity.json.bak.9 - own identity oldest backup
- * ~/.ZCashSwingWalletUI/messaging/contact_XXXX - a single contact named 0000 to 9999
- * ~/.ZCashSwingWalletUI/messaging/contact_XXXX/identity.json - contact's identity
- * ~/.ZCashSwingWalletUI/messaging/contact_XXXX/sent - sent messages dir
- * ~/.ZCashSwingWalletUI/messaging/contact_XXXX/received - received messages dir
- * ~/.ZCashSwingWalletUI/messaging/ignored_contacts - dir where ignored msg identities reside
- * ~/.ZCashSwingWalletUI/messaging/ignored_contacts/UUID.json - single ignored identity.
+ * ~/.ZelCashSwingWalletUI/messaging - root dir
+ * ~/.ZelCashSwingWalletUI/messaging/messagingoptions.json - options
+ * ~/.ZelCashSwingWalletUI/messaging/ownidentity.json - own identity
+ * ~/.ZelCashSwingWalletUI/messaging/ownidentity.json.bak.1 - own identity most recent backup
+ * ~/.ZelCashSwingWalletUI/messaging/ownidentity.json.bak.9 - own identity oldest backup
+ * ~/.ZelCashSwingWalletUI/messaging/contact_XXXX - a single contact named 0000 to 9999
+ * ~/.ZelCashSwingWalletUI/messaging/contact_XXXX/identity.json - contact's identity
+ * ~/.ZelCashSwingWalletUI/messaging/contact_XXXX/sent - sent messages dir
+ * ~/.ZelCashSwingWalletUI/messaging/contact_XXXX/received - received messages dir
+ * ~/.ZelCashSwingWalletUI/messaging/ignored_contacts - dir where ignored msg identities reside
+ * ~/.ZelCashSwingWalletUI/messaging/ignored_contacts/UUID.json - single ignored identity.
  * 
  * The sent/received directories have a substructure of type:
  * sent/XXXX/message_xxx.json - where XXXX is between 0000 and 9999, xxx is between 000 and 999 
@@ -658,7 +658,7 @@ public class MessagingStorage
 	
 	// Stores the details of a single contact
 	// Root dir may be like:
-	// ~/.ZCashSwingWalletUI/messaging/contact_XXXX
+	// ~/.ZelCashSwingWalletUI/messaging/contact_XXXX
 	static class SingleContactStorage
 	{
 		final String IGNORED_GROUP_IDS = "ignored_group_ids.json";
@@ -868,7 +868,7 @@ public class MessagingStorage
 	
 	// Stores messages of one type - sent/received for one contact
 	// Root directory may be like:
-	// ~/.ZCashSwingWalletUI/messaging/contact_XXXX/sent
+	// ~/.ZelCashSwingWalletUI/messaging/contact_XXXX/sent
 	static class SentOrReceivedMessagesStore
 	{
 		private File rootDir;
