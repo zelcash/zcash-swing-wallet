@@ -1,3 +1,6 @@
+THIS IS BEING WORKED ON DO NOT USE 
+
+
 Readme from ZENcash
 # [ZENCash](https://zensystem.io/) Desktop GUI Wallet
 
