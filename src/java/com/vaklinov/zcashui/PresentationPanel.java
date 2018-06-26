@@ -48,9 +48,9 @@ public class PresentationPanel
 {
 	static final int GRADIENT_EXTENT = 17;
 
-	static final Color  colorBorder = new Color(140, 145, 145);
-	static final Color  colorLow    = new Color(250, 250, 250);
-	static final Color  colorHigh   = new Color(225, 225, 230);
+	static final Color  colorBorder = new Color(247, 247, 247);
+	static final Color  colorLow    = new Color(247, 247, 247);
+	static final Color  colorHigh   = new Color(247, 247, 247);
 	static final Stroke edgeStroke  = new BasicStroke(1);
 
 	
