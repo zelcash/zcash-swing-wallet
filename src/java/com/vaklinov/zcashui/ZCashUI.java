@@ -754,8 +754,17 @@ public class ZCashUI
 			configOut.println("rpcuser=User" + Math.abs(r.nextInt()));
 			configOut.println("rpcpassword=Pass" + Math.abs(r.nextInt()) + "" + 
 			                                       Math.abs(r.nextInt()) + "" + 
-					                               Math.abs(r.nextInt()));
-			configOut.println("");
+                                                   Math.abs(r.nextInt()));
+            configOut.println("rpcallowip=127.0.0.1");                                       
+            configOut.println("server=1");
+            configOut.println("addnode=node.zel.cash");
+            configOut.println("addnode=node1.zel.cash");
+            configOut.println("addnode=node-eu2.zelcash.com");
+            configOut.println("addnode=node-eu.zelcash.com");
+            configOut.println("addnode=node-asia.zelcash.com");
+            configOut.println("addnode=node-uk.zelcash.com");
+            configOut.println("addnode=zelnode.cloudpools.net");
+            configOut.println("disablesafemode=1");
 			
 			/*
 			 * This is not necessary as of release:
