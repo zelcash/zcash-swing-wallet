@@ -749,12 +749,7 @@ public class ZCashUI
 			configOut.println("#############################################################################");
 			configOut.println("# Creation date: " + new Date().toString());
 			configOut.println("#############################################################################");
-			configOut.println("");
-			configOut.println("# The rpcuser/rpcpassword are used for the local call to zelcashd");
-			configOut.println("rpcuser=User" + Math.abs(r.nextInt()));
-			configOut.println("rpcpassword=Pass" + Math.abs(r.nextInt()) + "" + 
-			                                       Math.abs(r.nextInt()) + "" + 
-                                                   Math.abs(r.nextInt()));
+            configOut.println("");
             configOut.println("rpcallowip=127.0.0.1");                                       
             configOut.println("server=1");
             configOut.println("addnode=node.zel.cash");
@@ -765,7 +760,11 @@ public class ZCashUI
             configOut.println("addnode=node-uk.zelcash.com");
             configOut.println("addnode=zelnode.cloudpools.net");
             configOut.println("disablesafemode=1");
-			
+			configOut.println("# The rpcuser/rpcpassword are used for the local call to zelcashd");
+			configOut.println("rpcuser=User" + Math.abs(r.nextInt()));
+			configOut.println("rpcpassword=Pass" + Math.abs(r.nextInt()) + "" + 
+			                                       Math.abs(r.nextInt()) + "" + 
+                                                   Math.abs(r.nextInt()));
 			/*
 			 * This is not necessary as of release:
 			 *  https://github.com/ZencashOfficial/zen/releases/tag/v2.0.9-3-b8d2ebf
