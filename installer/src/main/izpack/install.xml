@@ -20,7 +20,7 @@
     <modifier key="headingImageOnLeft" value="yes"/>
     <modifier key="headingLineCount" value="1"/>
     <modifier key="headingFontSize" value="1.5"/>
-    <modifier key="headingBackgroundColor" value="#1E2940"/>
+    <modifier key="headingBackgroundColor" value="#142a59"/>
     <modifier key="headingPanelCounter" value="progressbar"/>
     <modifier key="headingPanelCounterPos" value="inNavigationPanel"/>
   </guiprefs>
@@ -51,7 +51,7 @@
     <variable name="WELCOME_TEXT" value="Zelcash Swing Wallet Installation"/>
     <variable name="WELCOME_VERSION" value="Version: 0.82.9"/>
     <variable name="WELCOME_BG_COLOR" value="#404B62"/>
-    <variable name="WELCOME_TEXT_COLOR" value="#ffffff"/>
+    <variable name="WELCOME_TEXT_COLOR" value="#f7f7f7"/>
   </variables>
 
 
