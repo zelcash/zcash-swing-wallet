@@ -588,7 +588,7 @@ public class ZCashUI
             if (os == OS_TYPE.WINDOWS)
             {
             	// Custom Windows L&F and font settings
-            	UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            	UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             	
             	// This font looks good but on Windows 7 it misses some chars like the stars...
             	//FontUIResource font = new FontUIResource("Lucida Sans Unicode", Font.PLAIN, 11);
