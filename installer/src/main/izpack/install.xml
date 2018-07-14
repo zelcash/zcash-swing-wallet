@@ -2,7 +2,7 @@
 <installation version="5.0">
   <info>
     <appname>ZelcashOfficialSwingWalletUI</appname>
-    <appversion>0.82.9</appversion>
+    <appversion>4.0.0</appversion>
     <url>https://zel.cash</url>
     <authors>
         <author name="Ivan Vaklinov" email="ivan@vaklinov.com"/>
@@ -49,7 +49,7 @@
   <variables>
     <variable name="InstallerFrame.logfilePath" value="Default"/>
     <variable name="WELCOME_TEXT" value="Zelcash Swing Wallet Installation"/>
-    <variable name="WELCOME_VERSION" value="Version: 0.82.9"/>
+    <variable name="WELCOME_VERSION" value="Version: 4"/>
     <variable name="WELCOME_BG_COLOR" value="#404B62"/>
     <variable name="WELCOME_TEXT_COLOR" value="#ffffff"/>
   </variables>
