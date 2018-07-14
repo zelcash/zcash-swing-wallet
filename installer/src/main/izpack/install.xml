@@ -51,7 +51,7 @@
     <variable name="WELCOME_TEXT" value="Zelcash Swing Wallet Installation"/>
     <variable name="WELCOME_VERSION" value="Version: 0.82.9"/>
     <variable name="WELCOME_BG_COLOR" value="#404B62"/>
-    <variable name="WELCOME_TEXT_COLOR" value="#f7f7f7"/>
+    <variable name="WELCOME_TEXT_COLOR" value="#ffffff"/>
   </variables>
 
 
