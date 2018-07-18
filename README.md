@@ -34,7 +34,7 @@ Thank you to the [Zencash Team](https://zencash.com/)
 ## Building, installing and running the Wallet GUI
 
 **For security reasons it is recommended to always build the GUI wallet program from GitHub**
-**[source](https://github.com/zelcash/zencash-swing-wallet-ui/archive/master.zip).**
+**[source](https://github.com/zelcash/zelcash-swing-wallet/archive/master.zip).**
 The details of how to build it are described below (easy to follow). 
 
 
@@ -58,22 +58,22 @@ The details of how to build it are described below (easy to follow).
 
 2. Building from source code
 
-   As a start you need to clone the zelcash-swing-wallet-ui Git repository:
+   As a start you need to clone the zelcash-swing-wallet Git repository:
    ```
-   user@ubuntu:~/build-dir$ git clone https://github.com/zelcash/zelcash-swing-wallet-ui.git
+   user@ubuntu:~/build-dir$ git clone https://github.com/zelcash/zelcash-swing-wallet.git
    ```
    Change the current directory:
    ```
-   user@ubuntu:~/build-dir$ cd zelcash-swing-wallet-ui/
+   user@ubuntu:~/build-dir$ cd zelcash-swing-wallet/
    ```
    Issue the build command:
    ```
-   user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ ant -buildfile ./src/build/build.xml
+   user@ubuntu:~/build-dir/zelcash-swing-wallet$ ant -buildfile ./src/build/build.xml
    ```
    This takes a few seconds and when it finishes, it builds a JAR file `./build/jars/ZelCashSwingWalletUI.jar`. 
    You need to make this file executable:
    ```
-   user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ chmod u+x ./build/jars/ZelCashSwingWalletUI.jar
+   user@ubuntu:~/build-dir/zelcash-swing-wallet$ chmod u+x ./build/jars/ZelCashSwingWalletUI.jar
    ```
    At this point the build process is finished the built GUI wallet program is the JAR 
    file `./build/jars/ZelCashSwingWalletUI.jar`. In addition the JAR file 
@@ -85,7 +85,7 @@ The details of how to build it are described below (easy to follow).
 
      Assuming you have already built from source code [ZelCash](https://zel.cash/) in directory `/home/user/zelcash/src` (for example - this is the typical build dir. for ZelCash) which contains the command line tools `zelcash-cli` and `zelcashd` you need to take the created JAR files and copy them to directory `/home/user/zelcash/src` (the same dir. that contains `zelcash-cli` and `zelcashd`). Example copy command:
       ```
-      user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ cp -R -v ./build/jars/* /home/user/zelcash/src    
+      user@ubuntu:~/build-dir/zelcash-swing-wallet$ cp -R -v ./build/jars/* /home/user/zelcash/src    
       ```
 
 4. Running the installed ZelCash GUI wallet
@@ -94,7 +94,7 @@ The details of how to build it are described below (easy to follow).
    Assuming you have already installed [ZelCash](https://zel.cash/) and the GUI Wallet `ZelCashSwingWalletUI.jar` in 
    directory `/home/user/zelcash/src` one way to run it from command line is:
    ```
-   user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ java -jar /home/user/zelcash/src/ZelCashSwingWalletUI.jar
+   user@ubuntu:~/build-dir/zelcash-swing-wallet$ java -jar /home/user/zelcash/src/ZelCashSwingWalletUI.jar
    ```
    If you are using Ubuntu (or similar ;) Linux you may instead just use the file manager and 
    right-click on the `ZelCashSwingWalletUI.jar` file and choose the option "Open with OpenJDK 8 Runtime". 
@@ -136,7 +136,7 @@ The latter needs to be disabled.
 1. Limitation: The list of transactions does not show all outgoing ones (specifically outgoing Z address 
 transactions). A corresponding issue [#1438](https://github.com/zcash/zcash/issues/1438) has been opened 
 for the ZCash developers. 
-1. Limitation: The CPU percentage shown to be taken by zend on Linux is the average for the entire lifetime 
+1. Limitation: The CPU percentage shown to be taken by zelcashd on Linux is the average for the entire lifetime 
 of the process. This is not very useful. This will be improved in future versions.
 1. Limitation: When using a natively compiled wallet version (e.g. `ZelCashSwingWalletUI.exe` for Windows) on a 
 very high resolution monitor with a specifically configured DPI scaling (enlargement) factor to make GUI 
