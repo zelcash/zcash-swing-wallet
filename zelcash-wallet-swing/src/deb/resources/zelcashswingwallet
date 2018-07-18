@@ -6,7 +6,8 @@
 #     / / |  __| | . ` | |    / _` / __| '_ \| | |_ | |  | | | |   \ \/  \/ / _` | | |/ _ \ __|
 #    / /__| |____| |\  | |___| (_| \__ \ | | | |__| | |__| |_| |_   \  /\  / (_| | | |  __/ |_ 
 #   /_____|______|_| \_|\_____\__,_|___/_| |_|\_____|\____/|_____|   \/  \/ \__,_|_|_|\___|\__|
-#                                        
+#
+#  Copyright (c) 2018 Zel Technologies                                       
 #  Copyright (c) 2016-2018 The ZEN Developers
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,5 +28,9 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.                                    
 # 
-
+if [ ! -f ~/.zelcash/zelcash.conf ]; then
+    mkdir -p ~/.zelcash
+    echo "rpcuser=username" >> ~/.zelcash/zelcash.conf
+    echo "rpcpassword=$(head -c 32 /dev/urandom | base64)" >> ~/.zelcash/zelcash.conf
+fi
 java -jar /usr/lib/zelcash-gui-wallet/ZelCashSwingWalletUI.jar

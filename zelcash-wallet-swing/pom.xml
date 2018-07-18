@@ -145,7 +145,7 @@
                                     </mapper>
                                 </data>
                                 <data>
-                                    <src>${project.build.directory}/deb/zelcash-desktop-gui-wallet</src>
+                                    <src>${project.build.directory}/deb/zelcashswingwallet</src>
                                     <type>file</type>
                                     <mapper>
                                         <type>perm</type>

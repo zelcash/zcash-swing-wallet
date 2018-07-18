@@ -1,10 +1,10 @@
 [Desktop Entry]
-Version=1.0
+Version=4.0.0
 Name=ZelCash Wallet
 Comment=ZelCash Desktop GUI Wallet (full node)
 GenericName=ZelCash Wallet
 Keywords=ZelCash;Crypto-currency;ZCash;
-Exec=zelcash-desktop-gui-wallet
+Exec=zelcashswingwallet
 Terminal=false
 X-MultipleArgs=false
 Type=Application
