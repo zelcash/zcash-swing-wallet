@@ -152,7 +152,7 @@
 	      <data src="${deb.resource.dir}/ZelCashWallet.desktop" type="file">
 	        <mapper type="perm" filemode="755" prefix="/usr/share/applications"/>
 	      </data>
-	      <data src="${deb.resource.dir}/ZelCash-icon.png" type="file">
+	      <data src="${deb.resource.dir}/Zelcash-icon.png" type="file">
 	        <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet"/>
 	      </data>	    	
 	    </deb>
@@ -191,7 +191,7 @@
 	</target>
 	
     <target name="buildit" depends="clean,jar,copyothers,ubuntuPackage">
-    	<echo message="Built ZelCash Desktop GUI Wallet with JDK ${ant.java.version}"/>
+    	<echo message="Built Zelcash Desktop GUI Wallet with JDK ${ant.java.version}"/>
     	<!-- Final cleanup -->
     	<delete dir="${classes.dir}"/>
     	<delete dir="${temp.dir}"/>

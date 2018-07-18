@@ -127,7 +127,7 @@ public class ZCashClientCaller
 		if ((zcashcli == null) || (!zcashcli.exists()))
 		{
 			throw new IOException(
-				"The ZelCash installation directory " + installDir + " needs to contain " +
+				"The Zelcash installation directory " + installDir + " needs to contain " +
 				"the command line utilities zelcashd and zelcash-cli. zelcash-cli is missing!");
 		}
 		
@@ -140,7 +140,7 @@ public class ZCashClientCaller
 		if (zcashd == null || (!zcashd.exists()))
 		{
 		    throw new IOException(
-		    	"The ZelCash command line utility " + zcashcli.getCanonicalPath() + 
+		    	"The Zelcash command line utility " + zcashcli.getCanonicalPath() + 
 		    	" was found, but zelcashd was not found!");
 		}
 	}

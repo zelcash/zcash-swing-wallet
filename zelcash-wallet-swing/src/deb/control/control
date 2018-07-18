@@ -3,6 +3,6 @@ Version: 4.0.0
 Section: misc
 Priority: low
 Architecture: all
-Description: ZelCash Desktop GUI Wallet 
+Description: Zelcash Desktop GUI Wallet 
 Maintainer: miles.manley@zel.cash
 Depends: default-jdk, zelcash

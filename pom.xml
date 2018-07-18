@@ -8,7 +8,7 @@
     <artifactId>ZelCashOfficialSwingWalletUI</artifactId>
     <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>ZelCash Official Swing Wallet UI</name>
+    <name>Zelcash Official Swing Wallet UI</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

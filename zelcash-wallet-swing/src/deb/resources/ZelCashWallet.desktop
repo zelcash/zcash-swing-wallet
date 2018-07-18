@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
-Name=ZelCash Wallet
-Comment=ZelCash Desktop GUI Wallet (full node)
-GenericName=ZelCash Wallet
-Keywords=ZelCash;Crypto-currency;ZCash;
+Name=Zelcash Wallet
+Comment=Zelcash Desktop GUI Wallet (full node)
+GenericName=Zelcash Wallet
+Keywords=Zelcash;Crypto-currency;ZCash;
 Exec=zelcash-desktop-gui-wallet
 Terminal=false
 X-MultipleArgs=false
 Type=Application
-Icon=/usr/lib/zelcash-gui-wallet/ZelCash-icon.png
+Icon=/usr/lib/zelcash-gui-wallet/Zelcash-icon.png
 Categories=GNOME;Application;
 StartupNotify=true

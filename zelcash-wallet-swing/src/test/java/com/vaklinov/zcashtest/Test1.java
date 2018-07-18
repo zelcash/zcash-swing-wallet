@@ -39,7 +39,7 @@ public class Test1
 		System.out.println(phrase + "|=> " + Util.convertGroupPhraseToZPrivateKey(phrase));
 		phrase = "ABCD";
 		System.out.println(phrase + "|=> " + Util.convertGroupPhraseToZPrivateKey(phrase));
-		phrase = "ZelCash is great";
+		phrase = "Zelcash is great";
 		System.out.println(phrase + "|=> " + Util.convertGroupPhraseToZPrivateKey(phrase));
 		phrase = "Here is a long phrase that we will see ... how it converts to a key";
 		System.out.println(phrase + "|=> " + Util.convertGroupPhraseToZPrivateKey(phrase));
