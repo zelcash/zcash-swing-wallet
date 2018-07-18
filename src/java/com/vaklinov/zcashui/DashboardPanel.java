@@ -863,15 +863,18 @@ public class DashboardPanel
 			Double usdPrice = data.getDouble("rate", 0);
 			try
 			{
-				this.lastUsdPrice = usdPrice;
+				String usdPriceX = String.format("%.2f", usdPrice);
+				Double usdPriceD = Double.parseDouble(usdPriceX);
+				usdPrice = usdPriceD;
+				this.lastUsdPrice = usdPriceD;
 			} catch (NumberFormatException nfe) { /* Do nothing */ }
 			
-			String usdMarketCap = data.getString("market_cap_usd", "N/A");
+			/*String usdMarketCap = data.getString("market_cap_usd", "N/A");
 			try
 			{
 				Double usdMarketCapD = Double.parseDouble(usdMarketCap) / 1000000;
 				usdMarketCap = new DecimalFormat("########0.000").format(usdMarketCapD) + " million";
-			} catch (NumberFormatException nfe) { /* Do nothing */ }
+			} catch (NumberFormatException nfe) { /* Do nothing / } */
 			
 			// Query the object for individual fields
 			String tableData[][] = new String[][]
