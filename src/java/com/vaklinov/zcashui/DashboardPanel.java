@@ -860,12 +860,10 @@ public class DashboardPanel
 				data = new JsonObject();
 			}
 			
-			String usdPrice = data.getString("price_usd", "N/A");
+			Double usdPrice = data.getDouble("rate", 0);
 			try
 			{
-				Double usdPriceD = Double.parseDouble(usdPrice);
-				usdPrice = new DecimalFormat("########0.00").format(usdPriceD);
-				this.lastUsdPrice = usdPriceD;
+				this.lastUsdPrice = usdPrice;
 			} catch (NumberFormatException nfe) { /* Do nothing */ }
 			
 			String usdMarketCap = data.getString("market_cap_usd", "N/A");
@@ -878,11 +876,11 @@ public class DashboardPanel
 			// Query the object for individual fields
 			String tableData[][] = new String[][]
 			{
-				{ langUtil.getString("panel.dashboard.marketcap.price.usd"),     usdPrice},
-				{ langUtil.getString("panel.dashboard.marketcap.price.btc"),     data.getString("price_btc",          "N/A") },
-				{ langUtil.getString("panel.dashboard.marketcap.capitalisation"), usdMarketCap },
-				{ langUtil.getString("panel.dashboard.marketcap.daily.change"), data.getString("percent_change_24h", "N/A") + "%"},
-				{ langUtil.getString("panel.dashboard.marketcap.weekly.change"), data.getString("percent_change_7d", "N/A") + "%"},
+				{ langUtil.getString("panel.dashboard.marketcap.price.usd"),      Double.toString(usdPrice)},
+			//	{ langUtil.getString("panel.dashboard.marketcap.price.btc"),     data.getString("price_btc",          "N/A") },
+			//	{ langUtil.getString("panel.dashboard.marketcap.capitalisation"), usdMarketCap },
+			//	{ langUtil.getString("panel.dashboard.marketcap.daily.change"), data.getString("percent_change_24h", "N/A") + "%"},
+			//	{ langUtil.getString("panel.dashboard.marketcap.weekly.change"), data.getString("percent_change_7d", "N/A") + "%"},
 			};
 
 			return tableData;
@@ -902,13 +900,13 @@ public class DashboardPanel
 			
 			try
 			{
-				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zelcash");
+				URL u = new URL("https://rates.zel.cash");
 				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
 				JsonArray ar = Json.parse(r).asArray();
-				data = ar.get(0).asObject();
+				data = ar.get(2).asObject();
 			} catch (Exception ioe)
 			{
-				Log.warning("Could not obtain ZEL exchange information from coinmarketcap.com due to: {0} {1}", 
+				Log.warning("Could not obtain ZEL information from rates.zel.cash due to: {0} {1}", 
 						    ioe.getClass().getName(), ioe.getMessage());
 			}
 			
