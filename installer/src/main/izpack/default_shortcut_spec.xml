@@ -7,11 +7,11 @@
         <lateShortcutInstall/>
         <skipIfNotSupported/>
         <shortcut
-                name = "Zelcash Wallet"
+                name = "ZelCash Wallet"
                 target = "$INSTALL_PATH\zelcashwallet.bat"
                 commandLine = ""
                 workingDirectory= "$INSTALL_PATH\app"
-                description="Zelcash Wallet Launch"
+                description="ZelCash Wallet Launch"
                 iconFile="$INSTALL_PATH\zelcash.ico"
                 iconIndex="0"
                 initialState="normal"

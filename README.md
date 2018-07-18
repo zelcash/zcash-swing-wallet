@@ -1,19 +1,19 @@
-# [Zelcash](https://zel.cash/) Desktop GUI Wallet
+# [ZelCash](https://zel.cash/) Desktop GUI Wallet
 
-## Graphical user interface wrapper for the [Zelcash](https://zel.cash) command line tools
+## Graphical user interface wrapper for the [ZelCash](https://zel.cash) command line tools
 
-This program provides a Graphical User Interface (GUI) for the Zelcash client tools that acts as a wrapper and 
+This program provides a Graphical User Interface (GUI) for the ZelCash client tools that acts as a wrapper and 
 presents the information in a user-friendly manner. Thanks to the Zencash team who maintain the swing wallet, this is a fork of their V0.82.9. 
 
 Thank you to the [Zencash Team](https://zencash.com/) 
 
-![Screenshot](https://github.com/zelcash/zelcash-swing-wallet/raw/master/docs/ZelcashWallet.png "Main Window")
+![Screenshot](https://github.com/zelcash/zelcash-swing-wallet/raw/master/docs/ZelCashWallet.png "Main Window")
 
 **This wallet is targeted at advanced users who understand the implications of running a full Zel node on**
 **the local machine, maintaining a full local copy of the blockchain, maintaining and backing up the**
 **Zel nodes's `wallet.dat` file etc! The wallet is not suitable for novice crypto-currency users!**
 
-**SECURITY WARNING: Encryption of the wallet.dat file is not yet supported for Zelcash. The ZelTreZ** 
+**SECURITY WARNING: Encryption of the wallet.dat file is not yet supported for ZelCash. The ZelTreZ** 
 **wallet is available for download as offers encryption by deafult of the wallet.dat** 
 **You can download it here, https://zeltrez.io Using the wallet** 
 **on a system infected with malware may result in wallet data/funds being stolen. The**
@@ -79,28 +79,28 @@ The details of how to build it are described below (easy to follow).
    file `./build/jars/ZelCashSwingWalletUI.jar`. In addition the JAR file 
    `bitcoinj-core-0.14.5.jar` is also necessary to run the wallet. 
 
-3. Installing the built Zelcash GUI wallet
+3. Installing the built ZelCash GUI wallet
 
-   3.1. If you have built Zelcash from source code:
+   3.1. If you have built ZelCash from source code:
 
-     Assuming you have already built from source code [Zelcash](https://zel.cash/) in directory `/home/user/zelcash/src` (for example - this is the typical build dir. for Zelcash) which contains the command line tools `zelcash-cli` and `zelcashd` you need to take the created JAR files and copy them to directory `/home/user/zelcash/src` (the same dir. that contains `zelcash-cli` and `zelcashd`). Example copy command:
+     Assuming you have already built from source code [ZelCash](https://zel.cash/) in directory `/home/user/zelcash/src` (for example - this is the typical build dir. for ZelCash) which contains the command line tools `zelcash-cli` and `zelcashd` you need to take the created JAR files and copy them to directory `/home/user/zelcash/src` (the same dir. that contains `zelcash-cli` and `zelcashd`). Example copy command:
       ```
       user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ cp -R -v ./build/jars/* /home/user/zelcash/src    
       ```
 
-4. Running the installed Zelcash GUI wallet
+4. Running the installed ZelCash GUI wallet
 
    It may be run from command line or started from another GUI tool (e.g. file manager). 
-   Assuming you have already installed [Zelcash](https://zel.cash/) and the GUI Wallet `ZelcashSwingWalletUI.jar` in 
+   Assuming you have already installed [ZelCash](https://zel.cash/) and the GUI Wallet `ZelCashSwingWalletUI.jar` in 
    directory `/home/user/zelcash/src` one way to run it from command line is:
    ```
    user@ubuntu:~/build-dir/zelcash-swing-wallet-ui$ java -jar /home/user/zelcash/src/ZelCashSwingWalletUI.jar
    ```
    If you are using Ubuntu (or similar ;) Linux you may instead just use the file manager and 
-   right-click on the `ZelcashSwingWalletUI.jar` file and choose the option "Open with OpenJDK 8 Runtime". 
-   This will start the Zelcash GUI wallet.
+   right-click on the `ZelCashSwingWalletUI.jar` file and choose the option "Open with OpenJDK 8 Runtime". 
+   This will start the ZelCash GUI wallet.
    
-   **Important:** the Zelcash configuration file `~/.zelcash/zelcash.conf` needs to be correctly set up for the GUI
+   **Important:** the ZelCash configuration file `~/.zelcash/zelcash.conf` needs to be correctly set up for the GUI
    wallet to work. Specifically the RPC user and password need to be set in it like:
    ```
    rpcuser=username
@@ -124,24 +124,24 @@ SOFTWARE.
 
 ### Known issues and limitations
 
-1. Issue: The Zelcash Desktop GUI Wallet is not compatible with applications that modify the ZEL `wallet.dat` file. The wallet should not be used
+1. Issue: The ZelCash Desktop GUI Wallet is not compatible with applications that modify the ZEL `wallet.dat` file. The wallet should not be used
 with such applications on the same PC. For instance some distributed exchange applications are known to create watch-only addresses in the
 `wallet.dat` file that cause the GUI wallet to display a wrong balance and/or display addresses that do not belong to the wallet. 
 1. Limitation: if two users exchange text messages via the messaging UI TAB and one of them has a system clock, substantially running slow or fast by more than 1 minute, it is possible that this user will see text messages appearing out of order. 
-1. Limitation: if a messaging identity has been created (happens on first click on the messaging UI tab), then replacing the `wallet.dat` or changing the node configuration between mainnet and testnet will make the identity invalid. This will result in a wallet update error. To remove the error the directory `~/.ZelcashSwingWalletUI/messaging` may be manually renamed or deleted (when the wallet is stopped). **CAUTION: all messaging history will be lost in this case!**
-1. Limitation: Wallet encryption has been temporarily disabled in Zelcash due to stability problems. A corresponding issue 
+1. Limitation: if a messaging identity has been created (happens on first click on the messaging UI tab), then replacing the `wallet.dat` or changing the node configuration between mainnet and testnet will make the identity invalid. This will result in a wallet update error. To remove the error the directory `~/.ZelCashSwingWalletUI/messaging` may be manually renamed or deleted (when the wallet is stopped). **CAUTION: all messaging history will be lost in this case!**
+1. Limitation: Wallet encryption has been temporarily disabled in ZelCash due to stability problems. A corresponding issue 
 [#1552](https://github.com/zcash/zcash/issues/1552) has been opened by the ZCash developers. Correspondingly
-wallet encryption has been temporarily disabled in the Zelcash Desktop GUI Wallet.
+wallet encryption has been temporarily disabled in the ZelCash Desktop GUI Wallet.
 The latter needs to be disabled. 
 1. Limitation: The list of transactions does not show all outgoing ones (specifically outgoing Z address 
 transactions). A corresponding issue [#1438](https://github.com/zcash/zcash/issues/1438) has been opened 
 for the ZCash developers. 
 1. Limitation: The CPU percentage shown to be taken by zend on Linux is the average for the entire lifetime 
 of the process. This is not very useful. This will be improved in future versions.
-1. Limitation: When using a natively compiled wallet version (e.g. `ZelcashSwingWalletUI.exe` for Windows) on a 
+1. Limitation: When using a natively compiled wallet version (e.g. `ZelCashSwingWalletUI.exe` for Windows) on a 
 very high resolution monitor with a specifically configured DPI scaling (enlargement) factor to make GUI 
 elements look larger, the GUI elements of the wallet actually do not scale as expected. To correct this on
-Windows you need to right-click on `ZelcashSwingWalletUI.exe` and choose option:
+Windows you need to right-click on `ZelCashSwingWalletUI.exe` and choose option:
 ```
 Properties >> Compatibility >> Override High DPI scaling behavior >> Scaling Performed by (Application)
 ```

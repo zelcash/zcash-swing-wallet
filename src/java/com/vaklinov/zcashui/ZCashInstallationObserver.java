@@ -73,7 +73,7 @@ public class ZCashInstallationObserver
 		if (!dir.exists() || dir.isFile())
 		{
 			throw new InstallationDetectionException(
-				"The Zelcash installation directory " + installDir + " does not exist or is not " +
+				"The ZelCash installation directory " + installDir + " does not exist or is not " +
 			    "a directory or is otherwise inaccessible to the wallet!");
 		}
 
@@ -86,14 +86,14 @@ public class ZCashInstallationObserver
 			zcashcli = OSUtil.findZCashCommand(OSUtil.getZCashCli());
 		}
 
-		Log.info("Using Zelcash utilities: " +
+		Log.info("Using ZelCash utilities: " +
 		                   "zelcashd: "    + ((zcashd != null) ? zcashd.getCanonicalPath() : "<MISSING>") + ", " +
 		                   "zelcash-cli: " + ((zcashcli != null) ? zcashcli.getCanonicalPath() : "<MISSING>"));
 
 		if ((zcashd == null) || (zcashcli == null) || (!zcashd.exists()) || (!zcashcli.exists()))
 		{
 			throw new InstallationDetectionException(
-				"The Zelcash GUI Wallet installation directory " + installDir + " needs\nto contain " +
+				"The ZelCash GUI Wallet installation directory " + installDir + " needs\nto contain " +
 				"the command line utilities zelcashd and zelcash-cli. At least one of them is missing! \n" +
 				"Please place files ZelCashSwingWalletUI.jar, " + OSUtil.getZCashCli() + ", " + 
 				OSUtil.getZCashd() + " in the same directory.");

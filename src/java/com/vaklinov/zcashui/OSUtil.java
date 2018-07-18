@@ -216,10 +216,10 @@ public class OSUtil
 		
 		if (os == OS_TYPE.MAC_OS)
 		{
-			return new File(System.getProperty("user.home") + "/Library/Application Support/Zelcash").getCanonicalPath();
+			return new File(System.getProperty("user.home") + "/Library/Application Support/ZelCash").getCanonicalPath();
 		} else if (os == OS_TYPE.WINDOWS)
 		{
-			return new File(System.getenv("APPDATA") + "\\Zelcash").getCanonicalPath();
+			return new File(System.getenv("APPDATA") + "\\ZelCash").getCanonicalPath();
 		} else
 		{
 			return new File(System.getProperty("user.home") + "/.zelcash").getCanonicalPath();
@@ -333,7 +333,7 @@ public class OSUtil
 	    		File pf = new File(programFiles);
 	    		if (pf.exists() && pf.isDirectory())
 	    		{
-	    			File ZDir = new File(pf, "Zelcash");
+	    			File ZDir = new File(pf, "ZelCash");
 	    			if (ZDir.exists() && ZDir.isDirectory())
 	    			{
 	    				File cf = new File(ZDir, command);

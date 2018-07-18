@@ -4,12 +4,12 @@
 
     <parent>
         <groupId>zel.cash</groupId>
-        <artifactId>ZelcashOfficialSwingWalletUI</artifactId>
+        <artifactId>ZelCashOfficialSwingWalletUI</artifactId>
         <version>4.0.0-SNAPSHOT</version>
     </parent>
 
   <artifactId>installer</artifactId>
-  <name>Zelcash Wallet Installer</name>
+  <name>ZelCash Wallet Installer</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

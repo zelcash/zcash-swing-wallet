@@ -1,19 +1,19 @@
-## [Zelcash](https://zel.cash/) Desktop GUI Wallet troubleshooting guide
+## [ZelCash](https://zel.cash/) Desktop GUI Wallet troubleshooting guide
 This document outlines possible solutions to several common problems that user might encounter while using the wallet.
 
 ### How to diagnose wallet problems
 
 When wallet problems occur, the information about the errors that caused the issue is usually found in the log files written by the wallet itself and also by `zelcashd`. The location of the wallet log files is:
 ```
-Linux:    ~/.ZelcashSwingWalletUI/ZelcashGUIWallet_xxxx_xx_debug.log 
-Windows:  %LOCALAPPDATA%/ZelcashSwingWalletUI/ZelcashGUIWallet_xxxx_xx_debug.log
-Mac OS:   ~/Library/Application Support/ZelcashSwingWalletUI/ZelcashGUIWallet_xxxx_xx_debug.log
+Linux:    ~/.ZelCashSwingWalletUI/ZelCashGUIWallet_xxxx_xx_debug.log 
+Windows:  %LOCALAPPDATA%/ZelCashSwingWalletUI/ZelCashGUIWallet_xxxx_xx_debug.log
+Mac OS:   ~/Library/Application Support/ZelCashSwingWalletUI/ZelCashGUIWallet_xxxx_xx_debug.log
 ```
 `zelcashd` that is automatically started by the wallet, stores its logs at locations:
 ```
 Linux:    ~/.zelcash/debug.log, 
-Windows:  %APPDATA%/Zelcash/debug.log
-Mac OS:   ~/Library/Application Support/Zelcash/debug.log
+Windows:  %APPDATA%/ZelCash/debug.log
+Mac OS:   ~/Library/Application Support/ZelCash/debug.log
  ```
 The log files are the first place too look for clues as to the nature of problem.
 
@@ -33,7 +33,7 @@ zelcashd -reindex
 ```
 For non-technical users here is some information on how to open a terminal on [Windows](https://www.lifewire.com/how-to-open-command-prompt-2618089) and [Mac OS](https://www.wikihow.com/Open-a-Terminal-Window-in-Mac). The full command on Mac OS is:
 ```
-/Applications/ZelcashWallet.app/Contents/Java/zelcashd -reindex
+/Applications/ZelCashWallet.app/Contents/Java/zelcashd -reindex
 ```
 On Windows you first have to locate `zelcashd.exe`. It is in the `/app` sub-directory of the wallet installation.
 

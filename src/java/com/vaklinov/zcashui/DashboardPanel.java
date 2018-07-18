@@ -189,7 +189,7 @@ public class DashboardPanel
 
 		JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 16));
 		JLabel logoLabel = new JLabel(new ImageIcon(
-				this.getClass().getClassLoader().getResource("images/Zelcash-yellow.orange-logo-small.png")));
+				this.getClass().getClassLoader().getResource("images/ZelCash-yellow.orange-logo-small.png")));
 		tempPanel.add(logoLabel);
 		JLabel zcLabel = new JLabel(langUtil.getString("panel.dashboard.main.label"));
 		tempPanel.add(zcLabel);
