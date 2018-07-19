@@ -146,7 +146,7 @@
               <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet/go-ipfs"/>
             </data>
             -->
-	      <data src="${deb.resource.dir}/zelcash-desktop-gui-wallet" type="file">
+	      <data src="${deb.resource.dir}/zelcashswingwallet" type="file">
 	        <mapper type="perm" filemode="755" prefix="/usr/bin"/>
 	      </data>
 	      <data src="${deb.resource.dir}/ZelCashWallet.desktop" type="file">
