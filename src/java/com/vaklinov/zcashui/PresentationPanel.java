@@ -37,14 +37,14 @@ import java.awt.LinearGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 
-import javax.swing.JPanel;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
 
 
 /**
  * Panel with gradient background etc. for pretty label presentations.
  */
 public class PresentationPanel 
-	extends JPanel 
+	extends ZelCashJPanel 
 {
 	static final int GRADIENT_EXTENT = 17;
 

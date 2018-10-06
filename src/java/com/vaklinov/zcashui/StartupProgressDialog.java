@@ -3,35 +3,31 @@
 package com.vaklinov.zcashui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJProgressBar;
+import com.cabecinha84.zelcashui.ZelCashUI;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 
 
-public class StartupProgressDialog extends JFrame {
+public class StartupProgressDialog extends ZelCashJFrame {
     
 
     private static final int POLL_PERIOD = 1500;
@@ -40,10 +36,11 @@ public class StartupProgressDialog extends JFrame {
     private BorderLayout borderLayout1 = new BorderLayout();
     private JLabel imageLabel = new JLabel();
     private JLabel progressLabel = new JLabel();
-    private JPanel southPanel = new JPanel();
+    private ZelCashJPanel southPanel = new ZelCashJPanel();
     private BorderLayout southPanelLayout = new BorderLayout();
-    private JProgressBar progressBar = new JProgressBar();
+    private ZelCashJProgressBar progressBar = new ZelCashJProgressBar();
     private ImageIcon imageIcon;
+    private static Color backGroundColor = ZelCashUI.progressbar;
     
     private final ZCashClientCaller clientCaller;
     
@@ -56,6 +53,7 @@ public class StartupProgressDialog extends JFrame {
         imageLabel.setIcon(imageIcon);
         imageLabel.setBorder(BorderFactory.createEmptyBorder(16, 40, 8, 40));
         Container contentPane = getContentPane();
+        contentPane.setBackground(backGroundColor);
         contentPane.setLayout(borderLayout1);
         southPanel.setLayout(southPanelLayout);
         southPanel.setBorder(BorderFactory.createEmptyBorder(0, 16, 16, 16));
@@ -63,7 +61,7 @@ public class StartupProgressDialog extends JFrame {
 		JLabel zcashWalletLabel = new JLabel(LanguageUtil.instance().getString("startup.progress.dialog.label"));
 		zcashWalletLabel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 		// todo - place in a panel with flow center
-		JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 1, 1));
+		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.CENTER, 1, 1));
 		tempPanel.add(zcashWalletLabel);
 		contentPane.add(tempPanel, BorderLayout.CENTER);
         contentPane.add(southPanel, BorderLayout.SOUTH);

@@ -34,8 +34,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -51,25 +49,23 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.vaklinov.zcashui.DataTable;
+import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJMenuItem;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJPopupMenu;
+import com.cabecinha84.zelcashui.ZelCashJScrollPane;
+import com.cabecinha84.zelcashui.ZelCashUI;
 import com.vaklinov.zcashui.Log;
-import com.vaklinov.zcashui.SingleKeyImportDialog;
 import com.vaklinov.zcashui.StatusUpdateErrorReporter;
 
 
@@ -77,18 +73,18 @@ import com.vaklinov.zcashui.StatusUpdateErrorReporter;
  * Main panel for messaging
  */
 public class JContactListPanel
-	extends JPanel
+	extends ZelCashJPanel
 {
 	private MessagingPanel   parent;
 	private MessagingStorage mesagingStorage;
 	private ContactList      list;
 	private StatusUpdateErrorReporter errorReporter;
-	private JFrame           parentFrame;
+	private ZelCashJFrame           parentFrame;
 	
-	private JPopupMenu popupMenu;
+	private ZelCashJPopupMenu popupMenu;
 	
 	public JContactListPanel(MessagingPanel parent, 
-			                 JFrame parentFrame,
+			ZelCashJFrame parentFrame,
 			                 MessagingStorage messagingStorage, 
 			                 StatusUpdateErrorReporter errorReporter)
 		throws IOException
@@ -101,12 +97,11 @@ public class JContactListPanel
 		this.errorReporter   = errorReporter;
 		
 		this.setLayout(new BorderLayout(0, 0));
-		
 		list = new ContactList();
 		list.setIdentities(this.mesagingStorage.getContactIdentities(true));
-		this.add(new JScrollPane(list), BorderLayout.CENTER);
+		this.add(new ZelCashJScrollPane(list), BorderLayout.CENTER);
 		
-		JPanel upperPanel = new JPanel(new BorderLayout(0, 0));
+		ZelCashJPanel upperPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		upperPanel.add(new JLabel(
 			"<html><span style=\"font-size:1.2em;font-style:italic;\">Contact list: &nbsp;</span></html>"),
 			BorderLayout.WEST);
@@ -114,22 +109,21 @@ public class JContactListPanel
         ImageIcon addIcon = new ImageIcon(addIconUrl);
         URL removeIconUrl = this.getClass().getClassLoader().getResource("images/remove12.png");
         ImageIcon removeIcon = new ImageIcon(removeIconUrl);
-        JButton addButton = new JButton(addIcon);
+        ZelCashJButton addButton = new ZelCashJButton(addIcon);
         addButton.setToolTipText("Add contact...");
-        JButton removeButton = new JButton(removeIcon);
+        ZelCashJButton removeButton = new ZelCashJButton(removeIcon);
         removeButton.setToolTipText("Remove contact...");
-        JButton addGroupButton = new JButton(
+        ZelCashJButton addGroupButton = new ZelCashJButton(
         	"<html><span style=\"font-size:0.7em;\">Group</span></html>", addIcon);
         addGroupButton.setToolTipText("Add group...");
-        JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 0));
+        ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 3, 0));
         tempPanel.add(removeButton);
         tempPanel.add(addButton);
         tempPanel.add(addGroupButton);
         upperPanel.add(tempPanel, BorderLayout.EAST);
-        
-        upperPanel.add(new JLabel(
-    			"<html><span style=\"font-size:1.6em;font-style:italic;\">&nbsp;</span>"),
-    			BorderLayout.CENTER);
+        JLabel contactList = new JLabel(
+    			"<html><span style=\"font-size:1.6em;font-style:italic;\">&nbsp;</span>");
+        upperPanel.add(contactList, BorderLayout.CENTER);
 		upperPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
 		this.add(upperPanel, BorderLayout.NORTH);
 		
@@ -228,10 +222,10 @@ public class JContactListPanel
 		
 		
 		// Actions of the popup menu
-		this.popupMenu = new JPopupMenu();
+		this.popupMenu = new ZelCashJPopupMenu();
 		int accelaratorKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		
-		JMenuItem showDetails = new JMenuItem("Show details...");
+		ZelCashJMenuItem showDetails = new ZelCashJMenuItem("Show details...");
         popupMenu.add(showDetails);
         showDetails.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelaratorKeyMask));
         showDetails.addActionListener(new ActionListener() 
@@ -249,7 +243,7 @@ public class JContactListPanel
 			}
 		});
         
-		JMenuItem removeContact = new JMenuItem("Remove...");
+        ZelCashJMenuItem removeContact = new ZelCashJMenuItem("Remove...");
         popupMenu.add(removeContact);
         removeContact.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, accelaratorKeyMask));
         removeContact.addActionListener(new ActionListener() 
@@ -261,7 +255,7 @@ public class JContactListPanel
 			}
 		});
 
-		JMenuItem sendContactDetails = new JMenuItem("Send contact details...");
+        ZelCashJMenuItem sendContactDetails = new ZelCashJMenuItem("Send contact details...");
         popupMenu.add(sendContactDetails);
         sendContactDetails.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelaratorKeyMask));
         sendContactDetails.addActionListener(new ActionListener() 
@@ -344,11 +338,11 @@ public class JContactListPanel
 		ImageIcon contactBlackIcon;
 		ImageIcon contactGroupBlackIcon;
 		JLabel    renderer;
-		
+		private static Color backGroundColor = ZelCashUI.startup;
 		public ContactList()
 		{
 			super();
-			
+			this.setBackground(backGroundColor);
 			this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			
 	        URL iconUrl = this.getClass().getClassLoader().getResource("images/contact-black.png");

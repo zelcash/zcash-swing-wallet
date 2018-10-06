@@ -1,9 +1,12 @@
 package com.vaklinov.zcashui;
 
-import javax.swing.*;
 import java.util.Locale;
 
-public class LanguageMenuItem extends JRadioButtonMenuItem {
+import javax.swing.Icon;
+
+import com.cabecinha84.zelcashui.ZelCashJRadioButtonMenuItem;
+
+public class LanguageMenuItem extends ZelCashJRadioButtonMenuItem {
 
     private Locale locale;
 

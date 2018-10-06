@@ -32,8 +32,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import com.cabecinha84.zelcashui.ZelCashJFrame;
 
 
 /**
@@ -45,11 +46,11 @@ public class BackupTracker
 	private static final String TRANSACTIONS_COUNTER_FILE      = "transactionsCountSinceBackup.txt";
 	private static final int    NUM_TRANSACTIONS_WIHOUT_BACKUP = 50;
 	
-	private JFrame parentFrame;
+	private ZelCashJFrame parentFrame;
 
 	private LanguageUtil langUtil;
 	
-	public BackupTracker(JFrame parentFrame)
+	public BackupTracker(ZelCashJFrame parentFrame)
 	{
 		this.parentFrame = parentFrame;
 		this.langUtil = LanguageUtil.instance();

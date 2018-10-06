@@ -40,13 +40,14 @@ import java.util.Comparator;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.Timer;
 
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJScrollPane;
+import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
+import com.cabecinha84.zelcashui.ZelCashJTable;
 import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 
@@ -57,8 +58,8 @@ import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 public class TransactionsDetailPanel
 	extends WalletTabPanel
 {
-	private JFrame parentFrame;
-	private JTabbedPane parentTabs;
+	private ZelCashJFrame parentFrame;
+	private ZelCashJTabbedPane parentTabs;
 	
 	private ZCashClientCaller clientCaller;
 	private StatusUpdateErrorReporter errorReporter;
@@ -66,8 +67,8 @@ public class TransactionsDetailPanel
 		
 	private String OSInfo              = null;
 		
-	private JTable transactionsTable   = null;
-	private JScrollPane transactionsTablePane  = null;
+	private ZelCashJTable transactionsTable   = null;
+	private ZelCashJScrollPane transactionsTablePane  = null;
 	private String[][] lastTransactionsData = null;
 	private DataGatheringThread<String[][]> transactionGatheringThread = null;
 	private LanguageUtil langUtil;
@@ -75,8 +76,8 @@ public class TransactionsDetailPanel
 	// Storage of labels
 	private LabelStorage labelStorage;
 
-	public TransactionsDetailPanel(JFrame parentFrame,
-		                  JTabbedPane parentTabs,
+	public TransactionsDetailPanel(ZelCashJFrame parentFrame,
+			ZelCashJTabbedPane parentTabs,
 			              ZCashInstallationObserver installationObserver,
 			              ZCashClientCaller clientCaller,
 			              StatusUpdateErrorReporter errorReporter,
@@ -98,13 +99,13 @@ public class TransactionsDetailPanel
 
 		langUtil = LanguageUtil.instance();
 		// Build content
-		JPanel dashboard = this;
+		ZelCashJPanel dashboard = this;
 		dashboard.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		dashboard.setLayout(new BorderLayout(0, 0));
 
 		// Table of transactions
 		lastTransactionsData = getTransactionsDataFromWallet();
-		dashboard.add(transactionsTablePane = new JScrollPane(
+		dashboard.add(transactionsTablePane = new ZelCashJScrollPane(
 				         transactionsTable = this.createTransactionsTable(lastTransactionsData)),
 				      BorderLayout.CENTER);
 		
@@ -188,7 +189,7 @@ public class TransactionsDetailPanel
 		{
 			Log.info("Updating table of transactions...");
 			this.remove(transactionsTablePane);
-			this.add(transactionsTablePane = new JScrollPane(
+			this.add(transactionsTablePane = new ZelCashJScrollPane(
 			             transactionsTable = this.createTransactionsTable(newTransactionsData)),
 			         BorderLayout.CENTER);
 		}
@@ -200,11 +201,11 @@ public class TransactionsDetailPanel
 	}
 
 
-	private JTable createTransactionsTable(String rowData[][])
+	private ZelCashJTable createTransactionsTable(String rowData[][])
 		throws WalletCallException, IOException, InterruptedException
 	{
 		String columnNames[] = langUtil.getString("transactions.detail.panel.column.names").split(":");
-        JTable table = new TransactionTable(
+		ZelCashJTable table = new TransactionTable(
         	rowData, columnNames, this.parentFrame, this.clientCaller, this.installationObserver); 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         table.getColumnModel().getColumn(0).setPreferredWidth(190);

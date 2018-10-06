@@ -33,11 +33,9 @@ import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -46,11 +44,11 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.cabecinha84.zelcashui.ZelCashJFileChooser;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.vaklinov.zcashui.CommandExecutor;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.OSUtil;
@@ -67,7 +65,7 @@ import com.vaklinov.zcashui.ZCashInstallationObserver.DaemonInfo;
  */
 public class IPFSWrapper
 {
-	private JFrame parentFrame;
+	private ZelCashJFrame parentFrame;
 	
 	private Process IPFSProcess;
 	
@@ -75,7 +73,7 @@ public class IPFSWrapper
 		"https?://[a-zA-Z0-9\\.\\-]+(:[0-9]{2,5})?/ipfs/[a-zA-Z0-9]{15,100}"); 
 	
 	
-	public IPFSWrapper(JFrame parentFrame)
+	public IPFSWrapper(ZelCashJFrame parentFrame)
 	{
 		this.parentFrame = parentFrame;
 		this.IPFSProcess = null;
@@ -121,7 +119,7 @@ public class IPFSWrapper
 	public String shareFileViaIPFS()
 		throws IOException, InterruptedException
 	{
-		JFileChooser fileChooser = new JFileChooser();
+		ZelCashJFileChooser fileChooser = new ZelCashJFileChooser();
 		fileChooser.setDialogTitle("Share file via IPFS...");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		 

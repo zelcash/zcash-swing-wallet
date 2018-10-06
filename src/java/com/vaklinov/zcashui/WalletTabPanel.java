@@ -33,9 +33,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 
 
@@ -43,7 +43,7 @@ import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
  * Base for all panels contained as wallet TABS.
  */
 public class WalletTabPanel
-	extends JPanel
+	extends ZelCashJPanel
 {	
 	// Lists of threads and timers that may be stopped if necessary
 	protected List<Timer> timers                   = null;

@@ -37,36 +37,36 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+
+import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJDialog;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJPasswordField;
 
 
 /**
  * Dialog to get the user password for encrypted wallets - for unlock.
  */
 public class PasswordDialog
-	extends JDialog
+	extends ZelCashJDialog
 {
 	protected boolean isOKPressed = false;
 	protected String  password    = null;
 	
 	protected JLabel     passwordLabel = null;
-	protected JTextField passwordField = null;
+	protected ZelCashJPasswordField passwordField = null;
 	
 	protected JLabel upperLabel;
 	protected JLabel lowerLabel;
 	
-	protected JPanel freeSlotPanel;
-	protected JPanel freeSlotPanel2;
+	protected ZelCashJPanel freeSlotPanel;
+	protected ZelCashJPanel freeSlotPanel2;
 	private LanguageUtil langUtil;
 	
-	public PasswordDialog(JFrame parent)
+	public PasswordDialog(ZelCashJFrame parent)
 	{
 		super(parent);
 		langUtil = LanguageUtil.instance();
@@ -75,11 +75,11 @@ public class PasswordDialog
 		this.setModal(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		JPanel controlsPanel = new JPanel();
+		ZelCashJPanel controlsPanel = new ZelCashJPanel();
 		controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
 		controlsPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
-		JPanel tempPanel = new JPanel(new BorderLayout(0, 0));
+		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.add(this.upperLabel = new JLabel(langUtil.getString("dialog.password.temp.panel.upper.label.text")), BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
@@ -87,22 +87,22 @@ public class PasswordDialog
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
-		tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(passwordLabel = new JLabel(langUtil.getString("dialog.password.temp.panel.password.label.text")));
-		tempPanel.add(passwordField = new JPasswordField(30));
+		tempPanel.add(passwordField = new ZelCashJPasswordField(30));
 		controlsPanel.add(tempPanel);
 		
 		dividerLabel = new JLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
-		this.freeSlotPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		this.freeSlotPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		controlsPanel.add(this.freeSlotPanel);
 		
-		this.freeSlotPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		this.freeSlotPanel2 = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		controlsPanel.add(this.freeSlotPanel2);
 
-		tempPanel = new JPanel(new BorderLayout(0, 0));
+		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.add(this.lowerLabel = new JLabel(langUtil.getString("dialog.password.temp.panel.lower.label.text")), BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
@@ -110,12 +110,12 @@ public class PasswordDialog
 		this.getContentPane().add(controlsPanel, BorderLayout.NORTH);
 
 		// Form buttons
-		JPanel buttonPanel = new JPanel();
+		ZelCashJPanel buttonPanel = new ZelCashJPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
-		JButton okButon = new JButton(langUtil.getString("dialog.password.buton.ok.text"));
+		ZelCashJButton okButon = new ZelCashJButton(langUtil.getString("dialog.password.buton.ok.text"));
 		buttonPanel.add(okButon);
 		buttonPanel.add(new JLabel("   "));
-		JButton cancelButon = new JButton(langUtil.getString("dialog.password.buton.cancel.text"));
+		ZelCashJButton cancelButon = new ZelCashJButton(langUtil.getString("dialog.password.buton.cancel.text"));
 		buttonPanel.add(cancelButon);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
