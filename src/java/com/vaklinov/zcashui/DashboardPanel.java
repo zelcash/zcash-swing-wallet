@@ -31,6 +31,8 @@ package com.vaklinov.zcashui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -45,6 +47,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -182,6 +185,18 @@ public class DashboardPanel extends WalletTabPanel {
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 14, 16));
 		JLabel logoLabel = new JLabel(new ImageIcon(
 				this.getClass().getClassLoader().getResource("images/ZelCash-yellow.orange-logo-small.png")));
+		logoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		logoLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://zel.cash/"));
+                } catch (Exception ex) {
+                	Log.warning("Error oppening https://zel.cash/ due to: {0} {1}",
+        					ex.getClass().getName(), ex.getMessage());
+                }
+            }
+        });
 		tempPanel.add(logoLabel);
 		JLabel zcLabel = new JLabel(langUtil.getString("panel.dashboard.main.label"));
 		tempPanel.add(zcLabel);
