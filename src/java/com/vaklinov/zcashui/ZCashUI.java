@@ -43,7 +43,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -58,6 +62,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.cabecinha84.zelcashui.AppLock;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.cabecinha84.zelcashui.ZelCashJMenu;
 import com.cabecinha84.zelcashui.ZelCashJMenuBar;
@@ -110,6 +115,10 @@ public class ZCashUI
     private AddressBookPanel addressBookPanel;
     private MessagingPanel   messagingPanel;
     private LanguageUtil langUtil;
+    
+    private static File walletLock;
+    private static FileChannel channel;
+    private static FileLock lock;
 
     ZelCashJTabbedPane tabs;
 
@@ -681,22 +690,11 @@ public class ZCashUI
                 	daemonStartInProgress = true;
                 }
             }
-            
+            if (false == AppLock.lock()) {
+                throw new Exception("Duplicate instante detected.");
+            }
+            installShutdownHook();
             new ZelCashUI();
-        	javax.swing.UIManager.put("ScrollBar.background", ZelCashUI.scrollbar);
-        	javax.swing.UIManager.put("ScrollPane.background", ZelCashUI.scrollpane);
-        	javax.swing.UIManager.put("SplitPane.background", ZelCashUI.splitpane);
-        	javax.swing.UIManager.put("TabbedPane.unselectedTabBackground", ZelCashUI.tabbedpaneUnselected);
-        	javax.swing.UIManager.put("Viewport.background", ZelCashUI.viewport);
-        	javax.swing.UIManager.put("ToolTip.background", ZelCashUI.tooltip);
-        	
-        	javax.swing.UIManager.put("Menu.selectionBackground", ZelCashUI.menuSelection);
-        	javax.swing.UIManager.put("MenuItem.selectionBackground", ZelCashUI.menuitemSelection);
-        	javax.swing.UIManager.put("Button.select", ZelCashUI.buttonSelect);
-        	javax.swing.UIManager.put("CheckBox.select", ZelCashUI.checkboxSelect);
-        	javax.swing.UIManager.put("ScrollBar.thumb", ZelCashUI.scrollbarThumb);
-    		javax.swing.UIManager.put("ScrollBar.foreground", ZelCashUI.scrollbarForeground);
-    		javax.swing.UIManager.put("ScrollBar.background", ZelCashUI.scrollbar);
     		
             StartupProgressDialog startupBar = null;
             if ((zcashdInfo.status != DAEMON_STATUS.RUNNING) || (daemonStartInProgress))
@@ -834,5 +832,16 @@ public class ZCashUI
 			configOut.close();
 		}
     }
+          
+    private static void installShutdownHook() {
+
+	    Runnable runner = new Runnable() {
+	        @Override
+	        public void run() {
+	            AppLock.unlock();
+	        }
+	    };
+	    Runtime.getRuntime().addShutdownHook(new Thread(runner, "Window Prefs Hook"));
+	}
     
 }

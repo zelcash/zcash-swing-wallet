@@ -102,18 +102,33 @@ public class ZelCashUI {
 	public ZelCashUI() {
 		Log.info("Loading ZelCashUI");
 		LoadZelCashUIFile();
+		javax.swing.UIManager.put("ScrollBar.background", ZelCashUI.scrollbar);
+    	javax.swing.UIManager.put("ScrollPane.background", ZelCashUI.scrollpane);
+    	javax.swing.UIManager.put("SplitPane.background", ZelCashUI.splitpane);
+    	javax.swing.UIManager.put("TabbedPane.unselectedTabBackground", ZelCashUI.tabbedpaneUnselected);
+    	javax.swing.UIManager.put("Viewport.background", ZelCashUI.viewport);
+    	javax.swing.UIManager.put("ToolTip.background", ZelCashUI.tooltip);
+    	
+    	javax.swing.UIManager.put("Menu.selectionBackground", ZelCashUI.menuSelection);
+    	javax.swing.UIManager.put("MenuItem.selectionBackground", ZelCashUI.menuitemSelection);
+    	javax.swing.UIManager.put("Button.select", ZelCashUI.buttonSelect);
+    	javax.swing.UIManager.put("CheckBox.select", ZelCashUI.checkboxSelect);
+    	javax.swing.UIManager.put("ScrollBar.thumb", ZelCashUI.scrollbarThumb);
+		javax.swing.UIManager.put("ScrollBar.foreground", ZelCashUI.scrollbarForeground);
+		javax.swing.UIManager.put("ScrollBar.background", ZelCashUI.scrollbar);
+		Log.info("Finished loading ZelCashUI");
 	}
 
 	private void LoadZelCashUIFile() {
 		try {
 			
-			String blockChainDir = OSUtil.getSettingsDirectory();
-			File zelcashConf = new File(blockChainDir + File.separator + "zelcash_ui.properties");
+			String settingsDir = OSUtil.getSettingsDirectory();
+			File zelcashConf = new File(settingsDir + File.separator + "zelcash_ui.properties");
 			if (!zelcashConf.exists())
 			{
 				Log.warning("Could not find file: {0} , will create a new one from default!", zelcashConf.getAbsolutePath());
 				Copy(getClass().getResourceAsStream("/ui/zelcash_ui.properties"),zelcashConf.getAbsolutePath());
-				zelcashConf = new File(blockChainDir + File.separator + "zelcash_ui.properties");
+				zelcashConf = new File(settingsDir + File.separator + "zelcash_ui.properties");
 				
 			} 
 			
@@ -174,7 +189,7 @@ public class ZelCashUI {
 			}
 		}
 		catch(Exception e) {
-			Log.warning("Error obtaining currency from config file due to: {0} {1}",
+			Log.warning("Error obtaining properties from zelcash_ui.properties file due to: {0} {1}",
 					e.getClass().getName(), e.getMessage());
 		}	
 	}
