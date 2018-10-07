@@ -79,6 +79,7 @@
     	        <include name="images/**"/>
     	        <include name="keys/**"/>
 				<include name="messages/**"/>
+    	    	<include name="ui/**"/>
     	    </fileset>
     	</copy>
     </target>
