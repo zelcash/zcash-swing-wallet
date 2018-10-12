@@ -14,53 +14,55 @@ import com.vaklinov.zcashui.OSUtil;
 
 public class ZelCashUI {
 
-	private static final String BUTTON_PROPERTY_COLOR = "button.background.color";
-	private static final String BUTTON_SELECT_PROPERTY_COLOR = "button.select.background.color";
-	private static final String CHECKBOX_PROPERTY_COLOR = "checkbox.background.color";
-	private static final String CHECKBOX_SELECT_PROPERTY_COLOR = "checkbox.select.background.color";
-	private static final String COMBOBOX_PROPERTY_COLOR = "combobox.background.color";
-	private static final String CONTAINER_PROPERTY_COLOR = "container.background.color";
-	private static final String DIALOG_PROPERTY_COLOR = "dialog.background.color";
-	private static final String FILECHOOSER_PROPERTY_COLOR = "filechooser.background.color";
-	private static final String FRAME_PROPERTY_COLOR = "frame.background.color";
-	private static final String LIST_PROPERTY_COLOR = "list.background.color";
-	private static final String MENU_PROPERTY_COLOR = "menu.background.color";
-	private static final String MENU_SELECTION_PROPERTY_COLOR = "menu.selection.background.color";
-	private static final String MENUBAR_PROPERTY_COLOR = "menubar.background.color";
-	private static final String MENUITEM_PROPERTY_COLOR = "menuitem.background.color";
-	private static final String MENUITEM_SELECTION_PROPERTY_COLOR = "menuitem.selection.background.color";
-	private static final String PANEL_PROPERTY_COLOR = "panel.background.color";
-	private static final String PASSWORDFIELD_PROPERTY_COLOR = "passwordfield.background.color";
-	private static final String POPUPMENU_PROPERTY_COLOR = "popupmenu.background.color";
-	private static final String PRESENTATIONPANEL_PROPERTY_COLOR = "presentationpanel.background.color";
-	private static final String PRESENTATIONPANEL_BORDER_PROPERTY_COLOR = "presentationpanel.border.color";
-	private static final String PROGRESSBAR_PROPERTY_COLOR = "progressbar.background.color";
-	private static final String PROGRESSBAR_FOREGROUND_PROPERTY_COLOR = "progressbar.foregroundcolor";
-	private static final String RADIOBUTTON_PROPERTY_COLOR = "radiobutton.background.color";
-	private static final String SCROLLBAR_PROPERTY_COLOR = "scrollbar.background.color";
-	private static final String SCROLLBAR_THUMB_PROPERTY_COLOR = "scrollbar.thumb.background.color";
-	private static final String SCROLLBAR_FOREGROUND_PROPERTY_COLOR = "scrollbar.foreground.color";
-	private static final String SCROLLPANE_PROPERTY_COLOR = "scrollpane.background.color";
-	private static final String STARTUP_PROPERTY_COLOR = "startup.background.color";
-	private static final String SPLITPANE_PROPERTY_COLOR = "splitpane.background.color";
-	private static final String TABBEDPANE_PROPERTY_COLOR = "tabbedpane.background.color";
-	private static final String TABBEDPANE_UNSELECTED_PROPERTY_COLOR = "tabbedPane.unselected.background.color";
-	private static final String TABLE_PROPERTY_COLOR = "table.background.color";
-	private static final String TABLE_HEADER_PROPERTY_COLOR = "table.header.background.color";
-	private static final String TEXTAREA_PROPERTY_COLOR = "textarea.background.color";
-	private static final String TEXTFIELD_PROPERTY_COLOR = "textfield.background.color";
-	private static final String TEXTPANE_PROPERTY_COLOR = "textpane.background.color";
-	private static final String TOOLTIP_PROPERTY_COLOR = "tooltip.background.color";
-	private static final String VIEWPORT_PROPERTY_COLOR = "viewport.background.color";
-	private static final String CURRENCY = "currency";
+	public static final String BUTTON_PROPERTY_COLOR = "button.background.color";
+	public static final String BUTTON_SELECT_PROPERTY_COLOR = "button.select.background.color";
+	public static final String CHECKBOX_PROPERTY_COLOR = "checkbox.background.color";
+	public static final String CHECKBOX_SELECT_PROPERTY_COLOR = "checkbox.select.background.color";
+	public static final String COLORCHOOSER_PROPERTY_COLOR = "colorchooser.background.color";
+	public static final String COMBOBOX_PROPERTY_COLOR = "combobox.background.color";
+	public static final String CONTAINER_PROPERTY_COLOR = "container.background.color";
+	public static final String DIALOG_PROPERTY_COLOR = "dialog.background.color";
+	public static final String FILECHOOSER_PROPERTY_COLOR = "filechooser.background.color";
+	public static final String FRAME_PROPERTY_COLOR = "frame.background.color";
+	public static final String LIST_PROPERTY_COLOR = "list.background.color";
+	public static final String MENU_PROPERTY_COLOR = "menu.background.color";
+	public static final String MENU_SELECTION_PROPERTY_COLOR = "menu.selection.background.color";
+	public static final String MENUBAR_PROPERTY_COLOR = "menubar.background.color";
+	public static final String MENUITEM_PROPERTY_COLOR = "menuitem.background.color";
+	public static final String MENUITEM_SELECTION_PROPERTY_COLOR = "menuitem.selection.background.color";
+	public static final String PANEL_PROPERTY_COLOR = "panel.background.color";
+	public static final String PASSWORDFIELD_PROPERTY_COLOR = "passwordfield.background.color";
+	public static final String POPUPMENU_PROPERTY_COLOR = "popupmenu.background.color";
+	public static final String PRESENTATIONPANEL_PROPERTY_COLOR = "presentationpanel.background.color";
+	public static final String PRESENTATIONPANEL_BORDER_PROPERTY_COLOR = "presentationpanel.border.color";
+	public static final String PROGRESSBAR_PROPERTY_COLOR = "progressbar.background.color";
+	public static final String PROGRESSBAR_FOREGROUND_PROPERTY_COLOR = "progressbar.foregroundcolor";
+	public static final String RADIOBUTTON_PROPERTY_COLOR = "radiobutton.background.color";
+	public static final String SCROLLBAR_PROPERTY_COLOR = "scrollbar.background.color";
+	public static final String SCROLLBAR_THUMB_PROPERTY_COLOR = "scrollbar.thumb.background.color";
+	public static final String SCROLLBAR_FOREGROUND_PROPERTY_COLOR = "scrollbar.foreground.color";
+	public static final String SCROLLPANE_PROPERTY_COLOR = "scrollpane.background.color";
+	public static final String STARTUP_PROPERTY_COLOR = "startup.background.color";
+	public static final String SPLITPANE_PROPERTY_COLOR = "splitpane.background.color";
+	public static final String TABBEDPANE_PROPERTY_COLOR = "tabbedpane.background.color";
+	public static final String TABBEDPANE_UNSELECTED_PROPERTY_COLOR = "tabbedPane.unselected.background.color";
+	public static final String TABLE_PROPERTY_COLOR = "table.background.color";
+	public static final String TABLE_HEADER_PROPERTY_COLOR = "table.header.background.color";
+	public static final String TEXTAREA_PROPERTY_COLOR = "textarea.background.color";
+	public static final String TEXTFIELD_PROPERTY_COLOR = "textfield.background.color";
+	public static final String TEXTPANE_PROPERTY_COLOR = "textpane.background.color";
+	public static final String TOOLTIP_PROPERTY_COLOR = "tooltip.background.color";
+	public static final String VIEWPORT_PROPERTY_COLOR = "viewport.background.color";
+	public static final String CURRENCY = "currency";
 
-	private static final String DEFAULT_COLOR = "#ffffff";
-	private static final String DEFAULT_CURRENCY = "USD";
+	public static final String DEFAULT_COLOR = "#ffffff";
+	public static final String DEFAULT_CURRENCY = "USD";
 	
 	public static Color button;
 	public static Color buttonSelect;
 	public static Color checkbox;
 	public static Color checkboxSelect;
+	public static Color colorChooser;
 	public static Color combobox;
 	public static Color container;
 	public static Color dialog;
@@ -101,7 +103,7 @@ public class ZelCashUI {
 	
 	public ZelCashUI() {
 		Log.info("Loading ZelCashUI");
-		LoadZelCashUIFile();
+		loadZelCashUIFile();
 		javax.swing.UIManager.put("ScrollBar.background", ZelCashUI.scrollbar);
     	javax.swing.UIManager.put("ScrollPane.background", ZelCashUI.scrollpane);
     	javax.swing.UIManager.put("SplitPane.background", ZelCashUI.splitpane);
@@ -116,10 +118,13 @@ public class ZelCashUI {
     	javax.swing.UIManager.put("ScrollBar.thumb", ZelCashUI.scrollbarThumb);
 		javax.swing.UIManager.put("ScrollBar.foreground", ZelCashUI.scrollbarForeground);
 		javax.swing.UIManager.put("ScrollBar.background", ZelCashUI.scrollbar);
+		javax.swing.UIManager.put("ColorChooser.background", ZelCashUI.colorChooser);
+		javax.swing.UIManager.put("ColorChooser.swatchesDefaultRecentColor", ZelCashUI.colorChooser);
+		
 		Log.info("Finished loading ZelCashUI");
 	}
 
-	private void LoadZelCashUIFile() {
+	private void loadZelCashUIFile() {
 		try {
 			
 			String settingsDir = OSUtil.getSettingsDirectory();
@@ -127,7 +132,7 @@ public class ZelCashUI {
 			if (!zelcashConf.exists())
 			{
 				Log.warning("Could not find file: {0} , will create a new one from default!", zelcashConf.getAbsolutePath());
-				Copy(getClass().getResourceAsStream("/ui/zelcash_ui.properties"),zelcashConf.getAbsolutePath());
+				copy(getClass().getResourceAsStream("/ui/zelcash_ui.properties"),zelcashConf.getAbsolutePath());
 				zelcashConf = new File(settingsDir + File.separator + "zelcash_ui.properties");
 				
 			} 
@@ -144,6 +149,7 @@ public class ZelCashUI {
 				buttonSelect = Color.decode(confProps.getProperty(BUTTON_SELECT_PROPERTY_COLOR)!= null? confProps.getProperty(BUTTON_SELECT_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				checkbox = Color.decode(confProps.getProperty(CHECKBOX_PROPERTY_COLOR)!= null? confProps.getProperty(CHECKBOX_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				checkboxSelect = Color.decode(confProps.getProperty(CHECKBOX_SELECT_PROPERTY_COLOR)!= null? confProps.getProperty(CHECKBOX_SELECT_PROPERTY_COLOR).trim():DEFAULT_COLOR);
+				colorChooser = Color.decode(confProps.getProperty(COLORCHOOSER_PROPERTY_COLOR)!= null? confProps.getProperty(COLORCHOOSER_PROPERTY_COLOR).trim():DEFAULT_COLOR);
 				combobox = Color.decode(confProps.getProperty(COMBOBOX_PROPERTY_COLOR)!= null? confProps.getProperty(COMBOBOX_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				container = Color.decode(confProps.getProperty(CONTAINER_PROPERTY_COLOR)!= null? confProps.getProperty(CONTAINER_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				dialog = Color.decode(confProps.getProperty(DIALOG_PROPERTY_COLOR)!= null? confProps.getProperty(DIALOG_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
@@ -194,7 +200,7 @@ public class ZelCashUI {
 		}	
 	}
 	
-	private static void Copy(InputStream source , String destination) {
+	private static void copy(InputStream source , String destination) {
 
 		Log.info("Copying ->" + source + "\n\tto ->" + destination);
 

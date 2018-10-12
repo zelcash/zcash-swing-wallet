@@ -69,6 +69,7 @@ import com.cabecinha84.zelcashui.ZelCashJMenuBar;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
 import com.cabecinha84.zelcashui.ZelCashUI;
+import com.cabecinha84.zelcashui.ZelCashUIEditDialog;
 import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 import com.vaklinov.zcashui.ZCashClientCaller.NetworkAndBlockchainInfo;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
@@ -323,17 +324,13 @@ public class ZCashUI
                     {
                     	try
                     	{
-                    		String blockChainDir = OSUtil.getSettingsDirectory();
-                			File zelcashConf = new File(blockChainDir + File.separator + "zelcash_ui.properties");
-                			java.awt.Desktop.getDesktop().edit(zelcashConf);
+                    		ZelCashUIEditDialog ad = new ZelCashUIEditDialog(ZCashUI.this);
+                    		ad.setVisible(true);
                     	} catch (UnsupportedEncodingException uee)
                     	{
                     		Log.error("Unexpected error: ", uee);
                     		ZCashUI.this.errorReporter.reportError(uee);
-                    	} catch (IOException e1) {
-                    		Log.error("Unexpected error: ", e1);
-                    		ZCashUI.this.errorReporter.reportError(e1);
-						}
+                    	}
                     }
                 }
             );

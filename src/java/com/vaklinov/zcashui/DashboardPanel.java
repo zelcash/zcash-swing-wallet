@@ -524,7 +524,7 @@ public class DashboardPanel extends WalletTabPanel {
 			if (this.blockcahinWarningPanel == null) {
 				// Create a new warning panel
 				ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-				PresentationPanel warningPanel = new PresentationPanel();
+				ZelCashPresentationPanel warningPanel = new ZelCashPresentationPanel();
 				this.blockcahinWarningLabel = new JLabel(warningText);
 				warningPanel.add(this.blockcahinWarningLabel);
 				tempPanel.add(warningPanel);
