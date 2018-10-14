@@ -54,6 +54,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.cabecinha84.zelcashui.ZelCashJDialog;
 import com.cabecinha84.zelcashui.ZelCashJFileChooser;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJProgressBar;
 import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
@@ -438,7 +439,7 @@ public class WalletOperations
 	public void exportToArizenWallet()
 	{
 		final ZelCashJDialog dialog = new ZelCashJDialog(this.parent, langUtil.getString("wallet.operations.dialog.export.arizen.title"));
-		final JLabel exportLabel = new JLabel();
+		final ZelCashJLabel exportLabel = new ZelCashJLabel();
 		final WalletRepo arizenWallet = new ArizenWallet();
 		try {
 			ZelCashJFileChooser fileChooser = new ZelCashJFileChooser();

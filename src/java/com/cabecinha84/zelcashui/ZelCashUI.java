@@ -48,6 +48,7 @@ public class ZelCashUI {
 	public static final String TABBEDPANE_UNSELECTED_PROPERTY_COLOR = "tabbedPane.unselected.background.color";
 	public static final String TABLE_PROPERTY_COLOR = "table.background.color";
 	public static final String TABLE_HEADER_PROPERTY_COLOR = "table.header.background.color";
+	public static final String TEXT_PROPERTY_COLOR = "text.color";
 	public static final String TEXTAREA_PROPERTY_COLOR = "textarea.background.color";
 	public static final String TEXTFIELD_PROPERTY_COLOR = "textfield.background.color";
 	public static final String TEXTPANE_PROPERTY_COLOR = "textpane.background.color";
@@ -56,6 +57,7 @@ public class ZelCashUI {
 	public static final String CURRENCY = "currency";
 
 	public static final String DEFAULT_COLOR = "#ffffff";
+	public static final String DEFAULT_COLOR_BLACK = "#000000";
 	public static final String DEFAULT_CURRENCY = "USD";
 	
 	public static Color button;
@@ -92,6 +94,7 @@ public class ZelCashUI {
 	public static Color tabbedpaneUnselected;
 	public static Color table;
 	public static Color tableHeader;
+	public static Color text;
 	public static Color textarea;
 	public static Color textfield;
 	public static Color textpane;
@@ -180,6 +183,7 @@ public class ZelCashUI {
 				table = Color.decode(confProps.getProperty(TABLE_PROPERTY_COLOR)!= null? confProps.getProperty(TABLE_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				tableHeader = Color.decode(confProps.getProperty(TABLE_HEADER_PROPERTY_COLOR)!= null? confProps.getProperty(TABLE_HEADER_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				textarea = Color.decode(confProps.getProperty(TEXTAREA_PROPERTY_COLOR)!= null? confProps.getProperty(TEXTAREA_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
+				text = Color.decode(confProps.getProperty(TEXT_PROPERTY_COLOR)!= null? confProps.getProperty(TEXT_PROPERTY_COLOR).trim():DEFAULT_COLOR_BLACK); 
 				textfield = Color.decode(confProps.getProperty(TEXTFIELD_PROPERTY_COLOR)!= null? confProps.getProperty(TEXTFIELD_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				textpane = Color.decode(confProps.getProperty(TEXTPANE_PROPERTY_COLOR)!= null? confProps.getProperty(TEXTPANE_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				tooltip = Color.decode(confProps.getProperty(TOOLTIP_PROPERTY_COLOR)!= null? confProps.getProperty(TOOLTIP_PROPERTY_COLOR).trim():DEFAULT_COLOR); 

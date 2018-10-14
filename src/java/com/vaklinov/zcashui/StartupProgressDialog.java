@@ -14,10 +14,10 @@ import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJProgressBar;
 import com.cabecinha84.zelcashui.ZelCashUI;
@@ -34,8 +34,8 @@ public class StartupProgressDialog extends ZelCashJFrame {
     private static final int STARTUP_ERROR_CODE = -28;
     
     private BorderLayout borderLayout1 = new BorderLayout();
-    private JLabel imageLabel = new JLabel();
-    private JLabel progressLabel = new JLabel();
+    private ZelCashJLabel imageLabel = new ZelCashJLabel();
+    private ZelCashJLabel progressLabel = new ZelCashJLabel();
     private ZelCashJPanel southPanel = new ZelCashJPanel();
     private BorderLayout southPanelLayout = new BorderLayout();
     private ZelCashJProgressBar progressBar = new ZelCashJProgressBar();
@@ -58,7 +58,7 @@ public class StartupProgressDialog extends ZelCashJFrame {
         southPanel.setLayout(southPanelLayout);
         southPanel.setBorder(BorderFactory.createEmptyBorder(0, 16, 16, 16));
         contentPane.add(imageLabel, BorderLayout.NORTH);
-		JLabel zcashWalletLabel = new JLabel(LanguageUtil.instance().getString("startup.progress.dialog.label"));
+        ZelCashJLabel zcashWalletLabel = new ZelCashJLabel(LanguageUtil.instance().getString("startup.progress.dialog.label"));
 		zcashWalletLabel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 		// todo - place in a panel with flow center
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.CENTER, 1, 1));

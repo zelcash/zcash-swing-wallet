@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -51,6 +50,7 @@ import javax.swing.border.EtchedBorder;
 
 import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJScrollPane;
 import com.cabecinha84.zelcashui.ZelCashJTable;
@@ -120,7 +120,7 @@ public class AddressesPanel
 		buttonPanel.add(newTAddressButton);
 		ZelCashJButton newZAddressButton = new ZelCashJButton(langUtil.getString("panel.address.button.new.z.address"));
 		buttonPanel.add(newZAddressButton);
-		buttonPanel.add(new JLabel("           "));
+		buttonPanel.add(new ZelCashJLabel("           "));
 		ZelCashJButton refreshButton = new ZelCashJButton(langUtil.getString("panel.address.button.refresh"));
 		buttonPanel.add(refreshButton);
 
@@ -135,7 +135,7 @@ public class AddressesPanel
 		ZelCashJPanel warningPanel = new ZelCashJPanel();
 		warningPanel.setLayout(new BorderLayout(3, 3));
 		warningPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		JLabel warningL = new JLabel(langUtil.getString("panel.address.label.warning"));
+		ZelCashJLabel warningL = new ZelCashJLabel(langUtil.getString("panel.address.label.warning"));
 		warningPanel.add(warningL, BorderLayout.NORTH);
 		addressesPanel.add(warningPanel, BorderLayout.NORTH);
 

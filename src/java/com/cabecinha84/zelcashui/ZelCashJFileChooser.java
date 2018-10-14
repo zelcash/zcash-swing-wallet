@@ -11,41 +11,47 @@ import javax.swing.filechooser.FileSystemView;
 
 public class ZelCashJFileChooser extends JFileChooser {
 	private static Color backGroundColor = ZelCashUI.filechooser;
-	
+	private static Color textColor = ZelCashUI.text;
 	public ZelCashJFileChooser() {
 		super();
 		this.setBackground(backGroundColor);
 		changeColor(this.getComponents());
+		this.setForeground(textColor);
 	}
 
 	public ZelCashJFileChooser(File currentDirectory, FileSystemView fsv) {
 		super(currentDirectory, fsv);
 		this.setBackground(backGroundColor);
 		changeColor(this.getComponents());
+		this.setForeground(textColor);
 	}
 
 	public ZelCashJFileChooser(File currentDirectory) {
 		super(currentDirectory);
 		this.setBackground(backGroundColor);
 		changeColor(this.getComponents());
+		this.setForeground(textColor);
 	}
 
 	public ZelCashJFileChooser(FileSystemView fsv) {
 		super(fsv);
 		this.setBackground(backGroundColor);
 		changeColor(this.getComponents());
+		this.setForeground(textColor);
 	}
 
 	public ZelCashJFileChooser(String currentDirectoryPath, FileSystemView fsv) {
 		super(currentDirectoryPath, fsv);
 		this.setBackground(backGroundColor);
 		changeColor(this.getComponents());
+		this.setForeground(textColor);
 	}
 
 	public ZelCashJFileChooser(String currentDirectoryPath) {
 		super(currentDirectoryPath);
 		this.setBackground(backGroundColor);
 		changeColor(this.getComponents());
+		this.setForeground(textColor);
 	}
 	
 	private void changeColor(Component[] comp)
@@ -55,6 +61,7 @@ public class ZelCashJFileChooser extends JFileChooser {
               try
               {
                    comp[x].setBackground(backGroundColor);
+                   comp[x].setForeground(textColor);
               }
               catch(Exception e) {}
          if(comp[x] instanceof Container)

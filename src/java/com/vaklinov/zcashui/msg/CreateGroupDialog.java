@@ -39,13 +39,13 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJDialog;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJProgressBar;
 import com.cabecinha84.zelcashui.ZelCashJTextField;
@@ -72,11 +72,11 @@ public class CreateGroupDialog
 	protected boolean isOKPressed = false;
 	protected String  key    = null;
 	
-	protected JLabel     keyLabel = null;
+	protected ZelCashJLabel     keyLabel = null;
 	protected ZelCashJTextField keyField = null;
 	
-	protected JLabel upperLabel;
-	protected JLabel lowerLabel;
+	protected ZelCashJLabel upperLabel;
+	protected ZelCashJLabel lowerLabel;
 	
 	protected ZelCashJProgressBar progress = null;
 	
@@ -110,13 +110,13 @@ public class CreateGroupDialog
 		controlsPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
-		tempPanel.add(this.upperLabel = new JLabel(
+		tempPanel.add(this.upperLabel = new ZelCashJLabel(
 			"<html>Please enter a key phrase that identifies a messaging group. " + 
 		    "Such a key phrase is usually a #HashTag<br/>or similar item known to the " +
 			" group of people participating:</html>"), BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
-		JLabel dividerLabel = new JLabel("   ");
+		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
@@ -124,19 +124,19 @@ public class CreateGroupDialog
 		tempPanel.add(keyField = new ZelCashJTextField(60));
 		controlsPanel.add(tempPanel);
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 
 		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
-		tempPanel.add(this.lowerLabel = new JLabel(
+		tempPanel.add(this.lowerLabel = new ZelCashJLabel(
 			"<html>The group key phrase will be converted into a group Z address that " +
 		    "all participants share to receive <br/>messages. The addition of a messaging " + 
 			"group may take considerable time, so please be patient...</html>"), 
 			BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
@@ -152,7 +152,7 @@ public class CreateGroupDialog
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
 		okButon = new ZelCashJButton("Create group");
 		buttonPanel.add(okButon);
-		buttonPanel.add(new JLabel("   "));
+		buttonPanel.add(new ZelCashJLabel("   "));
 		cancelButon = new ZelCashJButton("Cancel");
 		buttonPanel.add(cancelButon);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);

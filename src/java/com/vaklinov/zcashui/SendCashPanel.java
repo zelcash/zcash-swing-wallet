@@ -57,7 +57,6 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -67,6 +66,7 @@ import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJCheckBox;
 import com.cabecinha84.zelcashui.ZelCashJComboBox;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJPopupMenu;
@@ -102,7 +102,7 @@ public class SendCashPanel
 	private ZelCashJButton    sendButton              = null;
 	
 	private ZelCashJPanel       operationStatusPanel        = null;
-	private JLabel       operationStatusLabel        = null;
+	private ZelCashJLabel       operationStatusLabel        = null;
 	private ZelCashJProgressBar operationStatusProhgressBar = null;
 	private Timer        operationStatusTimer        = null;
 	private String       operationStatusID           = null;
@@ -133,8 +133,8 @@ public class SendCashPanel
 		sendCashPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(new JLabel(langUtil.getString("send.cash.panel.label")));
-		tempPanel.add(new JLabel(langUtil.getString("send.cash.panel.label.info")));
+		tempPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label")));
+		tempPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.info")));
 		sendCashPanel.add(tempPanel);
 
 		balanceAddressCombo = new ZelCashJComboBox<>(new String[] { "" });
@@ -142,12 +142,12 @@ public class SendCashPanel
 		comboBoxParentPanel.add(balanceAddressCombo);
 		sendCashPanel.add(comboBoxParentPanel);
 		
-		JLabel dividerLabel = new JLabel("   ");
+		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 3));
 		sendCashPanel.add(dividerLabel);
 
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(new JLabel(langUtil.getString("send.cash.panel.label.destination.address")));
+		tempPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.destination.address")));
 		sendCashPanel.add(tempPanel);
 		
 		destinationAddressField = new ZelCashJTextField(73);
@@ -155,13 +155,13 @@ public class SendCashPanel
         tempPanel.add(destinationAddressField);
 		sendCashPanel.add(tempPanel);
 				
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 3));
 		sendCashPanel.add(dividerLabel);
 
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(new JLabel(langUtil.getString("send.cash.panel.label.memo")));
-		tempPanel.add(new JLabel(langUtil.getString("send.cash.panel.label.memo.info")));
+		tempPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.memo")));
+		tempPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.memo.info")));
 		sendCashPanel.add(tempPanel);
 		
 		destinationMemoField = new ZelCashJTextField(73);
@@ -169,33 +169,33 @@ public class SendCashPanel
         tempPanel.add(destinationMemoField);
 		sendCashPanel.add(tempPanel);		
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 3));
 		sendCashPanel.add(dividerLabel);
 
 		// Construct a more complex panel for the amount and transaction fee
 		ZelCashJPanel amountAndFeePanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		ZelCashJPanel amountPanel = new ZelCashJPanel(new BorderLayout());
-		amountPanel.add(new JLabel(langUtil.getString("send.cash.panel.label.amount")), BorderLayout.NORTH);
+		amountPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.amount")), BorderLayout.NORTH);
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(destinationAmountField = new ZelCashJTextField(13));
 		destinationAmountField.setHorizontalAlignment(SwingConstants.RIGHT);
-		tempPanel.add(new JLabel(" ZEL    "));
+		tempPanel.add(new ZelCashJLabel(" ZEL    "));
 		amountPanel.add(tempPanel, BorderLayout.SOUTH);
 
 		ZelCashJPanel feePanel = new ZelCashJPanel(new BorderLayout());
-		feePanel.add(new JLabel(langUtil.getString("send.cash.panel.label.fee")), BorderLayout.NORTH);
+		feePanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.fee")), BorderLayout.NORTH);
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(transactionFeeField = new ZelCashJTextField(13));
 		transactionFeeField.setText("0.0001"); // Default value
 		transactionFeeField.setHorizontalAlignment(SwingConstants.RIGHT);		
-		tempPanel.add(new JLabel(" ZEL"));
+		tempPanel.add(new ZelCashJLabel(" ZEL"));
 		feePanel.add(tempPanel, BorderLayout.SOUTH);
 		
 		ZelCashJPanel sendChangeBoxPanel = new ZelCashJPanel(new BorderLayout());
-		sendChangeBoxPanel.add(new JLabel(" "), BorderLayout.NORTH);
+		sendChangeBoxPanel.add(new ZelCashJLabel(" "), BorderLayout.NORTH);
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(new JLabel("      "));
+		tempPanel.add(new ZelCashJLabel("      "));
 		tempPanel.add(sendChangeBackToSourceAddress = new ZelCashJCheckBox(langUtil.getString("send.cash.panel.checkbox.send.change.back")));
 		sendChangeBoxPanel.add(tempPanel, BorderLayout.SOUTH);
 
@@ -204,7 +204,7 @@ public class SendCashPanel
 		amountAndFeePanel.add(sendChangeBoxPanel);
 		sendCashPanel.add(amountAndFeePanel);		
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 3));
 		sendCashPanel.add(dividerLabel);
 
@@ -212,17 +212,17 @@ public class SendCashPanel
 		tempPanel.add(sendButton = new ZelCashJButton(langUtil.getString("send.cash.panel.button.send") + "   \u27A4\u27A4\u27A4"));
 		sendCashPanel.add(tempPanel);
 
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 5));
 		sendCashPanel.add(dividerLabel);
 		
 		ZelCashJPanel warningPanel = new ZelCashJPanel();
 		warningPanel.setLayout(new BorderLayout(7, 3));
-		JLabel warningL = new JLabel(langUtil.getString("send.cash.panel.label.send.warning"));
+		ZelCashJLabel warningL = new ZelCashJLabel(langUtil.getString("send.cash.panel.label.send.warning"));
 		warningPanel.add(warningL, BorderLayout.NORTH);
 		sendCashPanel.add(warningPanel);
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 15));
 		sendCashPanel.add(dividerLabel);
 		
@@ -232,21 +232,21 @@ public class SendCashPanel
 		operationStatusPanel.setLayout(new BoxLayout(operationStatusPanel, BoxLayout.Y_AXIS));
 		
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(new JLabel(langUtil.getString("send.cash.panel.label.last.operation.status")));
-        tempPanel.add(operationStatusLabel = new JLabel("N/A"));
+		tempPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.last.operation.status")));
+        tempPanel.add(operationStatusLabel = new ZelCashJLabel("N/A"));
         operationStatusPanel.add(tempPanel);		
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 6));
 		operationStatusPanel.add(dividerLabel);
 
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(new JLabel(langUtil.getString("send.cash.panel.label.last.operation.progress")));
+		tempPanel.add(new ZelCashJLabel(langUtil.getString("send.cash.panel.label.last.operation.progress")));
         tempPanel.add(operationStatusProhgressBar = new ZelCashJProgressBar(0, 200));
         operationStatusProhgressBar.setPreferredSize(new Dimension(250, 17));
         operationStatusPanel.add(tempPanel);		
         
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
 		operationStatusPanel.add(dividerLabel);
 		

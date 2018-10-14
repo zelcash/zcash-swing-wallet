@@ -49,7 +49,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -60,6 +59,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJPopupMenu;
@@ -102,7 +102,7 @@ public class JContactListPanel
 		this.add(new ZelCashJScrollPane(list), BorderLayout.CENTER);
 		
 		ZelCashJPanel upperPanel = new ZelCashJPanel(new BorderLayout(0, 0));
-		upperPanel.add(new JLabel(
+		upperPanel.add(new ZelCashJLabel(
 			"<html><span style=\"font-size:1.2em;font-style:italic;\">Contact list: &nbsp;</span></html>"),
 			BorderLayout.WEST);
 		URL addIconUrl = this.getClass().getClassLoader().getResource("images/add12.png");
@@ -121,7 +121,7 @@ public class JContactListPanel
         tempPanel.add(addButton);
         tempPanel.add(addGroupButton);
         upperPanel.add(tempPanel, BorderLayout.EAST);
-        JLabel contactList = new JLabel(
+        ZelCashJLabel contactList = new ZelCashJLabel(
     			"<html><span style=\"font-size:1.6em;font-style:italic;\">&nbsp;</span>");
         upperPanel.add(contactList, BorderLayout.CENTER);
 		upperPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
@@ -337,7 +337,7 @@ public class JContactListPanel
 	{
 		ImageIcon contactBlackIcon;
 		ImageIcon contactGroupBlackIcon;
-		JLabel    renderer;
+		ZelCashJLabel    renderer;
 		private static Color backGroundColor = ZelCashUI.startup;
 		public ContactList()
 		{
@@ -350,7 +350,7 @@ public class JContactListPanel
 	        URL groupIconUrl = this.getClass().getClassLoader().getResource("images/contact-group-black.png");
 	        contactGroupBlackIcon = new ImageIcon(groupIconUrl);
 	        
-	        renderer = new JLabel();
+	        renderer = new ZelCashJLabel();
 	        renderer.setOpaque(true);
 		}
 		

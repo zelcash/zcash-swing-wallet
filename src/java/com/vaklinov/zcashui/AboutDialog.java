@@ -36,13 +36,12 @@ import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
 import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJDialog;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
 
@@ -69,7 +68,7 @@ public class AboutDialog
 		ZelCashJPanel copyrigthPanel = new ZelCashJPanel();
 		copyrigthPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		copyrigthPanel.setLayout(new BorderLayout(3, 3));
-		JLabel copyrightLabel = new JLabel();
+		ZelCashJLabel copyrightLabel = new ZelCashJLabel();
 		
 		copyrightLabel.setText(langUtil.getString("dialog.about.front.text"));
 		copyrightLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -80,7 +79,7 @@ public class AboutDialog
 		ZelCashJPanel licensePanel = new ZelCashJPanel();
 		licensePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		licensePanel.setLayout(new BorderLayout(3, 3));
-		JLabel licenseLabel = new JLabel();
+		ZelCashJLabel licenseLabel = new ZelCashJLabel();
 		licenseLabel.setText(langUtil.getString("dialog.about.licence"));
 		licenseLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		licensePanel.add(licenseLabel, BorderLayout.NORTH);

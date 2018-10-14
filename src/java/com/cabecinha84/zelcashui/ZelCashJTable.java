@@ -11,46 +11,61 @@ import javax.swing.table.TableModel;
 public class ZelCashJTable extends JTable {
 	private static Color backGroundColor = ZelCashUI.table;
 	private static Color headerBackGroundColor = ZelCashUI.tableHeader;
+	private static Color textColor = ZelCashUI.text;
 	public ZelCashJTable() {
 		super();
 		this.setBackground(backGroundColor);
 		this.getTableHeader().setBackground(headerBackGroundColor);
+		this.setForeground(textColor);
+		this.getTableHeader().setForeground(textColor);
 	}
 
 	public ZelCashJTable(int numRows, int numColumns) {
 		super(numRows, numColumns);
 		this.setBackground(backGroundColor);
 		this.getTableHeader().setBackground(headerBackGroundColor);
+		this.setForeground(textColor);
+		this.getTableHeader().setForeground(textColor);
 	}
 
 	public ZelCashJTable(Object[][] rowData, Object[] columnNames) {
 		super(rowData, columnNames);
 		this.setBackground(backGroundColor);
 		this.getTableHeader().setBackground(headerBackGroundColor);
+		this.setForeground(textColor);
+		this.getTableHeader().setForeground(textColor);
 	}
 
 	public ZelCashJTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
 		super(dm, cm, sm);
 		this.setBackground(backGroundColor);
 		this.getTableHeader().setBackground(headerBackGroundColor);
+		this.setForeground(textColor);
+		this.getTableHeader().setForeground(textColor);
 	}
 
 	public ZelCashJTable(TableModel dm, TableColumnModel cm) {
 		super(dm, cm);
 		this.setBackground(backGroundColor);
 		this.getTableHeader().setBackground(headerBackGroundColor);
+		this.setForeground(textColor);
+		this.getTableHeader().setForeground(textColor);
 	}
 
 	public ZelCashJTable(TableModel dm) {
 		super(dm);
 		this.setBackground(backGroundColor);
 		this.getTableHeader().setBackground(headerBackGroundColor);
+		this.setForeground(textColor);
+		this.getTableHeader().setForeground(textColor);
 	}
 
 	public ZelCashJTable(Vector<? extends Vector> rowData, Vector<?> columnNames) {
 		super(rowData, columnNames);
 		this.setBackground(backGroundColor);
 		this.getTableHeader().setBackground(headerBackGroundColor);
+		this.setForeground(textColor);
+		this.getTableHeader().setForeground(textColor);
 	}
 
 

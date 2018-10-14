@@ -49,6 +49,7 @@ import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJCheckBox;
 import com.cabecinha84.zelcashui.ZelCashJDialog;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJTextField;
 import com.vaklinov.zcashui.Log;
@@ -66,7 +67,7 @@ public class MessagingOptionsEditDialog
 	protected MessagingStorage storage;
 	protected StatusUpdateErrorReporter errorReporter;
 	
-	protected JLabel infoLabel;
+	protected ZelCashJLabel infoLabel;
 	protected ZelCashJPanel buttonPanel;
 	
 	protected ZelCashJTextField amountTextField;
@@ -90,7 +91,7 @@ public class MessagingOptionsEditDialog
 			
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		infoLabel = new JLabel(
+		infoLabel = new ZelCashJLabel(
 				"<html><span style=\"font-size:0.93em;\">" +
 				"The options below pertain to messaging. It is posisble to set the amount of ZEL<br/>" +
 				"to be sent with every messaging transaction and also the transaction fee. It is<br/>" + 
@@ -214,9 +215,9 @@ public class MessagingOptionsEditDialog
 	private void addFormField(ZelCashJPanel detailsPanel, String name, JComponent field)
 	{
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-		JLabel tempLabel = new JLabel(name, JLabel.RIGHT);
+		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new JLabel("ZEL amount to send with every message:").getPreferredSize().width + 30;
+		final int width = new ZelCashJLabel("ZEL amount to send with every message:").getPreferredSize().width + 30;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);

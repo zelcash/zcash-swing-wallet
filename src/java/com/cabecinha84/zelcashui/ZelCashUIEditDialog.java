@@ -40,20 +40,24 @@ public class ZelCashUIEditDialog
 	private static final String TIER1DEFAULT = "#ffffff";
 	private static final String TIER2DEFAULT = "#cceeff";
 	private static final String TIER3DEFAULT = "#0069cc";
+	private static final String TEXTDEFAULT = "#000000";
 	
 	protected ZelCashJTextField tierOneColor;
 	protected ZelCashJTextField tierTwoColor;
 	protected ZelCashJTextField tierThreeColor;
+	protected ZelCashJTextField textColorTextField;
 	protected ZelCashJComboBox currencyOptions;
 	
 	private String currency;
 	private String tier1Color;
 	private String tier2Color;
 	private String tier3Color;
+	private String textColor;
 	
 	private Color color1;
 	private Color color2;
 	private Color color3;
+	private Color colorText;
 	
 	public ZelCashUIEditDialog(ZelCashJFrame parent)
 			throws UnsupportedEncodingException
@@ -70,13 +74,14 @@ public class ZelCashUIEditDialog
 
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		JLabel infoLabel = new JLabel(langUtil.getString("dialog.zelcashuiedit.info"));
+		ZelCashJLabel infoLabel = new ZelCashJLabel(langUtil.getString("dialog.zelcashuiedit.info"));
 	    tempPanel.add(infoLabel, BorderLayout.CENTER);
 		this.getContentPane().add(tempPanel, BorderLayout.NORTH);
 		
-		ZelCashJButton tier1Button = new ZelCashJButton("Select Color");
-		ZelCashJButton tier2Button = new ZelCashJButton("Select Color");
-		ZelCashJButton tier3Button = new ZelCashJButton("Select Color");
+		ZelCashJButton tier1Button = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
+		ZelCashJButton tier2Button = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
+		ZelCashJButton tier3Button = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
+		ZelCashJButton textButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
 		currencyOptions = new ZelCashJComboBox<>(getAvailableCurrencys());
 		currencyOptions.setSelectedItem(currency);
 		
@@ -84,15 +89,20 @@ public class ZelCashUIEditDialog
 		detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
 
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.currency"),  currencyOptions);
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.textcolor"),  textColorTextField = new ZelCashJTextField(7), textButton);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.tier1color"),  tierOneColor = new ZelCashJTextField(7), tier1Button);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.tier2color"),  tierTwoColor = new ZelCashJTextField(7), tier2Button);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.tier3color"),  tierThreeColor = new ZelCashJTextField(7), tier3Button);
+
+		textColorTextField.setText(textColor);
 		tierOneColor.setText(tier1Color);
 		tierTwoColor.setText(tier2Color);
 		tierThreeColor.setText(tier3Color);
+		textColorTextField.setEditable(false);;
 		tierOneColor.setEditable(false);
 		tierTwoColor.setEditable(false);
 		tierThreeColor.setEditable(false);
+		textColorTextField.setForeground(colorText);
 		tierOneColor.setBackground(color1);
 		tierTwoColor.setBackground(color2);
 		tierThreeColor.setBackground(color3);
@@ -104,9 +114,9 @@ public class ZelCashUIEditDialog
 		closePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
 		ZelCashJButton closeButon = new ZelCashJButton(langUtil.getString("dialog.about.button.close.text"));
 		closePanel.add(closeButon);
-		ZelCashJButton defaultsButton = new ZelCashJButton("Set Defaults");
+		ZelCashJButton defaultsButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.setDefaults"));
 		closePanel.add(defaultsButton);
-		ZelCashJButton saveButon = new ZelCashJButton("Save & close");
+		ZelCashJButton saveButon = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.saveandclose"));
 		closePanel.add(saveButon);
 		this.getContentPane().add(closePanel, BorderLayout.SOUTH);
 
@@ -142,12 +152,31 @@ public class ZelCashUIEditDialog
 				tier1Color = TIER1DEFAULT;
 				tier2Color = TIER2DEFAULT;
 				tier3Color = TIER3DEFAULT;
+				textColor = TEXTDEFAULT;
 				color1 = Color.decode(tier1Color);
 				color2 = Color.decode(tier2Color);
 				color3 = Color.decode(tier3Color);
+				colorText = Color.decode(textColor);
 				tierOneColor.setBackground(color1);
 				tierTwoColor.setBackground(color2);
 				tierThreeColor.setBackground(color3);
+				textColorTextField.setForeground(colorText);
+			}
+		});
+		
+		textButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				colorText = JColorChooser.showDialog(ZelCashUIEditDialog.this, "Pick Color", colorText);
+				if(colorText == null) {
+					colorText = Color.decode(textColor);
+				}
+				else {
+					textColor = toHexString(colorText);
+					textColorTextField.setForeground(colorText);
+				}
 			}
 		});
 		
@@ -213,9 +242,9 @@ public class ZelCashUIEditDialog
 	private void addFormField(ZelCashJPanel detailsPanel, String name, JComponent field, ZelCashJButton button)
 	{
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-		JLabel tempLabel = new JLabel(name, JLabel.RIGHT);
+		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new JLabel("Sender identiication T address:").getPreferredSize().width + 10;
+		final int width = new ZelCashJLabel("Sender identiication T address:").getPreferredSize().width + 10;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);
@@ -226,9 +255,9 @@ public class ZelCashUIEditDialog
 	private void addFormField(ZelCashJPanel detailsPanel, String name, JComponent field)
 	{
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-		JLabel tempLabel = new JLabel(name, JLabel.RIGHT);
+		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new JLabel("Sender identiication T address:").getPreferredSize().width + 10;
+		final int width = new ZelCashJLabel("Sender identiication T address:").getPreferredSize().width + 10;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);
@@ -254,6 +283,7 @@ public class ZelCashUIEditDialog
 				Log.info("Lets parse all the ui settings");
 				fis = new FileInputStream(zelcashConf);
 				confProps.load(fis);
+				textColor = confProps.getProperty(ZelCashUI.TEXT_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.TEXT_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR_BLACK; 
 				tier1Color = confProps.getProperty(ZelCashUI.FRAME_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.FRAME_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR; 
 				tier2Color = confProps.getProperty(ZelCashUI.TABLE_HEADER_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.TABLE_HEADER_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR; 
 				tier3Color = confProps.getProperty(ZelCashUI.PROGRESSBAR_FOREGROUND_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.PROGRESSBAR_FOREGROUND_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR; 
@@ -261,6 +291,7 @@ public class ZelCashUIEditDialog
 				color1 = Color.decode(tier1Color);
 				color2 = Color.decode(tier2Color);
 				color3 = Color.decode(tier3Color);
+				colorText = Color.decode(textColor);
 				
 			} finally
 			{
@@ -336,6 +367,7 @@ public class ZelCashUIEditDialog
 				confProps.setProperty(ZelCashUI.TEXTPANE_PROPERTY_COLOR, tier1Color); 
 				confProps.setProperty(ZelCashUI.TOOLTIP_PROPERTY_COLOR, tier1Color); 
 				confProps.setProperty(ZelCashUI.VIEWPORT_PROPERTY_COLOR, tier1Color); 
+				confProps.setProperty(ZelCashUI.TEXT_PROPERTY_COLOR, textColor); 
 				confProps.setProperty(ZelCashUI.CURRENCY, currencyOptions.getSelectedItem().toString());  
 				confProps.store(fr, "Save zelcash_ui.properties file");
 				

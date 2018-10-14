@@ -56,7 +56,6 @@ import java.util.UUID;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -69,6 +68,7 @@ import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJCheckBox;
 import com.cabecinha84.zelcashui.ZelCashJFileChooser;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJProgressBar;
 import com.cabecinha84.zelcashui.ZelCashJScrollPane;
@@ -111,12 +111,12 @@ public class MessagingPanel
 	
 	private JContactListPanel contactList;
 	
-	private JLabel conversationLabel;
+	private ZelCashJLabel conversationLabel;
 	private ZelCashJTextPane conversationTextPane;
 	
 	private ZelCashJTextArea    writeMessageTextArea;
 	private ZelCashJButton      sendButton;
-	private JLabel       sendResultLabel;
+	private ZelCashJLabel       sendResultLabel;
 	private ZelCashJProgressBar sendMessageProgressBar;
 	private ZelCashJCheckBox    sendAnonymously;
 	
@@ -174,9 +174,9 @@ public class MessagingPanel
 		this.conversationTextPane.setContentType("text/html");
 		this.conversationTextPane.addHyperlinkListener(new GroupLinkHandler());
 		ZelCashJPanel upperPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		upperPanel.add(this.conversationLabel = new JLabel(
+		upperPanel.add(this.conversationLabel = new ZelCashJLabel(
 			"<html><span style=\"font-size:1.2em;font-style:italic;\">Conversation ...</span>"));
-		upperPanel.add(new JLabel(
+		upperPanel.add(new ZelCashJLabel(
     			"<html><span style=\"font-size:1.6em;font-style:italic;\">&nbsp;</span>"));
 		upperPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
 		conversationPanel.add(upperPanel, BorderLayout.NORTH);		
@@ -202,7 +202,7 @@ public class MessagingPanel
 					        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 					        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), 
 			BorderLayout.CENTER);
-		JLabel sendLabel = new JLabel("Message to send:");
+		ZelCashJLabel sendLabel = new ZelCashJLabel("Message to send:");
 		MessagingIdentity ownIdentity = this.messagingStorage.getOwnIdentity();
 		if (ownIdentity != null)
 		{
@@ -210,13 +210,13 @@ public class MessagingPanel
 		}
 		sendLabel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		writePanel.add(sendLabel, BorderLayout.NORTH);
-		writePanel.add(new JLabel(""), BorderLayout.EAST); // dummy
+		writePanel.add(new ZelCashJLabel(""), BorderLayout.EAST); // dummy
 		writeAndSendPanel.add(writePanel, BorderLayout.CENTER);
 		
 		ZelCashJPanel sendPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
 		ZelCashJPanel sendButtonPanel = new ZelCashJPanel();
 		sendButtonPanel.setLayout(new BoxLayout(sendButtonPanel, BoxLayout.Y_AXIS));
-		JLabel filler = new JLabel(" ");
+		ZelCashJLabel filler = new ZelCashJLabel(" ");
 		filler.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		sendButtonPanel.add(filler); // filler
 		sendButton = new ZelCashJButton("Send message  \u27A4\u27A4\u27A4");
@@ -230,7 +230,7 @@ public class MessagingPanel
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(sendMessageProgressBar);
 		sendButtonPanel.add(tempPanel);
-		sendResultLabel = new JLabel(
+		sendResultLabel = new ZelCashJLabel(
 				"<html><span style=\"font-size:0.8em;\">" +
 				"Send status: &nbsp;</span>");
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));

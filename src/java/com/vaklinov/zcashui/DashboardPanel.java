@@ -29,7 +29,6 @@
 package com.vaklinov.zcashui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -41,9 +40,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -58,7 +54,6 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
@@ -66,6 +61,7 @@ import javax.swing.Timer;
 import javax.swing.border.EtchedBorder;
 
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJScrollPane;
 import com.cabecinha84.zelcashui.ZelCashPresentationPanel;
@@ -137,23 +133,23 @@ public class DashboardPanel extends WalletTabPanel {
 
 	private ZelCashJPanel upperLogoAndWarningPanel = null;
 
-	private JLabel networkAndBlockchainLabel = null;
-	private JLabel blockchain100PercentLabel = null;
-	private JLabel networkConnectionsIconLabel = null;
+	private ZelCashJLabel networkAndBlockchainLabel = null;
+	private ZelCashJLabel blockchain100PercentLabel = null;
+	private ZelCashJLabel networkConnectionsIconLabel = null;
 
 	private DataGatheringThread<NetworkAndBlockchainInfo> netInfoGatheringThread = null;
 	private ZelCashJPanel blockcahinWarningPanel = null;
-	private JLabel blockcahinWarningLabel = null;
+	private ZelCashJLabel blockcahinWarningLabel = null;
 	private ExchangeRatePanel exchangeRatePanel = null;
 
 	private Boolean walletIsEncrypted = null;
 	private Integer blockchainPercentage = null;
 
 	private String OSInfo = null;
-	private JLabel daemonStatusLabel = null;
+	private ZelCashJLabel daemonStatusLabel = null;
 	private DataGatheringThread<DaemonInfo> daemonInfoGatheringThread = null;
 
-	private JLabel walletBalanceLabel = null;
+	private ZelCashJLabel walletBalanceLabel = null;
 	private DataGatheringThread<WalletBalance> walletBalanceGatheringThread = null;
 
 	private DataGatheringThread<String[][]> transactionGatheringThread = null;
@@ -183,7 +179,7 @@ public class DashboardPanel extends WalletTabPanel {
 		upperLogoAndWarningPanel.setLayout(new BorderLayout(3, 3));
 
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 14, 16));
-		JLabel logoLabel = new JLabel(new ImageIcon(
+		ZelCashJLabel logoLabel = new ZelCashJLabel(new ImageIcon(
 				this.getClass().getClassLoader().getResource("images/ZelCash-yellow.orange-logo-small.png")));
 		logoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		logoLabel.addMouseListener(new MouseAdapter() {
@@ -198,7 +194,7 @@ public class DashboardPanel extends WalletTabPanel {
             }
         });
 		tempPanel.add(logoLabel);
-		JLabel zcLabel = new JLabel(langUtil.getString("panel.dashboard.main.label"));
+		ZelCashJLabel zcLabel = new ZelCashJLabel(langUtil.getString("panel.dashboard.main.label"));
 		tempPanel.add(zcLabel);
 		tempPanel.setToolTipText(langUtil.getString("panel.dashboard.tooltip"));
 		upperLogoAndWarningPanel.add(tempPanel, BorderLayout.WEST);
@@ -208,7 +204,7 @@ public class DashboardPanel extends WalletTabPanel {
 		roundedLeftPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 12, 0));
 		ZelCashJPanel leftInsidePanel = new ZelCashJPanel();
 		leftInsidePanel.setLayout(new BorderLayout(8, 8));
-		leftInsidePanel.add(walletBalanceLabel = new JLabel(), BorderLayout.NORTH);
+		leftInsidePanel.add(walletBalanceLabel = new ZelCashJLabel(), BorderLayout.NORTH);
 		roundedLeftPanel.add(leftInsidePanel);
 		
 		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
@@ -226,18 +222,18 @@ public class DashboardPanel extends WalletTabPanel {
 		ZelCashJPanel installationStatusPanel = new ZelCashJPanel();
 		installationStatusPanel.setLayout(new BorderLayout(3, 3));
 		ZelCashPresentationPanel daemonStatusPanel = new ZelCashPresentationPanel();
-		daemonStatusPanel.add(daemonStatusLabel = new JLabel());
+		daemonStatusPanel.add(daemonStatusLabel = new ZelCashJLabel());
 		installationStatusPanel.add(daemonStatusPanel, BorderLayout.WEST);
 
 		// Build the network and blockchain labels - could be better!
 		ZelCashJPanel netandBCPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		netandBCPanel.setOpaque(false);
-		netandBCPanel.add(networkAndBlockchainLabel = new JLabel(), BorderLayout.CENTER);
+		netandBCPanel.add(networkAndBlockchainLabel = new ZelCashJLabel(), BorderLayout.CENTER);
 		ZelCashJPanel netandBCIconsPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		netandBCIconsPanel.setOpaque(false);
-		this.blockchain100PercentLabel = new JLabel(" ");
+		this.blockchain100PercentLabel = new ZelCashJLabel(" ");
 		netandBCIconsPanel.add(this.blockchain100PercentLabel, BorderLayout.NORTH);
-		this.networkConnectionsIconLabel = new JLabel(" ");
+		this.networkConnectionsIconLabel = new ZelCashJLabel(" ");
 		this.networkConnectionsIconLabel.setIcon(this.connect_0_Icon);
 		netandBCIconsPanel.add(this.networkConnectionsIconLabel, BorderLayout.SOUTH);
 		netandBCPanel.add(netandBCIconsPanel, BorderLayout.EAST);
@@ -525,7 +521,7 @@ public class DashboardPanel extends WalletTabPanel {
 				// Create a new warning panel
 				ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 				ZelCashPresentationPanel warningPanel = new ZelCashPresentationPanel();
-				this.blockcahinWarningLabel = new JLabel(warningText);
+				this.blockcahinWarningLabel = new ZelCashJLabel(warningText);
 				warningPanel.add(this.blockcahinWarningLabel);
 				tempPanel.add(warningPanel);
 				this.blockcahinWarningPanel = tempPanel;
@@ -836,7 +832,7 @@ public class DashboardPanel extends WalletTabPanel {
 		public LatestTransactionsPanel() throws InterruptedException, IOException, WalletCallException {
 			final ZelCashJPanel content = new ZelCashJPanel();
 			content.setLayout(new BorderLayout(3, 3));
-			content.add(new JLabel(langUtil.getString("panel.dashboard.transactions.label")), BorderLayout.NORTH);
+			content.add(new ZelCashJLabel(langUtil.getString("panel.dashboard.transactions.label")), BorderLayout.NORTH);
 			transactionList = new LatestTransactionsList();
 			ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 			tempPanel.add(transactionList, BorderLayout.NORTH);
@@ -956,7 +952,7 @@ public class DashboardPanel extends WalletTabPanel {
 					}
 				}
 
-				JLabel imgLabel = new JLabel();
+				ZelCashJLabel imgLabel = new ZelCashJLabel();
 				imgLabel.setIcon(inOutIcon);
 				this.add(imgLabel);
 
@@ -966,14 +962,14 @@ public class DashboardPanel extends WalletTabPanel {
 								: unConfirmedTXIcon;
 				ImageIcon pubPrivIcon = transactionFeilds[0].contains("Private") ? lockClosedIcon : lockOpenIcon;
 				ZelCashJPanel iconsPanel = new ZelCashJPanel(new BorderLayout(0, 1));
-				iconsPanel.add(new JLabel(pubPrivIcon), BorderLayout.SOUTH);
-				iconsPanel.add(new JLabel(confirmationIcon), BorderLayout.NORTH);
+				iconsPanel.add(new ZelCashJLabel(pubPrivIcon), BorderLayout.SOUTH);
+				iconsPanel.add(new ZelCashJLabel(confirmationIcon), BorderLayout.NORTH);
 				this.add(iconsPanel);
 
-				this.add(new JLabel("<html>&nbsp;</html>"));
+				this.add(new ZelCashJLabel("<html>&nbsp;</html>"));
 
 				// Set the transaction information
-				JLabel transacitonInfo = new JLabel(langUtil.getString("panel.dashboard.transactions.info",
+				ZelCashJLabel transacitonInfo = new ZelCashJLabel(langUtil.getString("panel.dashboard.transactions.info",
 						transactionFeilds[0], transactionFeilds[1], transactionFeilds[2], transactionFeilds[3],
 						transactionFeilds[4], destinationAddress));
 				this.add(transacitonInfo);

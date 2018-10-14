@@ -37,12 +37,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import com.cabecinha84.zelcashui.ZelCashJButton;
 import com.cabecinha84.zelcashui.ZelCashJDialog;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJProgressBar;
 import com.cabecinha84.zelcashui.ZelCashJTextField;
@@ -57,11 +57,11 @@ public class SingleKeyImportDialog
 	protected boolean isOKPressed = false;
 	protected String  key    = null;
 	
-	protected JLabel     keyLabel = null;
+	protected ZelCashJLabel     keyLabel = null;
 	protected ZelCashJTextField keyField = null;
 	
-	protected JLabel upperLabel;
-	protected JLabel lowerLabel;
+	protected ZelCashJLabel upperLabel;
+	protected ZelCashJLabel lowerLabel;
 	
 	protected ZelCashJProgressBar progress = null;
 	
@@ -87,31 +87,31 @@ public class SingleKeyImportDialog
 		controlsPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
-		tempPanel.add(this.upperLabel = new JLabel(
+		tempPanel.add(this.upperLabel = new ZelCashJLabel(
 				langUtil.getString("single.key.import.dialog.tmp.panel")),
 				BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
-		JLabel dividerLabel = new JLabel("   ");
+		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(keyLabel = new JLabel(langUtil.getString("single.key.import.dialog.tmp.panel.key.label")));
+		tempPanel.add(keyLabel = new ZelCashJLabel(langUtil.getString("single.key.import.dialog.tmp.panel.key.label")));
 		tempPanel.add(keyField = new ZelCashJTextField(60));
 		controlsPanel.add(tempPanel);
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 
 		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
-		tempPanel.add(this.lowerLabel = new JLabel(
+		tempPanel.add(this.lowerLabel = new ZelCashJLabel(
 				langUtil.getString("single.key.import.dialog.tmp.panel.key.lower.label")),
 				BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
@@ -127,7 +127,7 @@ public class SingleKeyImportDialog
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
 		okButon = new ZelCashJButton(langUtil.getString("single.key.import.dialog.tmp.panel.ok.button.text"));
 		buttonPanel.add(okButon);
-		buttonPanel.add(new JLabel("   "));
+		buttonPanel.add(new ZelCashJLabel("   "));
 		cancelButon = new ZelCashJButton(langUtil.getString("single.key.import.dialog.tmp.panel.cancel.button.text"));
 		buttonPanel.add(cancelButon);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
