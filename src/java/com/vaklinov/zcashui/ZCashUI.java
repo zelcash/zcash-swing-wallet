@@ -159,26 +159,26 @@ public class ZCashUI
         BackupTracker backupTracker = new BackupTracker(this);
 		LabelStorage labelStorage = new LabelStorage();
         tabs.addTab(langUtil.getString("main.frame.tab.overview.title"),
-        		    new ImageIcon(cl.getResource("images/overview.png")),
+        		    new ImageIcon(cl.getResource("zelcashImages/overview.png")),
         		    dashboard = new DashboardPanel(this, installationObserver, clientCaller, 
         		    		                       errorReporter, backupTracker, labelStorage));
         tabs.addTab(langUtil.getString("main.frame.tab.transactions.title"),
-    		        new ImageIcon(cl.getResource("images/transactions.png")),
+    		        new ImageIcon(cl.getResource("zelcashImages/transactions.png")),
     		        transactionDetailsPanel = new TransactionsDetailPanel(
     		        	this, tabs, installationObserver, clientCaller, 
     		    	    errorReporter, dashboard.getTransactionGatheringThread(), labelStorage));
         this.dashboard.setDetailsPanelForSelection(this.transactionDetailsPanel);
         tabs.addTab(langUtil.getString("main.frame.tab.own.address.title"),
-        		    new ImageIcon(cl.getResource("images/own-addresses.png")),
+        		    new ImageIcon(cl.getResource("zelcashImages/own-addresses.png")),
         		    addresses = new AddressesPanel(this, clientCaller, errorReporter, labelStorage, installationObserver));
         tabs.addTab(langUtil.getString("main.frame.tab.send.cash.title"),
-        		    new ImageIcon(cl.getResource("images/send.png")),
+        		    new ImageIcon(cl.getResource("zelcashImages/send.png")),
         		    sendPanel = new SendCashPanel(clientCaller, errorReporter, installationObserver, backupTracker));
         tabs.addTab(langUtil.getString("main.frame.tab.address.book.title"),
-    		        new ImageIcon(cl.getResource("images/address-book.png")),
+    		        new ImageIcon(cl.getResource("zelcashImages/address-book.png")),
     		        addressBookPanel = new AddressBookPanel(sendPanel, tabs, labelStorage));
         tabs.addTab(langUtil.getString("main.frame.tab.messaging.title"),
-		            new ImageIcon(cl.getResource("images/messaging.png")),
+		            new ImageIcon(cl.getResource("zelcashImages/messaging.png")),
 		            messagingPanel = new MessagingPanel(this, sendPanel, tabs, clientCaller, errorReporter, labelStorage));
         contentPane.add(tabs);
 
