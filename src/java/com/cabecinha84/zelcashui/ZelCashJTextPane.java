@@ -6,7 +6,7 @@ import javax.swing.JTextPane;
 import javax.swing.text.StyledDocument;
 
 public class ZelCashJTextPane extends JTextPane {
-	private static Color backGroundColor = ZelCashUI.textpane;
+	private Color backGroundColor = ZelCashUI.textpane;
 	public ZelCashJTextPane() {
 		super();
 		this.setBackground(backGroundColor);

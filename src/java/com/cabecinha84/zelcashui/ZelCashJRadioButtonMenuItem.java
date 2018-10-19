@@ -7,7 +7,7 @@ import javax.swing.Icon;
 import javax.swing.JRadioButtonMenuItem;
 
 public class ZelCashJRadioButtonMenuItem extends JRadioButtonMenuItem {
-	private static Color backGroundColor = ZelCashUI.radiobutton;
+	private Color backGroundColor = ZelCashUI.radiobutton;
 
 	public ZelCashJRadioButtonMenuItem() {
 		super();

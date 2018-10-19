@@ -7,8 +7,8 @@ import javax.swing.Icon;
 import javax.swing.JCheckBox;
 
 public class ZelCashJCheckBox extends JCheckBox {
-	private static Color backGroundColor = ZelCashUI.checkbox;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.checkbox;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJCheckBox() {
 		super();
 		this.setBackground(backGroundColor);

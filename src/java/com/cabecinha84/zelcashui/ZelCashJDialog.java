@@ -9,7 +9,7 @@ import java.awt.Window;
 import javax.swing.JDialog;
 
 public class ZelCashJDialog extends JDialog {
-	private static Color backGroundColor = ZelCashUI.dialog;
+	private Color backGroundColor = ZelCashUI.dialog;
 	public ZelCashJDialog() {
 		super();
 		this.setBackground(backGroundColor);

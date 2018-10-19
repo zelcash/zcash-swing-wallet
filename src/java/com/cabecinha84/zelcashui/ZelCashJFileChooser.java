@@ -10,8 +10,8 @@ import javax.swing.filechooser.FileSystemView;
 
 
 public class ZelCashJFileChooser extends JFileChooser {
-	private static Color backGroundColor = ZelCashUI.filechooser;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.filechooser;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJFileChooser() {
 		super();
 		this.setBackground(backGroundColor);

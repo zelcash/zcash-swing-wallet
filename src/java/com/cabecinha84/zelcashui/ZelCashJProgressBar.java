@@ -6,8 +6,8 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.JProgressBar;
 
 public class ZelCashJProgressBar extends JProgressBar {
-	private static Color backGroundColor = ZelCashUI.progressbar;
-	private static Color foreGroundColor = ZelCashUI.progressbarForeground;
+	private Color backGroundColor = ZelCashUI.progressbar;
+	private Color foreGroundColor = ZelCashUI.progressbarForeground;
 	public ZelCashJProgressBar() {
 		super();
 		this.setBackground(backGroundColor);

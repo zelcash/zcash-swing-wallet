@@ -10,8 +10,8 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 
 public class ZelCashPresentationPanel extends ZelCashJPanel {
-	static final Color  colorBorder = ZelCashUI.presentationpanelBorder;
-	static final Color  backGroundColor    = ZelCashUI.presentationpanel;
+	private Color  colorBorder = ZelCashUI.presentationpanelBorder;
+	private Color  backGroundColor    = ZelCashUI.presentationpanel;
 	static final int GRADIENT_EXTENT = 17;
 
 	static final Stroke edgeStroke  = new BasicStroke(1);

@@ -116,6 +116,7 @@ public class ZelCashUI {
     	
     	javax.swing.UIManager.put("Menu.selectionBackground", ZelCashUI.menuSelection);
     	javax.swing.UIManager.put("MenuItem.selectionBackground", ZelCashUI.menuitemSelection);
+    	javax.swing.UIManager.put("MenuBar.selectionBackground", ZelCashUI.menuitemSelection);
     	javax.swing.UIManager.put("Button.select", ZelCashUI.buttonSelect);
     	javax.swing.UIManager.put("CheckBox.select", ZelCashUI.checkboxSelect);
     	javax.swing.UIManager.put("ScrollBar.thumb", ZelCashUI.scrollbarThumb);
@@ -123,6 +124,9 @@ public class ZelCashUI {
 		javax.swing.UIManager.put("ScrollBar.background", ZelCashUI.scrollbar);
 		javax.swing.UIManager.put("ColorChooser.background", ZelCashUI.colorChooser);
 		javax.swing.UIManager.put("ColorChooser.swatchesDefaultRecentColor", ZelCashUI.colorChooser);
+		javax.swing.UIManager.put("Focus.color", ZelCashUI.viewport);
+		javax.swing.UIManager.put("Slider.focus", ZelCashUI.viewport);
+		javax.swing.UIManager.put("Button.focus", ZelCashUI.viewport);
 		
 		Log.info("Finished loading ZelCashUI");
 	}

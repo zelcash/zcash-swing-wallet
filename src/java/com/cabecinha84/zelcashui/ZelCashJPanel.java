@@ -6,7 +6,7 @@ import java.awt.LayoutManager;
 import javax.swing.JPanel;
 
 public class ZelCashJPanel extends JPanel {
-	private static Color backGroundColor = ZelCashUI.panel;
+	private Color backGroundColor = ZelCashUI.panel;
 	public ZelCashJPanel() {
 		super();
 		this.setBackground(backGroundColor);

@@ -7,8 +7,8 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 
 public class ZelCashJButton extends JButton {
-	private static Color backGroundColor = ZelCashUI.button;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.button;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJButton() {
 		super();
 		this.setBackground(backGroundColor);

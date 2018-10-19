@@ -9,9 +9,9 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 public class ZelCashJTable extends JTable {
-	private static Color backGroundColor = ZelCashUI.table;
-	private static Color headerBackGroundColor = ZelCashUI.tableHeader;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.table;
+	private Color headerBackGroundColor = ZelCashUI.tableHeader;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJTable() {
 		super();
 		this.setBackground(backGroundColor);

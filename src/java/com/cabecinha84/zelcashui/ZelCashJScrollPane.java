@@ -6,7 +6,7 @@ import java.awt.Component;
 import javax.swing.JScrollPane;
 
 public class ZelCashJScrollPane extends JScrollPane {
-	private static Color backGroundColor = ZelCashUI.scrollpane;
+	private Color backGroundColor = ZelCashUI.scrollpane;
 	public ZelCashJScrollPane() {
 		super();
 		this.setBackground(backGroundColor);

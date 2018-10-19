@@ -5,8 +5,8 @@ import java.awt.Color;
 import javax.swing.JMenuBar;
 
 public class ZelCashJMenuBar extends JMenuBar {
-	private static Color backGroundColor = ZelCashUI.menubar;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.menubar;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJMenuBar() {
 		super();
 		this.setBackground(backGroundColor);

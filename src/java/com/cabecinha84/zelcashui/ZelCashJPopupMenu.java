@@ -5,7 +5,7 @@ import java.awt.Color;
 import javax.swing.JPopupMenu;
 
 public class ZelCashJPopupMenu extends JPopupMenu {
-	private static Color backGroundColor = ZelCashUI.popupmenu;
+	private Color backGroundColor = ZelCashUI.popupmenu;
 	public ZelCashJPopupMenu() {
 		super();
 		this.setBackground(backGroundColor);

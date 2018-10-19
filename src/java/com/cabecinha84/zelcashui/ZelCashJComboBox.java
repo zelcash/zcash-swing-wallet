@@ -7,8 +7,8 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 
 public class ZelCashJComboBox<T> extends JComboBox {
-	private static Color backGroundColor = ZelCashUI.combobox;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.combobox;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJComboBox() {
 		super();
 		this.setBackground(backGroundColor);

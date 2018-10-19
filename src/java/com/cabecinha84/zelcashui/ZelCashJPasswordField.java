@@ -6,8 +6,8 @@ import javax.swing.JPasswordField;
 import javax.swing.text.Document;
 
 public class ZelCashJPasswordField extends JPasswordField {
-	private static Color backGroundColor = ZelCashUI.passwordfield;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.passwordfield;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJPasswordField() {
 		super();
 		this.setBackground(backGroundColor);

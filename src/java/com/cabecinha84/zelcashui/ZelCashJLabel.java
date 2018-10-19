@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 
 public class ZelCashJLabel extends JLabel {
 
-	private static Color textColor = ZelCashUI.text;
+	private Color textColor = ZelCashUI.text;
 	
 	public ZelCashJLabel() {
 		super();

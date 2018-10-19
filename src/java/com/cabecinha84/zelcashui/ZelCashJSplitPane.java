@@ -6,7 +6,7 @@ import java.awt.Component;
 import javax.swing.JSplitPane;
 
 public class ZelCashJSplitPane extends JSplitPane {
-	private static Color backGroundColor = ZelCashUI.splitpane;
+	private Color backGroundColor = ZelCashUI.splitpane;
 	public ZelCashJSplitPane() {
 		super();
 		this.setBackground(backGroundColor);

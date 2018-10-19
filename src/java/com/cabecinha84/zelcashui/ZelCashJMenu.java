@@ -6,8 +6,8 @@ import javax.swing.Action;
 import javax.swing.JMenu;
 
 public class ZelCashJMenu extends JMenu {
-	private static Color backGroundColor = ZelCashUI.menu;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.menu;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJMenu() {
 		super();
 		this.setBackground(backGroundColor);

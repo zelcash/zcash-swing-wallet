@@ -6,8 +6,8 @@ import javax.swing.JTextField;
 import javax.swing.text.Document;
 
 public class ZelCashJTextField extends JTextField {
-	private static Color backGroundColor = ZelCashUI.textarea;
-	private static Color textColor = ZelCashUI.text;
+	private Color backGroundColor = ZelCashUI.textarea;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJTextField() {
 		super();
 		this.setBackground(backGroundColor);

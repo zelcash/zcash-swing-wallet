@@ -6,7 +6,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.Document;
 
 public class ZelCashJTextArea extends JTextArea {
-	private static Color backGroundColor = ZelCashUI.textarea;
+	private Color backGroundColor = ZelCashUI.textarea;
 	public ZelCashJTextArea() {
 		super();
 		this.setBackground(backGroundColor);

@@ -7,7 +7,7 @@ import java.awt.HeadlessException;
 import javax.swing.JFrame;
 
 public class ZelCashJFrame extends JFrame {
-	private static Color backGroundColor = ZelCashUI.frame;
+	private Color backGroundColor = ZelCashUI.frame;
 	public ZelCashJFrame() throws HeadlessException {
 		super();
 		this.setBackground(backGroundColor);
