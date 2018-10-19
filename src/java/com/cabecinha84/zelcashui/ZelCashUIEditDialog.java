@@ -162,6 +162,10 @@ public class ZelCashUIEditDialog
 					ZelCashUIEditDialog.this.parentFrame = z;	
 					ZelCashUIEditDialog.this.parentFrame.repaint();
 					ZelCashUIEditDialog.this.parentFrame.setVisible(true);
+					ZelCashUIEditDialog dialog = new ZelCashUIEditDialog(ZelCashUIEditDialog.this.parentFrame);
+					ZelCashUIEditDialog.this.setVisible(false);
+					ZelCashUIEditDialog.this.dispose();
+					dialog.setVisible(true);
 				}
 				catch (WalletCallException wce)
 		        {
@@ -239,6 +243,10 @@ public class ZelCashUIEditDialog
 					ZelCashUIEditDialog.this.parentFrame = z;	
 					ZelCashUIEditDialog.this.parentFrame.repaint();
 					ZelCashUIEditDialog.this.parentFrame.setVisible(true);
+					ZelCashUIEditDialog dialog = new ZelCashUIEditDialog(ZelCashUIEditDialog.this.parentFrame);
+					ZelCashUIEditDialog.this.setVisible(false);
+					ZelCashUIEditDialog.this.dispose();
+					dialog.setVisible(true);
 				}
 				catch (WalletCallException wce)
 		        {
