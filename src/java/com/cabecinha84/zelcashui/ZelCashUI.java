@@ -111,7 +111,7 @@ public class ZelCashUI {
     	javax.swing.UIManager.put("ScrollPane.background", ZelCashUI.scrollpane);
     	javax.swing.UIManager.put("SplitPane.background", ZelCashUI.splitpane);
     	javax.swing.UIManager.put("TabbedPane.unselectedTabBackground", ZelCashUI.tabbedpaneUnselected);
-    	javax.swing.UIManager.put("TabbedPane.focus", ZelCashUI.viewport);
+    	javax.swing.UIManager.put("TabbedPane.focus", ZelCashUI.tabbedpane);
     	javax.swing.UIManager.put("Viewport.background", ZelCashUI.viewport);
     	javax.swing.UIManager.put("ToolTip.background", ZelCashUI.tooltip);
     	
