@@ -127,6 +127,14 @@ public class ZelCashUI {
 		javax.swing.UIManager.put("Focus.color", ZelCashUI.viewport);
 		javax.swing.UIManager.put("Slider.focus", ZelCashUI.viewport);
 		javax.swing.UIManager.put("Button.focus", ZelCashUI.viewport);
+		javax.swing.UIManager.put("OptionPane.background",ZelCashUI.viewport);
+		javax.swing.UIManager.put("OptionPane.foreground",ZelCashUI.text);
+		javax.swing.UIManager.put("OptionPane.messageForeground",ZelCashUI.text);
+		javax.swing.UIManager.put("Button.background",ZelCashUI.button);
+		javax.swing.UIManager.put("Button.foreground",ZelCashUI.text);
+		javax.swing.UIManager.put("Panel.background",ZelCashUI.panel);
+		javax.swing.UIManager.put("Panel.foreground",ZelCashUI.text);
+			
 		
 		Log.info("Finished loading ZelCashUI");
 	}
