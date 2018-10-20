@@ -281,7 +281,8 @@ public class ZCashUI
         //languageMenu.add(italian);
         languageMenu.add(english);
 
-        mb.add(languageMenu);
+        //Temporarily disabled till translations are completed
+        //mb.add(languageMenu);
 
         this.setJMenuBar(mb);
 
