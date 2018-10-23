@@ -105,9 +105,9 @@ public class JContactListPanel
 		upperPanel.add(new ZelCashJLabel(
 			"<html><span style=\"font-size:1.2em;font-style:italic;\">Contact list: &nbsp;</span></html>"),
 			BorderLayout.WEST);
-		URL addIconUrl = this.getClass().getClassLoader().getResource("images/add12.png");
+		URL addIconUrl = this.getClass().getClassLoader().getResource("zelcashImages/add12.png");
         ImageIcon addIcon = new ImageIcon(addIconUrl);
-        URL removeIconUrl = this.getClass().getClassLoader().getResource("images/remove12.png");
+        URL removeIconUrl = this.getClass().getClassLoader().getResource("zelcashImages/remove12.png");
         ImageIcon removeIcon = new ImageIcon(removeIconUrl);
         ZelCashJButton addButton = new ZelCashJButton(addIcon);
         addButton.setToolTipText("Add contact...");

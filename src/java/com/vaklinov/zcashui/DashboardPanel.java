@@ -82,31 +82,31 @@ import com.vaklinov.zcashui.ZCashInstallationObserver.DaemonInfo;
 public class DashboardPanel extends WalletTabPanel {
 	// Static icon resources
 	private static ImageIcon inputTransactionIcon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/tx_input.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/tx_input.png"));
 	private static ImageIcon outputTransactionIcon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/tx_output.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/tx_output.png"));
 	private static ImageIcon inoutTransactionIcon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/tx_inout.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/tx_inout.png"));
 	private static ImageIcon minedTransactionIcon = new ImageIcon(
 			DashboardPanel.class.getClassLoader().getResource("images/tx_mined.png"));
 	private static ImageIcon unConfirmedTXIcon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/tr_unconfirmed.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/tr_unconfirmed.png"));
 	private static ImageIcon confirmedTXIcon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/tr_confirmed.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/tr_confirmed.png"));
 	private static ImageIcon lockClosedIcon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/lock_closed_s.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/lock_closed_s.png"));
 	private static ImageIcon lockOpenIcon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/lock_opengreen_s.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/lock_opengreen_s.png"));
 	private static ImageIcon connect_0_Icon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/connect0_16.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/connect0_16.png"));
 	private static ImageIcon connect_1_Icon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/connect1_16.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/connect1_16.png"));
 	private static ImageIcon connect_2_Icon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/connect2_16.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/connect2_16.png"));
 	private static ImageIcon connect_3_Icon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/connect3_16.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/connect3_16.png"));
 	private static ImageIcon connect_4_Icon = new ImageIcon(
-			DashboardPanel.class.getClassLoader().getResource("images/connect4_16.png"));
+			DashboardPanel.class.getClassLoader().getResource("zelcashImages/connect4_16.png"));
 
 	// Confirmation symbols
 	private static String confirmedSymbol = "\u2690";
