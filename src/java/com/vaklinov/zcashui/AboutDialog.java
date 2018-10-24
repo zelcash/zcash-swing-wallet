@@ -31,31 +31,28 @@ package com.vaklinov.zcashui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
+
+import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJDialog;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
 
 
 /**
  * Typical about box stuff...
  */
 public class AboutDialog
-	extends JDialog
+	extends ZelCashJDialog
 {
-	public AboutDialog(JFrame parent)
+	public AboutDialog(ZelCashJFrame parent)
 		throws UnsupportedEncodingException
 	{
 		LanguageUtil langUtil = LanguageUtil.instance();
@@ -66,12 +63,12 @@ public class AboutDialog
 		this.setModal(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		JTabbedPane tabs = new JTabbedPane();
+		ZelCashJTabbedPane tabs = new ZelCashJTabbedPane();
 
-		JPanel copyrigthPanel = new JPanel();
+		ZelCashJPanel copyrigthPanel = new ZelCashJPanel();
 		copyrigthPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		copyrigthPanel.setLayout(new BorderLayout(3, 3));
-		JLabel copyrightLabel = new JLabel();
+		ZelCashJLabel copyrightLabel = new ZelCashJLabel();
 		
 		copyrightLabel.setText(langUtil.getString("dialog.about.front.text"));
 		copyrightLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -79,10 +76,10 @@ public class AboutDialog
 				
 		tabs.add(langUtil.getString("dialog.about.tab.title"), copyrigthPanel);
 
-		JPanel licensePanel = new JPanel();
+		ZelCashJPanel licensePanel = new ZelCashJPanel();
 		licensePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		licensePanel.setLayout(new BorderLayout(3, 3));
-		JLabel licenseLabel = new JLabel();
+		ZelCashJLabel licenseLabel = new ZelCashJLabel();
 		licenseLabel.setText(langUtil.getString("dialog.about.licence"));
 		licenseLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		licensePanel.add(licenseLabel, BorderLayout.NORTH);
@@ -92,9 +89,9 @@ public class AboutDialog
 		this.getContentPane().setLayout(new BorderLayout(0, 0));
 		this.getContentPane().add(tabs, BorderLayout.NORTH);
 
-		JPanel closePanel = new JPanel();
+		ZelCashJPanel closePanel = new ZelCashJPanel();
 		closePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
-		JButton closeButon = new JButton(langUtil.getString("dialog.about.button.close.text"));
+		ZelCashJButton closeButon = new ZelCashJButton(langUtil.getString("dialog.about.button.close.text"));
 		closePanel.add(closeButon);
 		this.getContentPane().add(closePanel, BorderLayout.SOUTH);
 

@@ -31,11 +31,11 @@ package com.vaklinov.zcashui;
 
 import java.awt.Font;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
+import com.cabecinha84.zelcashui.ZelCashJPasswordField;
 
 
 /**
@@ -44,22 +44,22 @@ import javax.swing.JTextField;
 public class PasswordEncryptionDialog
 	extends PasswordDialog
 {
-	protected JTextField passwordConfirmationField = null;
+	protected ZelCashJPasswordField passwordConfirmationField = null;
 
 	private LanguageUtil langUtil;
 	
-	public PasswordEncryptionDialog(JFrame parent)
+	public PasswordEncryptionDialog(ZelCashJFrame parent)
 	{
 		super(parent);
 		langUtil = LanguageUtil.instance();
 		this.upperLabel.setText(langUtil.getString("dialog.password.encryption.upper.label.text"));
 		
-		JLabel confLabel = new JLabel(langUtil.getString("dialog.password.encryption.confirmation.label.text"));
+		ZelCashJLabel confLabel = new ZelCashJLabel(langUtil.getString("dialog.password.encryption.confirmation.label.text"));
 		this.freeSlotPanel.add(confLabel);
-		this.freeSlotPanel.add(passwordConfirmationField = new JPasswordField(30));
+		this.freeSlotPanel.add(passwordConfirmationField = new ZelCashJPasswordField(30));
 		this.passwordLabel.setPreferredSize(confLabel.getPreferredSize());
 		
-		JLabel dividerLabel = new JLabel("   ");
+		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		this.freeSlotPanel2.add(dividerLabel);
 		

@@ -46,17 +46,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.border.EtchedBorder;
+
+import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJDialog;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
+import com.cabecinha84.zelcashui.ZelCashJMenuItem;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJScrollPane;
 
 //TODO
 
@@ -67,13 +69,13 @@ public class TransactionTable
 	extends DataTable 
 {	
 	public TransactionTable(final Object[][] rowData, final Object[] columnNames, 
-			                final JFrame parent, final ZCashClientCaller caller,
+			                final ZelCashJFrame parent, final ZCashClientCaller caller,
 			                final ZCashInstallationObserver installationObserver)
 	{
 		super(rowData, columnNames);
 		int accelaratorKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		final LanguageUtil langUtil = LanguageUtil.instance();
-		JMenuItem showDetails = new JMenuItem("Show details...");
+		ZelCashJMenuItem showDetails = new ZelCashJMenuItem("Show details...");
 		showDetails.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelaratorKeyMask));
         popupMenu.add(showDetails);
         
@@ -108,7 +110,7 @@ public class TransactionTable
 		});
         
         
-		JMenuItem showInExplorer = new JMenuItem(langUtil.getString("transactions.table.show.in.explorer"));
+        ZelCashJMenuItem showInExplorer = new ZelCashJMenuItem(langUtil.getString("transactions.table.show.in.explorer"));
 		showInExplorer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelaratorKeyMask));
         popupMenu.add(showInExplorer);
         
@@ -145,7 +147,7 @@ public class TransactionTable
 			}
 		});
 		
-        JMenuItem showMemoField = new JMenuItem(langUtil.getString("transactions.table.memo.field"));
+        ZelCashJMenuItem showMemoField = new ZelCashJMenuItem(langUtil.getString("transactions.table.memo.field"));
         showMemoField.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, accelaratorKeyMask));
 	    popupMenu.add(showMemoField);
     
@@ -230,9 +232,9 @@ public class TransactionTable
 	
 	
 	private static class DetailsDialog
-		extends JDialog
+		extends ZelCashJDialog
 	{
-		public DetailsDialog(JFrame parent, Map<String, String> details)
+		public DetailsDialog(ZelCashJFrame parent, Map<String, String> details)
 			throws UnsupportedEncodingException
 		{
 			LanguageUtil langUtil = LanguageUtil.instance();
@@ -245,9 +247,9 @@ public class TransactionTable
 			
 			this.getContentPane().setLayout(new BorderLayout(0, 0));
 			
-			JPanel tempPanel = new JPanel(new BorderLayout(0, 0));
+			ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 			tempPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-			JLabel infoLabel = new JLabel(
+			ZelCashJLabel infoLabel = new ZelCashJLabel(
 					langUtil.getString("transaction.table.details.dialog.info.label"));
 			infoLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			tempPanel.add(infoLabel, BorderLayout.CENTER);
@@ -286,15 +288,15 @@ public class TransactionTable
 			table.getColumnModel().getColumn(0).setPreferredWidth(200);
 			table.getColumnModel().getColumn(1).setPreferredWidth(maxPreferredWidht);
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-			JScrollPane tablePane = new JScrollPane(
+			ZelCashJScrollPane tablePane = new ZelCashJScrollPane(
 				table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			
 			this.getContentPane().add(tablePane, BorderLayout.CENTER);
 
 			// Lower close button
-			JPanel closePanel = new JPanel();
+			ZelCashJPanel closePanel = new ZelCashJPanel();
 			closePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
-			JButton closeButon = new JButton(langUtil.getString("transaction.table.details.dialog.button.close"));
+			ZelCashJButton closeButon = new ZelCashJButton(langUtil.getString("transaction.table.details.dialog.button.close"));
 			closePanel.add(closeButon);
 			this.getContentPane().add(closePanel, BorderLayout.SOUTH);
 

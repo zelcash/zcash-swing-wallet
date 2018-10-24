@@ -44,15 +44,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.cabecinha84.zelcashui.AppLock;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJMenu;
+import com.cabecinha84.zelcashui.ZelCashJMenuBar;
+import com.cabecinha84.zelcashui.ZelCashJMenuItem;
+import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
+import com.cabecinha84.zelcashui.ZelCashUI;
+import com.cabecinha84.zelcashui.ZelCashUIEditDialog;
 import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 import com.vaklinov.zcashui.ZCashClientCaller.NetworkAndBlockchainInfo;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
@@ -66,7 +81,7 @@ import com.vaklinov.zcashui.msg.MessagingPanel;
  * Main ZelCash Window.
  */
 public class ZCashUI
-    extends JFrame
+    extends ZelCashJFrame
 {
     private ZCashInstallationObserver installationObserver;
     private ZCashClientCaller         clientCaller;
@@ -74,22 +89,23 @@ public class ZCashUI
 
     private WalletOperations walletOps;
 
-    private JMenuItem menuItemExit;
-    private JMenuItem menuItemAbout;
-    private JMenuItem menuItemEncrypt;
-    private JMenuItem menuItemBackup;
-    private JMenuItem menuItemExportKeys;
-    private JMenuItem menuItemImportKeys;
-    private JMenuItem menuItemShowPrivateKey;
-    private JMenuItem menuItemImportOnePrivateKey;
-    private JMenuItem menuItemOwnIdentity;
-    private JMenuItem menuItemExportOwnIdentity;
-    private JMenuItem menuItemImportContactIdentity;
-    private JMenuItem menuItemAddMessagingGroup;
-    private JMenuItem menuItemRemoveContactIdentity;
-    private JMenuItem menuItemMessagingOptions;
-    private JMenuItem menuItemShareFileViaIPFS;
-    private JMenuItem menuItemExportToArizen;
+    private ZelCashJMenuItem menuItemExit;
+    private ZelCashJMenuItem menuItemAbout;
+    private ZelCashJMenuItem menuItemZelcashUI;
+    private ZelCashJMenuItem menuItemEncrypt;
+    private ZelCashJMenuItem menuItemBackup;
+    private ZelCashJMenuItem menuItemExportKeys;
+    private ZelCashJMenuItem menuItemImportKeys;
+    private ZelCashJMenuItem menuItemShowPrivateKey;
+    private ZelCashJMenuItem menuItemImportOnePrivateKey;
+    private ZelCashJMenuItem menuItemOwnIdentity;
+    private ZelCashJMenuItem menuItemExportOwnIdentity;
+    private ZelCashJMenuItem menuItemImportContactIdentity;
+    private ZelCashJMenuItem menuItemAddMessagingGroup;
+    private ZelCashJMenuItem menuItemRemoveContactIdentity;
+    private ZelCashJMenuItem menuItemMessagingOptions;
+    private ZelCashJMenuItem menuItemShareFileViaIPFS;
+    private ZelCashJMenuItem menuItemExportToArizen;
 
     private DashboardPanel   dashboard;
     private TransactionsDetailPanel transactionDetailsPanel;
@@ -98,13 +114,16 @@ public class ZCashUI
     private AddressBookPanel addressBookPanel;
     private MessagingPanel   messagingPanel;
     private LanguageUtil langUtil;
+    
+    private static File walletLock;
+    private static FileChannel channel;
+    private static FileLock lock;
 
-    JTabbedPane tabs;
+    ZelCashJTabbedPane tabs;
 
     public ZCashUI(StartupProgressDialog progressDialog)
         throws IOException, InterruptedException, WalletCallException
     {
-
         langUtil = LanguageUtil.instance();
 
         this.setTitle(langUtil.getString("main.frame.title"));
@@ -114,12 +133,13 @@ public class ZCashUI
         	progressDialog.setProgressText(langUtil.getString("main.frame.progressbar"));
         }
         
+        
         ClassLoader cl = this.getClass().getClassLoader();
 
         this.setIconImage(new ImageIcon(cl.getResource("images/ZelCash-yellow.orange-logo.png")).getImage());
 
         Container contentPane = this.getContentPane();
-
+        contentPane.setBackground(ZelCashUI.container);
         errorReporter = new StatusUpdateErrorReporter(this);
         installationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
         clientCaller = new ZCashClientCaller(OSUtil.getProgramDirectory());
@@ -130,33 +150,33 @@ public class ZCashUI
         }
 
         // Build content
-        tabs = new JTabbedPane();
+        tabs = new ZelCashJTabbedPane();
         Font oldTabFont = tabs.getFont();
         Font newTabFont  = new Font(oldTabFont.getName(), Font.BOLD | Font.ITALIC, oldTabFont.getSize() * 57 / 50);
         tabs.setFont(newTabFont);
         BackupTracker backupTracker = new BackupTracker(this);
 		LabelStorage labelStorage = new LabelStorage();
         tabs.addTab(langUtil.getString("main.frame.tab.overview.title"),
-        		    new ImageIcon(cl.getResource("images/overview.png")),
+        		    new ImageIcon(cl.getResource("zelcashImages/overview.png")),
         		    dashboard = new DashboardPanel(this, installationObserver, clientCaller, 
         		    		                       errorReporter, backupTracker, labelStorage));
         tabs.addTab(langUtil.getString("main.frame.tab.transactions.title"),
-    		        new ImageIcon(cl.getResource("images/transactions.png")),
+    		        new ImageIcon(cl.getResource("zelcashImages/transactions.png")),
     		        transactionDetailsPanel = new TransactionsDetailPanel(
     		        	this, tabs, installationObserver, clientCaller, 
     		    	    errorReporter, dashboard.getTransactionGatheringThread(), labelStorage));
         this.dashboard.setDetailsPanelForSelection(this.transactionDetailsPanel);
         tabs.addTab(langUtil.getString("main.frame.tab.own.address.title"),
-        		    new ImageIcon(cl.getResource("images/own-addresses.png")),
+        		    new ImageIcon(cl.getResource("zelcashImages/own-addresses.png")),
         		    addresses = new AddressesPanel(this, clientCaller, errorReporter, labelStorage, installationObserver));
         tabs.addTab(langUtil.getString("main.frame.tab.send.cash.title"),
-        		    new ImageIcon(cl.getResource("images/send.png")),
+        		    new ImageIcon(cl.getResource("zelcashImages/send.png")),
         		    sendPanel = new SendCashPanel(clientCaller, errorReporter, installationObserver, backupTracker));
         tabs.addTab(langUtil.getString("main.frame.tab.address.book.title"),
-    		        new ImageIcon(cl.getResource("images/address-book.png")),
+    		        new ImageIcon(cl.getResource("zelcashImages/address-book.png")),
     		        addressBookPanel = new AddressBookPanel(sendPanel, tabs, labelStorage));
         tabs.addTab(langUtil.getString("main.frame.tab.messaging.title"),
-		            new ImageIcon(cl.getResource("images/messaging.png")),
+		            new ImageIcon(cl.getResource("zelcashImages/messaging.png")),
 		            messagingPanel = new MessagingPanel(this, sendPanel, tabs, clientCaller, errorReporter, labelStorage));
         contentPane.add(tabs);
 
@@ -165,56 +185,58 @@ public class ZCashUI
             	installationObserver, clientCaller, errorReporter, backupTracker);        
 
         // Build menu
-        JMenuBar mb = new JMenuBar();
-        JMenu file = new JMenu(langUtil.getString("menu.label.main"));
+        ZelCashJMenuBar mb = new ZelCashJMenuBar();
+        ZelCashJMenu file = new ZelCashJMenu(langUtil.getString("menu.label.main"));
         file.setMnemonic(KeyEvent.VK_M);
         int accelaratorKeyMask = Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask();
-        file.add(menuItemAbout = new JMenuItem(langUtil.getString("menu.label.about"), KeyEvent.VK_T));
+        file.add(menuItemZelcashUI = new ZelCashJMenuItem(langUtil.getString("menu.label.zelcashui"), KeyEvent.VK_Z));
+        menuItemZelcashUI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelaratorKeyMask));
+        file.add(menuItemAbout = new ZelCashJMenuItem(langUtil.getString("menu.label.about"), KeyEvent.VK_T));
         menuItemAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, accelaratorKeyMask));
         file.addSeparator();
-        file.add(menuItemExit = new JMenuItem(langUtil.getString("menu.label.quit"), KeyEvent.VK_Q));
+        file.add(menuItemExit = new ZelCashJMenuItem(langUtil.getString("menu.label.quit"), KeyEvent.VK_Q));
         menuItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, accelaratorKeyMask));
         mb.add(file);
 
-        JMenu wallet = new JMenu(langUtil.getString("menu.label.wallet"));
+        ZelCashJMenu wallet = new ZelCashJMenu(langUtil.getString("menu.label.wallet"));
         wallet.setMnemonic(KeyEvent.VK_W);
-        wallet.add(menuItemBackup = new JMenuItem(langUtil.getString("menu.label.backup"), KeyEvent.VK_B));
+        wallet.add(menuItemBackup = new ZelCashJMenuItem(langUtil.getString("menu.label.backup"), KeyEvent.VK_B));
         menuItemBackup.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, accelaratorKeyMask));
         // Encryption menu item is hidden since encryption is not possible
-        //wallet.add(menuItemEncrypt = new JMenuItem(langUtil.getString("menu.label.encrypt"), KeyEvent.VK_E));
+        //wallet.add(menuItemEncrypt = new ZelCashJMenuItem(langUtil.getString("menu.label.encrypt"), KeyEvent.VK_E));
         //menuItemEncrypt.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelaratorKeyMask));
-        wallet.add(menuItemExportKeys = new JMenuItem(langUtil.getString("menu.label.export.private.keys"), KeyEvent.VK_K));
+        wallet.add(menuItemExportKeys = new ZelCashJMenuItem(langUtil.getString("menu.label.export.private.keys"), KeyEvent.VK_K));
         menuItemExportKeys.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, accelaratorKeyMask));
-        wallet.add(menuItemImportKeys = new JMenuItem(langUtil.getString("menu.label.import.private.keys"), KeyEvent.VK_I));
+        wallet.add(menuItemImportKeys = new ZelCashJMenuItem(langUtil.getString("menu.label.import.private.keys"), KeyEvent.VK_I));
         menuItemImportKeys.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, accelaratorKeyMask));
-        wallet.add(menuItemShowPrivateKey = new JMenuItem(langUtil.getString("menu.label.show.private.key"), KeyEvent.VK_P));
+        wallet.add(menuItemShowPrivateKey = new ZelCashJMenuItem(langUtil.getString("menu.label.show.private.key"), KeyEvent.VK_P));
         menuItemShowPrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelaratorKeyMask));
-        wallet.add(menuItemImportOnePrivateKey = new JMenuItem(langUtil.getString("menu.label.import.one.private.key"), KeyEvent.VK_N));
+        wallet.add(menuItemImportOnePrivateKey = new ZelCashJMenuItem(langUtil.getString("menu.label.import.one.private.key"), KeyEvent.VK_N));
         menuItemImportOnePrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelaratorKeyMask));
-        //wallet.add(menuItemExportToArizen = new JMenuItem(langUtil.getString("menu.label.export.to.arizen"), KeyEvent.VK_A));
+        //wallet.add(menuItemExportToArizen = new ZelCashJMenuItem(langUtil.getString("menu.label.export.to.arizen"), KeyEvent.VK_A));
         //menuItemExportToArizen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelaratorKeyMask));
         mb.add(wallet);
 
-        JMenu messaging = new JMenu(langUtil.getString("menu.label.messaging"));
+        ZelCashJMenu messaging = new ZelCashJMenu(langUtil.getString("menu.label.messaging"));
         messaging.setMnemonic(KeyEvent.VK_S);
-        messaging.add(menuItemOwnIdentity = new JMenuItem(langUtil.getString("menu.label.own.identity"), KeyEvent.VK_D));
+        messaging.add(menuItemOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.own.identity"), KeyEvent.VK_D));
         menuItemOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelaratorKeyMask));        
-        messaging.add(menuItemExportOwnIdentity = new JMenuItem(langUtil.getString("menu.label.export.own.identity"), KeyEvent.VK_X));
+        messaging.add(menuItemExportOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.export.own.identity"), KeyEvent.VK_X));
         menuItemExportOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelaratorKeyMask));        
-        messaging.add(menuItemAddMessagingGroup = new JMenuItem(langUtil.getString("menu.label.add.messaging.group"), KeyEvent.VK_G));
+        messaging.add(menuItemAddMessagingGroup = new ZelCashJMenuItem(langUtil.getString("menu.label.add.messaging.group"), KeyEvent.VK_G));
         menuItemAddMessagingGroup.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, accelaratorKeyMask));
-        messaging.add(menuItemImportContactIdentity = new JMenuItem(langUtil.getString("menu.label.import.contact.identity"), KeyEvent.VK_Y));
+        messaging.add(menuItemImportContactIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.import.contact.identity"), KeyEvent.VK_Y));
         menuItemImportContactIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, accelaratorKeyMask));
-        messaging.add(menuItemRemoveContactIdentity = new JMenuItem(langUtil.getString("menu.label.remove.contact"), KeyEvent.VK_R));
+        messaging.add(menuItemRemoveContactIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.remove.contact"), KeyEvent.VK_R));
         menuItemRemoveContactIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, accelaratorKeyMask));
-        messaging.add(menuItemMessagingOptions = new JMenuItem(langUtil.getString("menu.label.options"), KeyEvent.VK_O));
+        messaging.add(menuItemMessagingOptions = new ZelCashJMenuItem(langUtil.getString("menu.label.options"), KeyEvent.VK_O));
         menuItemMessagingOptions.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelaratorKeyMask));
         
-        JMenu shareFileVia = new JMenu(langUtil.getString("menu.label.share.file"));
+        ZelCashJMenu shareFileVia = new ZelCashJMenu(langUtil.getString("menu.label.share.file"));
         shareFileVia.setMnemonic(KeyEvent.VK_V);
         // TODO: uncomment this for IPFS integration
         //messaging.add(shareFileVia);
-        shareFileVia.add(menuItemShareFileViaIPFS = new JMenuItem(langUtil.getString("menu.label.ipfs"), KeyEvent.VK_F));
+        shareFileVia.add(menuItemShareFileViaIPFS = new ZelCashJMenuItem(langUtil.getString("menu.label.ipfs"), KeyEvent.VK_F));
         menuItemShareFileViaIPFS.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, accelaratorKeyMask));
         
         mb.add(messaging);
@@ -233,30 +255,32 @@ public class ZCashUI
                 } catch (Exception ex) { ex.printStackTrace(  ); }
             }
         };
-        JMenu languageMenu = new JMenu(langUtil.getString("menu.label.language"));
-        LanguageMenuItem italian = new
+        ZelCashJMenu languageMenu = new ZelCashJMenu(langUtil.getString("menu.label.language"));
+        //only english translation available
+        /*LanguageMenuItem italian = new
                 LanguageMenuItem(langUtil.getString("menu.label.language.italian"),
                 new ImageIcon(cl.getResource("images/italian.png")), Locale.ITALY);
-        italian.setHorizontalTextPosition(JMenuItem.RIGHT);
+        italian.setHorizontalTextPosition(ZelCashJMenuItem.RIGHT);
 
-        italian.addActionListener(languageSelectionAction);
+        italian.addActionListener(languageSelectionAction);*/
 
 
         LanguageMenuItem english = new
                 LanguageMenuItem(langUtil.getString("menu.label.language.english"),
                 new ImageIcon(cl.getResource("images/uk.png")), Locale.US);
-        english.setHorizontalTextPosition(JMenuItem.RIGHT);
+        english.setHorizontalTextPosition(ZelCashJMenuItem.RIGHT);
 
         english.addActionListener(languageSelectionAction);
 
         ButtonGroup group = new ButtonGroup(  );
-        group.add(italian);
+        //group.add(italian);
         group.add(english);
 
-        languageMenu.add(italian);
+        //languageMenu.add(italian);
         languageMenu.add(english);
 
-        mb.add(languageMenu);
+        //Temporarily disabled till translations are completed
+        //mb.add(languageMenu);
 
         this.setJMenuBar(mb);
 
@@ -290,6 +314,25 @@ public class ZCashUI
                 }
             }
         );
+        
+        menuItemZelcashUI.addActionListener(
+                new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                    	try
+                    	{
+                    		ZelCashUIEditDialog ad = new ZelCashUIEditDialog(ZCashUI.this);
+                    		ad.setVisible(true);
+                    	} catch (UnsupportedEncodingException uee)
+                    	{
+                    		Log.error("Unexpected error: ", uee);
+                    		ZCashUI.this.errorReporter.reportError(uee);
+                    	}
+                    }
+                }
+            );
 
         menuItemBackup.addActionListener(   
         	new ActionListener()
@@ -517,7 +560,7 @@ public class ZCashUI
     			@Override
     			public void stateChanged(ChangeEvent e) 
     			{
-    				JTabbedPane tabs = (JTabbedPane)e.getSource();
+    				ZelCashJTabbedPane tabs = (ZelCashJTabbedPane)e.getSource();
     				if (tabs.getSelectedIndex() == 5)
     				{
     					ZCashUI.this.messagingPanel.tabSelected();
@@ -597,6 +640,7 @@ public class ZCashUI
             {
             	// The MacOS L&F is active by default - the property sets the menu bar Mac style
             	System.setProperty("apple.laf.useScreenMenuBar", "true");
+            	System.setProperty("com.apple.mrj.application.apple.menu.about.name", LanguageUtil.instance().getString("apple.menu.about.name"));
             }
             else
             {            
@@ -643,7 +687,12 @@ public class ZCashUI
                 	daemonStartInProgress = true;
                 }
             }
-            
+            if (false == AppLock.lock()) {
+                throw new Exception("Duplicate instante detected.");
+            }
+            installShutdownHook();
+            new ZelCashUI();
+    		
             StartupProgressDialog startupBar = null;
             if ((zcashdInfo.status != DAEMON_STATUS.RUNNING) || (daemonStartInProgress))
             {
@@ -780,5 +829,16 @@ public class ZCashUI
 			configOut.close();
 		}
     }
+          
+    private static void installShutdownHook() {
+
+	    Runnable runner = new Runnable() {
+	        @Override
+	        public void run() {
+	            AppLock.unlock();
+	        }
+	    };
+	    Runtime.getRuntime().addShutdownHook(new Thread(runner, "Window Prefs Hook"));
+	}
     
 }

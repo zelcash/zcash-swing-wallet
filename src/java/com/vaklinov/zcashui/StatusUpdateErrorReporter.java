@@ -28,18 +28,19 @@
  **********************************************************************************/
 package com.vaklinov.zcashui;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import com.cabecinha84.zelcashui.ZelCashJFrame;
 
 /**
  * Reporter for periodic errors. Will later have options to filter errors etc.
  */
 public class StatusUpdateErrorReporter 
 {	
-	private JFrame parent;
+	private ZelCashJFrame parent;
 	private long lastReportedErrroTime = 0;
 	
-	public StatusUpdateErrorReporter(JFrame parent)
+	public StatusUpdateErrorReporter(ZelCashJFrame parent)
 	{
 		this.parent = parent;
 	}

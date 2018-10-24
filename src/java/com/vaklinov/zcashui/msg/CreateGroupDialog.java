@@ -39,16 +39,16 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJDialog;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJProgressBar;
+import com.cabecinha84.zelcashui.ZelCashJTextField;
 import com.vaklinov.zcashui.LabelStorage;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.StatusUpdateErrorReporter;
@@ -61,10 +61,10 @@ import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
  * Dialog showing the messaging options and allowing them to be edited.
  */
 public class CreateGroupDialog
-	extends JDialog
+	extends ZelCashJDialog
 {
 	protected MessagingPanel msgPanel;
-	protected JFrame parentFrame;
+	protected ZelCashJFrame parentFrame;
 	protected MessagingStorage storage;
 	protected StatusUpdateErrorReporter errorReporter;
 	protected ZCashClientCaller caller;
@@ -72,22 +72,22 @@ public class CreateGroupDialog
 	protected boolean isOKPressed = false;
 	protected String  key    = null;
 	
-	protected JLabel     keyLabel = null;
-	protected JTextField keyField = null;
+	protected ZelCashJLabel     keyLabel = null;
+	protected ZelCashJTextField keyField = null;
 	
-	protected JLabel upperLabel;
-	protected JLabel lowerLabel;
+	protected ZelCashJLabel upperLabel;
+	protected ZelCashJLabel lowerLabel;
 	
-	protected JProgressBar progress = null;
+	protected ZelCashJProgressBar progress = null;
 	
-	JButton okButon;
-	JButton cancelButon;
+	ZelCashJButton okButon;
+	ZelCashJButton cancelButon;
 	
 	LabelStorage labelStorage;
 	
 	protected MessagingIdentity createdGroup = null;
 	
-	public CreateGroupDialog(MessagingPanel msgPanel, JFrame parentFrame, MessagingStorage storage, 
+	public CreateGroupDialog(MessagingPanel msgPanel, ZelCashJFrame parentFrame, MessagingStorage storage, 
 			                 StatusUpdateErrorReporter errorReporter, ZCashClientCaller caller,
 			                 LabelStorage labelStorage)
 		throws IOException
@@ -105,55 +105,55 @@ public class CreateGroupDialog
 		this.setModal(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		JPanel controlsPanel = new JPanel();
+		ZelCashJPanel controlsPanel = new ZelCashJPanel();
 		controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
 		controlsPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
-		JPanel tempPanel = new JPanel(new BorderLayout(0, 0));
-		tempPanel.add(this.upperLabel = new JLabel(
+		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
+		tempPanel.add(this.upperLabel = new ZelCashJLabel(
 			"<html>Please enter a key phrase that identifies a messaging group. " + 
 		    "Such a key phrase is usually a #HashTag<br/>or similar item known to the " +
 			" group of people participating:</html>"), BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
-		JLabel dividerLabel = new JLabel("   ");
+		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
-		tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(keyField = new JTextField(60));
+		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		tempPanel.add(keyField = new ZelCashJTextField(60));
 		controlsPanel.add(tempPanel);
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 
-		tempPanel = new JPanel(new BorderLayout(0, 0));
-		tempPanel.add(this.lowerLabel = new JLabel(
+		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
+		tempPanel.add(this.lowerLabel = new ZelCashJLabel(
 			"<html>The group key phrase will be converted into a group Z address that " +
 		    "all participants share to receive <br/>messages. The addition of a messaging " + 
 			"group may take considerable time, so please be patient...</html>"), 
 			BorderLayout.CENTER);
 		controlsPanel.add(tempPanel);
 		
-		dividerLabel = new JLabel("   ");
+		dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		controlsPanel.add(dividerLabel);
 		
-		tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		tempPanel.add(progress = new JProgressBar());
+		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		tempPanel.add(progress = new ZelCashJProgressBar());
 		controlsPanel.add(tempPanel);
 		
 		this.getContentPane().setLayout(new BorderLayout(0, 0));
 		this.getContentPane().add(controlsPanel, BorderLayout.NORTH);
 
 		// Form buttons
-		JPanel buttonPanel = new JPanel();
+		ZelCashJPanel buttonPanel = new ZelCashJPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
-		okButon = new JButton("Create group");
+		okButon = new ZelCashJButton("Create group");
 		buttonPanel.add(okButon);
-		buttonPanel.add(new JLabel("   "));
-		cancelButon = new JButton("Cancel");
+		buttonPanel.add(new ZelCashJLabel("   "));
+		cancelButon = new ZelCashJButton("Cancel");
 		buttonPanel.add(cancelButon);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 

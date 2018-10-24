@@ -37,13 +37,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 
 
 
@@ -66,7 +67,7 @@ public class AddressTable
 		
 		int accelaratorKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		final LanguageUtil langUtil = LanguageUtil.instance();
-		JMenuItem obtainPrivateKey = new JMenuItem(langUtil.getString("table.address.option.obtain.private.key.label"));
+		ZelCashJMenuItem obtainPrivateKey = new ZelCashJMenuItem(langUtil.getString("table.address.option.obtain.private.key.label"));
 		obtainPrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelaratorKeyMask));
         popupMenu.add(obtainPrivateKey);
         
@@ -86,7 +87,7 @@ public class AddressTable
 						final boolean bEncryptedWallet = caller.isWalletEncrypted();
 						if (bEncryptedWallet)
 						{
-							PasswordDialog pd = new PasswordDialog((JFrame)(AddressTable.this.getRootPane().getParent()));
+							PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(AddressTable.this.getRootPane().getParent()));
 							pd.setVisible(true);
 							
 							if (!pd.isOKPressed())
@@ -132,7 +133,7 @@ public class AddressTable
 		});
         
         
-		JMenuItem setLabel = new JMenuItem("Set label...");
+        ZelCashJMenuItem setLabel = new ZelCashJMenuItem("Set label...");
 		setLabel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelaratorKeyMask));
         popupMenu.add(setLabel);
         
@@ -177,7 +178,7 @@ public class AddressTable
 			}
 		});
 
-        JMenuItem showInExplorer = new JMenuItem(langUtil.getString("table.address.show.in.explorer"));
+        ZelCashJMenuItem showInExplorer = new ZelCashJMenuItem(langUtil.getString("table.address.show.in.explorer"));
 		showInExplorer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelaratorKeyMask));
         popupMenu.add(showInExplorer);
         

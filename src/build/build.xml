@@ -79,6 +79,8 @@
     	        <include name="images/**"/>
     	        <include name="keys/**"/>
 				<include name="messages/**"/>
+    	    	<include name="ui/**"/>
+    	    	<include name="zelcashImages/**"/>
     	    </fileset>
     	</copy>
     </target>

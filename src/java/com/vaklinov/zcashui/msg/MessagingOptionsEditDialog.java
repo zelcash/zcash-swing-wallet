@@ -40,17 +40,18 @@ import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
+import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJCheckBox;
+import com.cabecinha84.zelcashui.ZelCashJDialog;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
+import com.cabecinha84.zelcashui.ZelCashJPanel;
+import com.cabecinha84.zelcashui.ZelCashJTextField;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.StatusUpdateErrorReporter;
 import com.vaklinov.zcashui.Util;
@@ -60,20 +61,20 @@ import com.vaklinov.zcashui.Util;
  * Dialog showing the messaging options and allowing them to be edited.
  */
 public class MessagingOptionsEditDialog
-	extends JDialog
+	extends ZelCashJDialog
 {
-	protected JFrame parentFrame;
+	protected ZelCashJFrame parentFrame;
 	protected MessagingStorage storage;
 	protected StatusUpdateErrorReporter errorReporter;
 	
-	protected JLabel infoLabel;
-	protected JPanel buttonPanel;
+	protected ZelCashJLabel infoLabel;
+	protected ZelCashJPanel buttonPanel;
 	
-	protected JTextField amountTextField;
-	protected JTextField transactionFeeTextField;
-	protected JCheckBox  automaticallyAddUsers;
+	protected ZelCashJTextField amountTextField;
+	protected ZelCashJTextField transactionFeeTextField;
+	protected ZelCashJCheckBox  automaticallyAddUsers;
 	
-	public MessagingOptionsEditDialog(JFrame parentFrame, MessagingStorage storage, StatusUpdateErrorReporter errorReporter)
+	public MessagingOptionsEditDialog(ZelCashJFrame parentFrame, MessagingStorage storage, StatusUpdateErrorReporter errorReporter)
 		throws IOException
 	{
 		this.parentFrame   = parentFrame;
@@ -88,9 +89,9 @@ public class MessagingOptionsEditDialog
 			
 		this.getContentPane().setLayout(new BorderLayout(0, 0));
 			
-		JPanel tempPanel = new JPanel(new BorderLayout(0, 0));
+		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		infoLabel = new JLabel(
+		infoLabel = new ZelCashJLabel(
 				"<html><span style=\"font-size:0.93em;\">" +
 				"The options below pertain to messaging. It is posisble to set the amount of ZEL<br/>" +
 				"to be sent with every messaging transaction and also the transaction fee. It is<br/>" + 
@@ -99,13 +100,13 @@ public class MessagingOptionsEditDialog
 	    tempPanel.add(infoLabel, BorderLayout.CENTER);
 		this.getContentPane().add(tempPanel, BorderLayout.NORTH);
 			
-		JPanel detailsPanel = new JPanel();
+		ZelCashJPanel detailsPanel = new ZelCashJPanel();
 		detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
 		
 		addFormField(detailsPanel, "Automatically add users to contact list:",   
-				     automaticallyAddUsers = new JCheckBox());
-		addFormField(detailsPanel, "ZEL amount to send with every message:",   amountTextField = new JTextField(12));
-		addFormField(detailsPanel, "Transaction fee:",  transactionFeeTextField = new JTextField(12));
+				     automaticallyAddUsers = new ZelCashJCheckBox());
+		addFormField(detailsPanel, "ZEL amount to send with every message:",   amountTextField = new ZelCashJTextField(12));
+		addFormField(detailsPanel, "Transaction fee:",  transactionFeeTextField = new ZelCashJTextField(12));
 		
 		DecimalFormatSymbols decSymbols = new DecimalFormatSymbols(Locale.ROOT);
 		automaticallyAddUsers.setSelected(options.isAutomaticallyAddUsersIfNotExplicitlyImported());
@@ -116,9 +117,9 @@ public class MessagingOptionsEditDialog
 		this.getContentPane().add(detailsPanel, BorderLayout.CENTER);
 
 		// Lower buttons - by default only close is available
-		buttonPanel = new JPanel();
+		buttonPanel = new ZelCashJPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 3));
-		JButton closeButon = new JButton("Close");
+		ZelCashJButton closeButon = new ZelCashJButton("Close");
 		buttonPanel.add(closeButon);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
@@ -132,7 +133,7 @@ public class MessagingOptionsEditDialog
 				}
 		});
 		
-		JButton saveButon = new JButton("Save & close");
+		ZelCashJButton saveButon = new ZelCashJButton("Save & close");
 		buttonPanel.add(saveButon);
 		saveButon.addActionListener(new ActionListener()
 		{
@@ -211,12 +212,12 @@ public class MessagingOptionsEditDialog
 	}
 	
 	
-	private void addFormField(JPanel detailsPanel, String name, JComponent field)
+	private void addFormField(ZelCashJPanel detailsPanel, String name, JComponent field)
 	{
-		JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-		JLabel tempLabel = new JLabel(name, JLabel.RIGHT);
+		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new JLabel("ZEL amount to send with every message:").getPreferredSize().width + 30;
+		final int width = new ZelCashJLabel("ZEL amount to send with every message:").getPreferredSize().width + 30;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);

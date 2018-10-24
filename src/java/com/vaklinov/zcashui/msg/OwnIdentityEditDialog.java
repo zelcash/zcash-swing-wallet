@@ -32,10 +32,10 @@ package com.vaklinov.zcashui.msg;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.StatusUpdateErrorReporter;
 
@@ -49,7 +49,7 @@ public class OwnIdentityEditDialog
 	private MessagingStorage storage;
 	private StatusUpdateErrorReporter errorReporter;
 	
-	public OwnIdentityEditDialog(JFrame parent, MessagingIdentity identity, 
+	public OwnIdentityEditDialog(ZelCashJFrame parent, MessagingIdentity identity, 
 			                     MessagingStorage storage, StatusUpdateErrorReporter errorReporter, boolean identityIsBeingCreated)
 	{
 		super(parent, identity);
@@ -82,7 +82,7 @@ public class OwnIdentityEditDialog
 			this.buttonPanel.removeAll();
 		}
 		
-		JButton saveButon = new JButton("Save & close");
+		ZelCashJButton saveButon = new ZelCashJButton("Save & close");
 		buttonPanel.add(saveButon);
 		saveButon.addActionListener(new ActionListener()
 		{
