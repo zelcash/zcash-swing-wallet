@@ -43,11 +43,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.channels.OverlappingFileLockException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -642,6 +640,7 @@ public class ZCashUI
             {
             	// The MacOS L&F is active by default - the property sets the menu bar Mac style
             	System.setProperty("apple.laf.useScreenMenuBar", "true");
+            	System.setProperty("com.apple.mrj.application.apple.menu.about.name", LanguageUtil.instance().getString("apple.menu.about.name"));
             }
             else
             {            
