@@ -93,7 +93,7 @@ public class MessagingOptionsEditDialog
 		tempPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		infoLabel = new ZelCashJLabel(
 				"<html><span style=\"font-size:0.93em;\">" +
-				"The options below pertain to messaging. It is posisble to set the amount of ZEL<br/>" +
+				"The options below pertain to messaging. It is possible to set the amount of ZEL<br/>" +
 				"to be sent with every messaging transaction and also the transaction fee. It is<br/>" + 
 			    "also possible to decide if users are to be automatically added to the contact list.<br/><br/>" +
 			    "</span>");

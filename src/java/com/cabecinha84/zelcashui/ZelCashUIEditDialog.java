@@ -392,7 +392,7 @@ public class ZelCashUIEditDialog
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
 		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new ZelCashJLabel("Sender identiication T address:").getPreferredSize().width + 10;
+		final int width = new ZelCashJLabel("Sender identification T address:").getPreferredSize().width + 10;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);
@@ -405,7 +405,7 @@ public class ZelCashUIEditDialog
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
 		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new ZelCashJLabel("Sender identiication T address:").getPreferredSize().width + 10;
+		final int width = new ZelCashJLabel("Sender identification T address:").getPreferredSize().width + 10;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);

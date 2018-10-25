@@ -255,7 +255,7 @@ public class ZCashClientCaller
 	    	JsonObject trans = jsonTransactions.get(i).asObject();
 
 	    	// Needs to be the same as in getWalletZReceivedTransactions()
-	    	// TODO: some day refactor to use object containers
+	    	// TODO: someday refactor to use object containers
 	    	strTransactions[i][0] = "\u2606T (Public)";
 	    	strTransactions[i][1] = trans.getString("category", "ERROR!");
 	    	strTransactions[i][2] = trans.get("confirmations").toString();
@@ -302,7 +302,7 @@ public class ZCashClientCaller
 
 		    	String txID = trans.getString("txid", "ERROR!");
 		    	// Needs to be the same as in getWalletPublicTransactions()
-		    	// TODO: some day refactor to use object containers
+		    	// TODO: someday refactor to use object containers
 		    	currentTransaction[0] = "\u2605Z (Private)";
 		    	currentTransaction[1] = "receive";
 		    	

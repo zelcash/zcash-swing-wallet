@@ -130,7 +130,7 @@ public class MessagingStorage
 	}
 	
 	
-	// If a message is from an igonred contact - returns it, else null
+	// If a message is from an ignored contact - returns it, else null
 	public MessagingIdentity getIgnoredContactForMessage(Message msg)
 	{
 		MessagingIdentity contact = null;
@@ -356,7 +356,7 @@ public class MessagingStorage
 		int contactDirIndex = contactDirs.length;
 		String contactDirName;
 		
-		// We need to make sure the dir does not exist.. if it does maybe users were removed before etc
+		// We need to make sure the dir does not exist. If it does maybe users were removed before etc
 		// so we increment!
 		do
 		{
@@ -453,7 +453,7 @@ public class MessagingStorage
 	}
 	
 	
-	public MessagingIdentity createAndStoreAnonumousContactIdentity(String threadID, String returnAddress)
+	public MessagingIdentity createAndStoreAnonymousContactIdentity(String threadID, String returnAddress)
 		throws IOException
 	{
 		MessagingIdentity newID = new MessagingIdentity();
@@ -494,7 +494,7 @@ public class MessagingStorage
 	}
 	
 	
-	public void updateAnonumousContactIdentityForThreadID(String threadID, MessagingIdentity newID)
+	public void updateAnonymousContactIdentityForThreadID(String threadID, MessagingIdentity newID)
 		throws IOException
 	{
 		for (SingleContactStorage contact : this.contactsList)
@@ -513,9 +513,9 @@ public class MessagingStorage
 
 	/**
 	 * Returns all known messages for a certain contact in ascending date order. 
-	 * If identity not found etc. thorws an exception
+	 * If identity not found etc. throws an exception
 	 * 
-	 * @param conact
+	 * @param contact
 	 * 
 	 * @return all known messages for a certain contact in ascending date order.
 	 */

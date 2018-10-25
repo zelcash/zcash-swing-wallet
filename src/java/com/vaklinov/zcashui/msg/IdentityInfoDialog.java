@@ -102,7 +102,7 @@ public class IdentityInfoDialog
 		
 		addFormField(detailsPanel, "Nick name:",  nicknameTextField = new ZelCashJTextField(40));
 		addFormField(detailsPanel, "First name:", firstnameTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "Midle name:", middlenameTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, "Middle name:", middlenameTextField = new ZelCashJTextField(40));
 		addFormField(detailsPanel, "Surname:",    surnameTextField = new ZelCashJTextField(40));
 		
 		addFormField(detailsPanel, "E-mail:",         emailTextField = new ZelCashJTextField(40));
@@ -169,7 +169,7 @@ public class IdentityInfoDialog
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
 		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new ZelCashJLabel("Sender identiication T address:").getPreferredSize().width + 10;
+		final int width = new ZelCashJLabel("Sender identification T address:").getPreferredSize().width + 10;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);

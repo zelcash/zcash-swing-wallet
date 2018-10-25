@@ -7,13 +7,13 @@ When wallet problems occur, the information about the errors that caused the iss
 ```
 Linux:    ~/.ZelCashSwingWalletUI/ZelCashGUIWallet_xxxx_xx_debug.log 
 Windows:  %LOCALAPPDATA%/ZelCashSwingWalletUI/ZelCashGUIWallet_xxxx_xx_debug.log
-Mac OS:   ~/Library/Application Support/ZelCashSwingWalletUI/ZelCashGUIWallet_xxxx_xx_debug.log
+macOS:   ~/Library/Application Support/ZelCashSwingWalletUI/ZelCashGUIWallet_xxxx_xx_debug.log
 ```
 `zelcashd` that is automatically started by the wallet, stores its logs at locations:
 ```
 Linux:    ~/.zelcash/debug.log, 
 Windows:  %APPDATA%/ZelCash/debug.log
-Mac OS:   ~/Library/Application Support/ZelCash/debug.log
+macOS:   ~/Library/Application Support/ZelCash/debug.log
  ```
 The log files are the first place too look for clues as to the nature of problem.
 
@@ -31,7 +31,7 @@ works in 90%+ of cases is to start `zelcashd` manually with a `-reindex` option 
 ```
 zelcashd -reindex
 ```
-For non-technical users here is some information on how to open a terminal on [Windows](https://www.lifewire.com/how-to-open-command-prompt-2618089) and [Mac OS](https://www.wikihow.com/Open-a-Terminal-Window-in-Mac). The full command on Mac OS is:
+For non-technical users here is some information on how to open a terminal on [Windows](https://www.lifewire.com/how-to-open-command-prompt-2618089) and [macOS](https://www.wikihow.com/Open-a-Terminal-Window-in-Mac). The full command on macOS is:
 ```
 /Applications/ZelCashWallet.app/Contents/Java/zelcashd -reindex
 ```

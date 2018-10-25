@@ -59,7 +59,7 @@ import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 
 
 /**
- * Addresses panel - shows T/Z addresses and their balnces.
+ * Addresses panel - shows T/Z addresses and their balances.
  */
 public class AddressesPanel
 		extends WalletTabPanel
@@ -405,7 +405,7 @@ public class AddressesPanel
 		// Z Addresses - they are OK
 		String[] zAddresses = clientCaller.getWalletZAddresses();
 
-		// T Addresses listed with the list received by addr comamnd
+		// T Addresses listed with the list received by addr command
 		String[] tAddresses = this.clientCaller.getWalletAllPublicAddresses();
 		Set<String> tStoredAddressSet = new HashSet<>();
 		for (String address : tAddresses)

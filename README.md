@@ -40,7 +40,7 @@ The details of how to build it are described below (easy to follow).
 
 1. Operating system and tools
 
-   As of June 2018 this program supports Linux and Mac OS X and Windows.
+   As of June 2018 this program supports Linux and macOS X and Windows.
    The Linux tools you need to build and run the Wallet GUI are Git, Java (JDK8) and
    Ant. If using Ubuntu Linux, they may be installed via command: 
    ```

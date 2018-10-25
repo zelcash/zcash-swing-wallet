@@ -754,38 +754,54 @@ public class DashboardPanel extends WalletTabPanel {
 		// Forms the exchange data for a table
 		private Object[][] getExchangeDataInTableForm() {
 			JsonObject data = this.zelcashDataGatheringThread.getLastData();
-			if (data == null) {
+			JsonObject rates = new JsonObject();
+			JsonObject cmc = new JsonObject();	
+			if (data == null)
+			{
 				data = new JsonObject();
+				rates = new JsonObject();
+				cmc = new JsonObject(); 
+			} else {
+				if (data.get("rates") == null) {
+					rates = new JsonObject();
+				} else {
+					Log.info(data.get("rates").toString());
+					rates = data.get("rates").asObject();
+				}
+				if (data.get("cmc") == null) {
+					cmc = new JsonObject();
+				} else {
+					cmc = data.get("cmc").asObject();
+				}
 			}
 
-			Double price = data.getDouble("rate", 0);
-			try {
+			//JsonObject rates = data.getJSONObject("rates");
+			//Log.info(rates.toString());
+			Double price = rates.getDouble("rate", 0);
+			try
+			{
 				String priceX = String.format("%.3f", price);
 				Double priceD = Double.parseDouble(priceX);
 				price = priceD;
 				this.lastCurrencyPrice = priceD;
-			} catch (NumberFormatException nfe) {
-				/* Do nothing */ }
-
-			/*
-			 * String usdMarketCap = data.getString("market_cap_usd", "N/A"); try { Double
-			 * usdMarketCapD = Double.parseDouble(usdMarketCap) / 1000000; usdMarketCap =
-			 * new DecimalFormat("########0.000").format(usdMarketCapD) + " million"; }
-			 * catch (NumberFormatException nfe) { /* Do nothing / }
-			 */
-
+			} catch (NumberFormatException nfe) { /* Do nothing */ }
+			
+			String usdMarketCap = cmc.getString("market_cap_usd", "N/A");
+			try
+			{
+				Double usdMarketCapD = Double.parseDouble(usdMarketCap) / 1000000;
+				usdMarketCap = new DecimalFormat("########0.000").format(usdMarketCapD) + " million";
+			} catch (NumberFormatException nfe) { /* Do nothing */ }
+			
 			// Query the object for individual fields
 			String currencyMessage = langUtil.getString("panel.dashboard.marketcap.price.currency") + ZelCashUI.currency + ":";
-			String tableData[][] = new String[][] {
-					{ currencyMessage, Double.toString(price) },
-					// { langUtil.getString("panel.dashboard.marketcap.price.btc"),
-					// data.getString("price_btc", "N/A") },
-					// { langUtil.getString("panel.dashboard.marketcap.capitalisation"),
-					// usdMarketCap },
-					// { langUtil.getString("panel.dashboard.marketcap.daily.change"),
-					// data.getString("percent_change_24h", "N/A") + "%"},
-					// { langUtil.getString("panel.dashboard.marketcap.weekly.change"),
-					// data.getString("percent_change_7d", "N/A") + "%"},
+			String tableData[][] = new String[][]
+			{
+				{ currencyMessage,     Double.toString(price)},
+				{ langUtil.getString("panel.dashboard.marketcap.price.btc"),     cmc.getString("price_btc",          "N/A") },
+				{ langUtil.getString("panel.dashboard.marketcap.capitalisation"), usdMarketCap },
+				{ langUtil.getString("panel.dashboard.marketcap.daily.change"), cmc.getString("percent_change_24h", "N/A") + "%"},
+				{ langUtil.getString("panel.dashboard.marketcap.weekly.change"), cmc.getString("percent_change_7d", "N/A") + "%"},
 			};
 
 			return tableData;
@@ -796,10 +812,25 @@ public class DashboardPanel extends WalletTabPanel {
 		}
 
 		// Obtains the ZEL exchange data as a JsonObject
-		private JsonObject getExchangeDataFromRemoteService() {
+		private JsonObject getExchangeDataFromRemoteService()
+		{
 			JsonObject data = new JsonObject();
 			String currency = ZelCashUI.currency;
-			try {
+			
+			try
+			{
+				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zelcash");
+				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
+				JsonArray ar = Json.parse(r).asArray();
+				data.add("cmc", ar.get(0).asObject());
+			} catch (Exception ioe)
+			{
+				Log.warning("Could not obtain ZEL exchange information from coinmarketcap.com due to: {0} {1}", 
+						    ioe.getClass().getName(), ioe.getMessage());
+			}
+
+			try
+			{
 				URL u = new URL("https://rates.zel.cash");
 				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
 				JsonArray ar = Json.parse(r).asArray();
@@ -807,19 +838,20 @@ public class DashboardPanel extends WalletTabPanel {
 				for (int i = 0; i < ar.size(); ++i) {
 					JsonObject obj = ar.get(i).asObject();
 					String id = obj.get("code").toString().replaceAll("\"", "");
-					if (id.equals(currency)) {
-						data = obj;
+										if (id.equals(currency)) {
+						data.add("rates",obj);
 						break;
 					}
 					if(i+1 == ar.size()) {
 						Log.warning("Could not find the currency in https://rates.zel.cash");
 					}
 				}
-
-			} catch (Exception ioe) {
-				Log.warning("Could not obtain ZEL information from rates.zel.cash due to: {0} {1}",
-						ioe.getClass().getName(), ioe.getMessage());
+			} catch (Exception ioe)
+			{
+				Log.warning("Could not obtain ZEL exchange information from rates.zel.cash due to: {0} {1}", 
+						    ioe.getClass().getName(), ioe.getMessage());
 			}
+			Log.info(data.toString());
 			return data;
 		}
 	}
@@ -927,11 +959,11 @@ public class DashboardPanel extends WalletTabPanel {
 
 		class SingleTransactionPanel extends ZelCashJPanel {
 			// TODO: depends on the format of the gathering thread
-			public SingleTransactionPanel(String[] transactionFeilds) {
+			public SingleTransactionPanel(String[] transactionFields) {
 				this.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 3));
 				this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
-				String destinationAddress = transactionFeilds[5];
+				String destinationAddress = transactionFields[5];
 
 				String label = DashboardPanel.this.labelStorage.getLabel(destinationAddress);
 				if ((label != null) && (label.length() > 0)) {
@@ -944,10 +976,10 @@ public class DashboardPanel extends WalletTabPanel {
 
 				// Set the correct icon for input/output
 				ImageIcon inOutIcon = inoutTransactionIcon;
-				if (transactionFeilds[1] != null) {
-					if (transactionFeilds[1].contains("IN")) {
+				if (transactionFields[1] != null) {
+					if (transactionFields[1].contains("IN")) {
 						inOutIcon = inputTransactionIcon;
-					} else if (transactionFeilds[1].contains("OUT")) {
+					} else if (transactionFields[1].contains("OUT")) {
 						inOutIcon = outputTransactionIcon;
 					}
 				}
@@ -957,10 +989,10 @@ public class DashboardPanel extends WalletTabPanel {
 				this.add(imgLabel);
 
 				// Set the two icons for public/private and confirmations
-				ImageIcon confirmationIcon = transactionFeilds[2].contains(
+				ImageIcon confirmationIcon = transactionFields[2].contains(
 						(langUtil.getString("panel.dashboard.table.transactions.confirmed.yes"))) ? confirmedTXIcon
 								: unConfirmedTXIcon;
-				ImageIcon pubPrivIcon = transactionFeilds[0].contains("Private") ? lockClosedIcon : lockOpenIcon;
+				ImageIcon pubPrivIcon = transactionFields[0].contains("Private") ? lockClosedIcon : lockOpenIcon;
 				ZelCashJPanel iconsPanel = new ZelCashJPanel(new BorderLayout(0, 1));
 				iconsPanel.add(new ZelCashJLabel(pubPrivIcon), BorderLayout.SOUTH);
 				iconsPanel.add(new ZelCashJLabel(confirmationIcon), BorderLayout.NORTH);
@@ -970,8 +1002,8 @@ public class DashboardPanel extends WalletTabPanel {
 
 				// Set the transaction information
 				ZelCashJLabel transacitonInfo = new ZelCashJLabel(langUtil.getString("panel.dashboard.transactions.info",
-						transactionFeilds[0], transactionFeilds[1], transactionFeilds[2], transactionFeilds[3],
-						transactionFeilds[4], destinationAddress));
+						transactionFields[0], transactionFields[1], transactionFields[2], transactionFields[3],
+						transactionFields[4], destinationAddress));
 				this.add(transacitonInfo);
 			}
 		}

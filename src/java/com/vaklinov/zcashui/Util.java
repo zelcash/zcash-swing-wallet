@@ -359,7 +359,7 @@ public class Util
 	
 	
 	/**
-	 * Delets a directory and all of its subdirectories.
+	 * Deletes a directory and all of its subdirectories.
 	 * 
 	 * @param dir directory to delete.
 	 * 

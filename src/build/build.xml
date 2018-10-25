@@ -63,8 +63,11 @@
 	    <os family="unix" />
 	</condition>
 	
-    <condition property="isJava9">
-	    <equals arg1="${ant.java.version}" arg2="9" />
+    <condition property="isJava9OrLater">
+	    <or>
+	        <equals arg1="${ant.java.version}" arg2="9" />
+    		<equals arg1="${ant.java.version}" arg2="10" />
+    	</or>
     </condition>	
 	
     <!-- TARGETS -->
@@ -85,7 +88,7 @@
     	</copy>
     </target>
 
-    <target name="compileJDK9" depends="clean" if="isJava9">
+    <target name="compileJDK9" depends="clean" if="isJava9OrLater">
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
         	<compilerarg line="--add-modules java.xml.bind" />
@@ -93,7 +96,7 @@
         </javac>
     </target>
 	
-    <target name="compile" depends="clean" unless="isJava9">
+    <target name="compile" depends="clean" unless="isJava9OrLater">
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
         	<classpath refid="main-classpath"/>
@@ -117,7 +120,7 @@
 	
     <target name="ubuntuPackage" depends="jar,copyothers">	
     	<mkdir dir="${ubuntu.package.dir}"/>
-	    <deb destfile="${ubuntu.package.dir}/zelcash-desktop-gui-wallet_4.0.0_all.deb" 
+	    <deb destfile="${ubuntu.package.dir}/zelcash-swing-wallet_5.0.0.deb" 
 	    	 control="${deb.dir}/control"
 	    	 verbose="true">
 	    	
@@ -162,7 +165,7 @@
 	
 	<!-- TODO: As of Nov 2017 the IPFS wallet integration is suspended. 
 	<target name="unpackIPFSForMacOS" if="isMacOS">
-	    <echo message="Using the IPFS packaged executable on Mac OS..." />
+	    <echo message="Using the IPFS packaged executable on macOS..." />
 		<mkdir dir="${temp.dir}"/>
 		<gunzip src="${basedir}/lib/go-ipfs_v0.4.11_darwin-amd64.tar.gz" dest="${temp.dir}/ipfs.tar"/>
 	</target>
