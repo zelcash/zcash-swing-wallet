@@ -75,10 +75,11 @@ public class IdentityInfoDialog
 	protected ZelCashJTextField facebookTextField;
 	protected ZelCashJTextField twitterTextField;
 		
+	private static LanguageUtil langUtil = LanguageUtil.instance();
 	
 	public IdentityInfoDialog(ZelCashJFrame parentFrame, MessagingIdentity identity)
 	{
-		LanguageUtil langUtil = LanguageUtil.instance();
+		
 		this.parentFrame = parentFrame;
 		this.identity    = identity;
 		
@@ -90,28 +91,25 @@ public class IdentityInfoDialog
 			
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		infoLabel = new ZelCashJLabel(
-				"<html><span style=\"font-size:0.97em;\">" +
-				"The information shown below pertains to contact " + identity.getNickname() + 
-			    "</span>");
+		infoLabel = new ZelCashJLabel(langUtil.getString("dialog.identity.info.infolabel", identity.getNickname()));
 	    tempPanel.add(infoLabel, BorderLayout.CENTER);
 		this.getContentPane().add(tempPanel, BorderLayout.NORTH);
 			
 		ZelCashJPanel detailsPanel = new ZelCashJPanel();
 		detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
 		
-		addFormField(detailsPanel, "Nick name:",  nicknameTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "First name:", firstnameTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "Middle name:", middlenameTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "Surname:",    surnameTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.nickname"),  nicknameTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.firstname"), firstnameTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.middlename"), middlenameTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.surname"),    surnameTextField = new ZelCashJTextField(40));
 		
-		addFormField(detailsPanel, "E-mail:",         emailTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "Street address:", streetaddressTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "Facebook page:",  facebookTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "Twitter page:",   twitterTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.email"),         emailTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.streetaddress"), streetaddressTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.facebook"),  facebookTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.twitter"),   twitterTextField = new ZelCashJTextField(40));
 		
-		addFormField(detailsPanel, "Sender identification T address:", senderidaddressTextField = new ZelCashJTextField(40));
-		addFormField(detailsPanel, "Send/receive Z address:", sendreceiveaddressTextField = new ZelCashJTextArea(2, 40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.sendert"), senderidaddressTextField = new ZelCashJTextField(40));
+		addFormField(detailsPanel, langUtil.getString("dialog.identity.info.senderz"), sendreceiveaddressTextField = new ZelCashJTextArea(2, 40));
 		sendreceiveaddressTextField.setLineWrap(true);
 		
 
@@ -143,7 +141,7 @@ public class IdentityInfoDialog
 		// Lower buttons - by default only close is available
 		buttonPanel = new ZelCashJPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 3));
-		ZelCashJButton closeButon = new ZelCashJButton("Close");
+		ZelCashJButton closeButon = new ZelCashJButton(langUtil.getString("dialog.identity.info.button.close"));
 		buttonPanel.add(closeButon);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
@@ -169,7 +167,7 @@ public class IdentityInfoDialog
 		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
 		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
 		// TODO: hard sizing of labels may not scale!
-		final int width = new ZelCashJLabel("Sender identification T address:").getPreferredSize().width + 10;
+		final int width = new ZelCashJLabel(langUtil.getString("dialog.identity.info.sender.id")).getPreferredSize().width + 10;
 		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
 		tempPanel.add(tempLabel);
 		tempPanel.add(field);

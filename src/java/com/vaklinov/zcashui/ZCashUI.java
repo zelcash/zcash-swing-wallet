@@ -689,7 +689,7 @@ public class ZCashUI
                 }
             }
             if (false == AppLock.lock()) {
-                throw new Exception("Duplicate instante detected.");
+                throw new Exception(LanguageUtil.instance().getString("duplicate.instante.detected"));
             }
             installShutdownHook();
     		
