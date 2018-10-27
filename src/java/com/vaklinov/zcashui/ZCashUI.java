@@ -612,6 +612,7 @@ public class ZCashUI
     {
         try
         {
+        	new ZelCashUI();
         	OS_TYPE os = OSUtil.getOSType();
         	
         	if ((os == OS_TYPE.WINDOWS) || (os == OS_TYPE.MAC_OS))
@@ -691,7 +692,6 @@ public class ZCashUI
                 throw new Exception("Duplicate instante detected.");
             }
             installShutdownHook();
-            new ZelCashUI();
     		
             StartupProgressDialog startupBar = null;
             if ((zcashdInfo.status != DAEMON_STATUS.RUNNING) || (daemonStartInProgress))
