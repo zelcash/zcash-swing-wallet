@@ -221,8 +221,8 @@ public class ZCashUI
         messaging.setMnemonic(KeyEvent.VK_S);
         messaging.add(menuItemOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.own.identity"), KeyEvent.VK_D));
         menuItemOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelaratorKeyMask));        
-        messaging.add(menuItemExportOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.export.own.identity"), KeyEvent.VK_X));
-        menuItemExportOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelaratorKeyMask));        
+        messaging.add(menuItemExportOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.export.own.identity"), KeyEvent.VK_L));
+        menuItemExportOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelaratorKeyMask));        
         messaging.add(menuItemAddMessagingGroup = new ZelCashJMenuItem(langUtil.getString("menu.label.add.messaging.group"), KeyEvent.VK_G));
         menuItemAddMessagingGroup.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, accelaratorKeyMask));
         messaging.add(menuItemImportContactIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.import.contact.identity"), KeyEvent.VK_Y));

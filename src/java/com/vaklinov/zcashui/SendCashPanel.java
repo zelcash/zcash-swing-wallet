@@ -317,7 +317,7 @@ public class SendCashPanel
 		this.timers.add(timerBalancesUpdater);
 		
 		// Add a popup menu to the destination address field - for convenience
-		ZelCashJMenuItem paste = new ZelCashJMenuItem(langUtil.getString("send.cash.panel.menu.item.paste"));
+		/*ZelCashJMenuItem paste = new ZelCashJMenuItem(langUtil.getString("send.cash.panel.menu.item.paste"));
 		final ZelCashJPopupMenu popupMenu = new ZelCashJPopupMenu();
         popupMenu.add(paste);
         paste.addActionListener(new ActionListener() 
@@ -362,7 +362,7 @@ public class SendCashPanel
             	}
             }
         });
-		
+		*/
 	}
 	
 	
