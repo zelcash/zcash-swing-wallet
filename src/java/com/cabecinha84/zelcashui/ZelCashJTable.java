@@ -1,12 +1,19 @@
 package com.cabecinha84.zelcashui;
 
 import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+
+import com.vaklinov.zcashui.DataTable;
 
 public class ZelCashJTable extends JTable {
 	private Color backGroundColor = ZelCashUI.table;
@@ -18,6 +25,7 @@ public class ZelCashJTable extends JTable {
 		this.getTableHeader().setBackground(headerBackGroundColor);
 		this.setForeground(textColor);
 		this.getTableHeader().setForeground(textColor);
+		addClipBoardMenuOptions();
 	}
 
 	public ZelCashJTable(int numRows, int numColumns) {
@@ -26,6 +34,7 @@ public class ZelCashJTable extends JTable {
 		this.getTableHeader().setBackground(headerBackGroundColor);
 		this.setForeground(textColor);
 		this.getTableHeader().setForeground(textColor);
+		addClipBoardMenuOptions();
 	}
 
 	public ZelCashJTable(Object[][] rowData, Object[] columnNames) {
@@ -34,6 +43,7 @@ public class ZelCashJTable extends JTable {
 		this.getTableHeader().setBackground(headerBackGroundColor);
 		this.setForeground(textColor);
 		this.getTableHeader().setForeground(textColor);
+		addClipBoardMenuOptions();
 	}
 
 	public ZelCashJTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
@@ -42,6 +52,7 @@ public class ZelCashJTable extends JTable {
 		this.getTableHeader().setBackground(headerBackGroundColor);
 		this.setForeground(textColor);
 		this.getTableHeader().setForeground(textColor);
+		addClipBoardMenuOptions();
 	}
 
 	public ZelCashJTable(TableModel dm, TableColumnModel cm) {
@@ -50,6 +61,7 @@ public class ZelCashJTable extends JTable {
 		this.getTableHeader().setBackground(headerBackGroundColor);
 		this.setForeground(textColor);
 		this.getTableHeader().setForeground(textColor);
+		addClipBoardMenuOptions();
 	}
 
 	public ZelCashJTable(TableModel dm) {
@@ -58,6 +70,7 @@ public class ZelCashJTable extends JTable {
 		this.getTableHeader().setBackground(headerBackGroundColor);
 		this.setForeground(textColor);
 		this.getTableHeader().setForeground(textColor);
+		addClipBoardMenuOptions();
 	}
 
 	public ZelCashJTable(Vector<? extends Vector> rowData, Vector<?> columnNames) {
@@ -66,9 +79,30 @@ public class ZelCashJTable extends JTable {
 		this.getTableHeader().setBackground(headerBackGroundColor);
 		this.setForeground(textColor);
 		this.getTableHeader().setForeground(textColor);
+		addClipBoardMenuOptions();
 	}
 
-
+	private void addClipBoardMenuOptions() {
+	    this.addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	            if (e.getKeyCode() == KeyEvent.VK_C) {
+	            	int lastRow = getSelectedRow();
+	            	int lastColumn = getSelectedColumn();
+	            	if ((lastRow >= 0) && (lastColumn >= 0))
+					{
+						String text = getValueAt(lastRow, lastColumn).toString();
+					
+						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+						clipboard.setContents(new StringSelection(text), null);
+					} else
+					{
+						// Log perhaps
+					}
+	            }
+	        }
+	    });
+	}
 	
 }
 
