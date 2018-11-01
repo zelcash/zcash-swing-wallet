@@ -289,11 +289,21 @@ public class JContactListPanel
 			
 			if (id.isAnonymous())
 			{
-		        int reply = JOptionPane.showConfirmDialog(
+				Object[] options = 
+		        	{ 
+		        		langUtil.getString("button.option.yes"),
+		        		langUtil.getString("button.option.no")
+		        	};
+				
+		        int reply = JOptionPane.showOptionDialog(
 			        this.parentFrame, 
 			        langUtil.getString("contact.list.confirm.anonymous", id.getDiplayString()),
 			        langUtil.getString("contact.list.are.you.sure"), 
-			        JOptionPane.YES_NO_OPTION);
+			        JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        options,
+			        JOptionPane.NO_OPTION);
 			        
 			    if (reply == JOptionPane.NO_OPTION) 
 			    {

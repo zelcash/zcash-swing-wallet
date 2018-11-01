@@ -526,13 +526,21 @@ public class MessagingPanel
 		        	        
 		        // Show the GUI dialog to edit an initially empty messaging identity
 		        boolean identityCreated = this.openOwnIdentityDialog();
-		        
+		        Object[] options = 
+		        	{ 
+		        		langUtil.getString("button.option.yes"),
+		        		langUtil.getString("button.option.no")
+		        	};
 		        // Offer the user to export his messaging identity
-		        int reply = JOptionPane.showConfirmDialog(
+		        int reply = JOptionPane.showOptionDialog(
 		        	this.parentFrame, 
 		        	langUtil.getString("messaging.panel.export.message"), 
 		        	langUtil.getString("messaging.panel.export"), 
-		        	JOptionPane.YES_NO_OPTION);
+			        JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        options,
+			        JOptionPane.NO_OPTION);
 		        
 		        if (reply == JOptionPane.YES_OPTION) 
 		        {
@@ -810,10 +818,19 @@ public class MessagingPanel
 			{
 				if (mi.isIdenticalTo(contactIdentity))
 				{  
-			        int choice = JOptionPane.showConfirmDialog(
+					Object[] options = 
+			        	{ 
+			        		langUtil.getString("button.option.yes"),
+			        		langUtil.getString("button.option.no")
+			        	};
+			        int choice = JOptionPane.showOptionDialog(
 		        		this.parentFrame,
 		        		langUtil.getString("messaging.identity.import.duplicate.user", mi.getDiplayString(), contactIdentity.getDiplayString()),
-		        		langUtil.getString("messaging.identity.import.same.user"), JOptionPane.YES_NO_OPTION);
+		        		langUtil.getString("messaging.identity.import.same.user"), JOptionPane.YES_NO_OPTION,
+				        JOptionPane.QUESTION_MESSAGE,
+				        null,
+				        options,
+				        JOptionPane.NO_OPTION);
 			        
 			        if (choice == JOptionPane.YES_OPTION) 
 			        {
@@ -861,12 +878,20 @@ public class MessagingPanel
 		
 			// Add the new identity normally!
 			this.messagingStorage.addContactIdentity(contactIdentity);
-			
-			int sendIDChoice = JOptionPane.showConfirmDialog(
+			Object[] options = 
+	        	{ 
+	        		langUtil.getString("button.option.yes"),
+	        		langUtil.getString("button.option.no")
+	        	};
+			int sendIDChoice = JOptionPane.showOptionDialog(
 				this.parentFrame, 
 				langUtil.getString("messaging.identity.import.successfully", 
 						contactIdentity.getDiplayString()),
-				langUtil.getString("messaging.identity.import.send.identity"), JOptionPane.YES_NO_OPTION);
+				langUtil.getString("messaging.identity.import.send.identity"), JOptionPane.YES_NO_OPTION,
+		        JOptionPane.QUESTION_MESSAGE,
+		        null,
+		        options,
+		        JOptionPane.NO_OPTION);
 			
 			this.contactList.reloadMessagingIdentities();
 			
@@ -915,8 +940,14 @@ public class MessagingPanel
 			String contactTAddress = Util.stringIsEmpty(id.getSenderidaddress()) ? 
 					                 "<NONE>" : id.getSenderidaddress();
 			String contactZAddress = Util.stringIsEmpty(id.getSendreceiveaddress()) ? 
-	                                 "<NONE>" : id.getSendreceiveaddress();			
-	        int reply = JOptionPane.showConfirmDialog(
+	                                 "<NONE>" : id.getSendreceiveaddress();	
+			Object[] options = 
+	        	{ 
+	        		langUtil.getString("button.option.yes"),
+	        		langUtil.getString("button.option.no")
+	        	};
+			
+	        int reply = JOptionPane.showOptionDialog(
 	        	this.parentFrame,
 	        	id.isGroup() ? langUtil.getString("messaging.identity.remove.group.warning", 
 	        			id.getDiplayString(),
@@ -926,7 +957,11 @@ public class MessagingPanel
 	    	        			contactTAddress,
 	    	        			contactZAddress),
 	        	langUtil.getString("messaging.identity.remove.warning"), 
-	        	JOptionPane.YES_NO_OPTION);
+	        	JOptionPane.YES_NO_OPTION,
+		        JOptionPane.QUESTION_MESSAGE,
+		        null,
+		        options,
+		        JOptionPane.NO_OPTION);
 	        
 	        if (reply == JOptionPane.NO_OPTION) 
 	        {
@@ -1036,12 +1071,21 @@ public class MessagingPanel
 			{
 				if (!contactIdentity.isGroup())
 				{
+					Object[] options = 
+			        	{ 
+			        		langUtil.getString("button.option.yes"),
+			        		langUtil.getString("button.option.no")
+			        	};
 			        // Offer the user to send a return address
-			        int reply = JOptionPane.showConfirmDialog(
+			        int reply = JOptionPane.showOptionDialog(
 			        	this.parentFrame, 
 			        	langUtil.getString("messaging.send.first.message", contactIdentity.getDiplayString()),
 			        	langUtil.getString("messaging.send.return.address"), 
-			        	JOptionPane.YES_NO_OPTION);
+			        	JOptionPane.YES_NO_OPTION,
+				        JOptionPane.QUESTION_MESSAGE,
+				        null,
+				        options,
+				        JOptionPane.NO_OPTION);
 			        
 			        if (reply == JOptionPane.YES_OPTION) 
 			        {
@@ -1070,11 +1114,20 @@ public class MessagingPanel
 			// Check to make sure a normal message is not being sent to an anonymous identity
 			if (contactIdentity.isAnonymous())
 			{
-		        int reply = JOptionPane.showConfirmDialog(
+				Object[] options = 
+		        	{ 
+		        		langUtil.getString("button.option.yes"),
+		        		langUtil.getString("button.option.no")
+		        	};
+		        int reply = JOptionPane.showOptionDialog(
 			      	this.parentFrame, 
 			      	langUtil.getString("messaging.send.reveal.t.message", contactIdentity.getDiplayString()),
 			       	langUtil.getString("messaging.send.reveal.t"), 
-			       	JOptionPane.YES_NO_OPTION);
+			       	JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        options,
+			        JOptionPane.NO_OPTION);
 			        
 			    if (reply == JOptionPane.NO_OPTION) 
 			    {
@@ -1815,11 +1868,19 @@ public class MessagingPanel
 			
 			// So a group is created - we need to ask the user if he wishes to send an identity message 
 			MessagingIdentity createdGroup = cgd.getCreatedGroup();
-			
-			int sendIDChoice = JOptionPane.showConfirmDialog(
+			Object[] options = 
+	        	{ 
+	        		langUtil.getString("button.option.yes"),
+	        		langUtil.getString("button.option.no")
+	        	};
+			int sendIDChoice = JOptionPane.showOptionDialog(
 				this.parentFrame, 
 				langUtil.getString("messaging.add.group.message", createdGroup.getDiplayString()),
-				langUtil.getString("messaging.add.group.send.contact"), JOptionPane.YES_NO_OPTION);
+				langUtil.getString("messaging.add.group.send.contact"), JOptionPane.YES_NO_OPTION,
+		        JOptionPane.QUESTION_MESSAGE,
+		        null,
+		        options,
+		        JOptionPane.NO_OPTION);
 				
 			// TODO: code duplication with import
 			if (sendIDChoice == JOptionPane.YES_OPTION)
