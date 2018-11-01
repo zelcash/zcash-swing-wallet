@@ -9,13 +9,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -46,11 +43,15 @@ public class ZelCashUIEditDialog
 	private static final String TIER2DEFAULT = "#cceeff";
 	private static final String TIER3DEFAULT = "#0069cc";
 	private static final String TEXTDEFAULT = "#000000";
+	private static final String MESSAGESENTDEFAULT = "#0000ff";
+	private static final String MESSAGERECEIVEDDEFAULT = "#ff0000";
 	
 	protected ZelCashJTextField tierOneColor;
 	protected ZelCashJTextField tierTwoColor;
 	protected ZelCashJTextField tierThreeColor;
 	protected ZelCashJTextField textColorTextField;
+	protected ZelCashJTextField messageSentTextField;
+	protected ZelCashJTextField messageReceivedTextField;
 	protected ZelCashJComboBox currencyOptions;
 	
 	private String currency;
@@ -58,11 +59,15 @@ public class ZelCashUIEditDialog
 	private String tier2Color;
 	private String tier3Color;
 	private String textColor;
+	private String messageSentColor;
+	private String messageReceivedColor;
 	
 	private Color color1;
 	private Color color2;
 	private Color color3;
 	private Color colorText;
+	private Color colorMessageSent;
+	private Color colorMessageReceived;
 	
 	private ZelCashJFrame parentFrame;
 	
@@ -72,6 +77,8 @@ public class ZelCashUIEditDialog
 	private static ZelCashJButton tier2Button;
 	private static ZelCashJButton tier3Button;
 	private static ZelCashJButton textButton;
+	private static ZelCashJButton messageSentButton;
+	private static ZelCashJButton messageReceivedButton;
 	
 	
 	public ZelCashUIEditDialog(ZelCashJFrame parent)
@@ -98,6 +105,8 @@ public class ZelCashUIEditDialog
 		tier2Button = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
 		tier3Button = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
 		textButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
+		messageSentButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
+		messageReceivedButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
 		currencyOptions = new ZelCashJComboBox<>(getAvailableCurrencys());
 		currencyOptions.setSelectedItem(currency);
 		
@@ -106,19 +115,27 @@ public class ZelCashUIEditDialog
 
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.currency"),  currencyOptions);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.textcolor"),  textColorTextField = new ZelCashJTextField(7), textButton);
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.message.sent.color"),  messageSentTextField = new ZelCashJTextField(7), messageSentButton);
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.message.received.color"),  messageReceivedTextField = new ZelCashJTextField(7), messageReceivedButton);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.tier1color"),  tierOneColor = new ZelCashJTextField(7), tier1Button);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.tier2color"),  tierTwoColor = new ZelCashJTextField(7), tier2Button);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashuiedit.tier3color"),  tierThreeColor = new ZelCashJTextField(7), tier3Button);
 
 		textColorTextField.setText(textColor);
+		messageSentTextField.setText(messageSentColor);
+		messageReceivedTextField.setText(messageReceivedColor);
 		tierOneColor.setText(tier1Color);
 		tierTwoColor.setText(tier2Color);
 		tierThreeColor.setText(tier3Color);
-		textColorTextField.setEditable(false);;
+		textColorTextField.setEditable(false);
+		messageSentTextField.setEditable(false);
+		messageReceivedTextField.setEditable(false);
 		tierOneColor.setEditable(false);
 		tierTwoColor.setEditable(false);
 		tierThreeColor.setEditable(false);
 		textColorTextField.setForeground(colorText);
+		messageSentTextField.setForeground(colorMessageSent);
+		messageReceivedTextField.setForeground(colorMessageReceived);
 		tierOneColor.setBackground(color1);
 		tierTwoColor.setBackground(color2);
 		tierThreeColor.setBackground(color3);
@@ -226,14 +243,20 @@ public class ZelCashUIEditDialog
 				tier2Color = TIER2DEFAULT;
 				tier3Color = TIER3DEFAULT;
 				textColor = TEXTDEFAULT;
+				messageSentColor = MESSAGESENTDEFAULT;
+				messageReceivedColor = MESSAGERECEIVEDDEFAULT;
 				color1 = Color.decode(tier1Color);
 				color2 = Color.decode(tier2Color);
 				color3 = Color.decode(tier3Color);
 				colorText = Color.decode(textColor);
+				colorMessageSent = Color.decode(messageSentColor);
+				colorMessageReceived = Color.decode(messageReceivedColor);
 				tierOneColor.setBackground(color1);
 				tierTwoColor.setBackground(color2);
 				tierThreeColor.setBackground(color3);
 				textColorTextField.setForeground(colorText);
+				messageSentTextField.setForeground(colorMessageSent);
+				messageReceivedTextField.setForeground(colorMessageReceived);
 				ZelCashUIEditDialog.this.saveZelCashUISettings();			
 				new ZelCashUI();
 				try {
@@ -312,6 +335,48 @@ public class ZelCashUIEditDialog
 				}
 				textButton.setSelected(false);
 				textButton.setFocusable(false);
+				
+			}
+		});
+		
+		messageSentButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				Color color = ZelCashJColorChooser.showDialog(ZelCashUIEditDialog.this, "Pick Color", colorMessageSent);
+				ZelCashUIEditDialog.this.repaint();
+				ZelCashUIEditDialog.this.parentFrame.repaint();
+				if(color == null) {
+					colorMessageSent = Color.decode(messageSentColor);
+				}
+				else {
+					messageSentColor = toHexString(color);
+					messageSentTextField.setForeground(color);
+				}
+				messageSentButton.setSelected(false);
+				messageSentButton.setFocusable(false);
+				
+			}
+		});
+		
+		messageReceivedButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				Color color = ZelCashJColorChooser.showDialog(ZelCashUIEditDialog.this, "Pick Color", colorMessageReceived);
+				ZelCashUIEditDialog.this.repaint();
+				ZelCashUIEditDialog.this.parentFrame.repaint();
+				if(color == null) {
+					colorMessageReceived = Color.decode(messageReceivedColor);
+				}
+				else {
+					messageReceivedColor = toHexString(color);
+					messageReceivedTextField.setForeground(color);
+				}
+				messageReceivedButton.setSelected(false);
+				messageReceivedButton.setFocusable(false);
 				
 			}
 		});
@@ -432,6 +497,8 @@ public class ZelCashUIEditDialog
 				fis = new FileInputStream(zelcashConf);
 				confProps.load(fis);
 				textColor = confProps.getProperty(ZelCashUI.TEXT_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.TEXT_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR_BLACK; 
+				messageSentColor = confProps.getProperty(ZelCashUI.MESSAGE_SENT_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.MESSAGE_SENT_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR_BLUE; 
+				messageReceivedColor = confProps.getProperty(ZelCashUI.MESSAGE_RECEIVED_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.MESSAGE_RECEIVED_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR_RED; 
 				tier1Color = confProps.getProperty(ZelCashUI.FRAME_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.FRAME_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR; 
 				tier2Color = confProps.getProperty(ZelCashUI.TABLE_HEADER_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.TABLE_HEADER_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR; 
 				tier3Color = confProps.getProperty(ZelCashUI.PROGRESSBAR_FOREGROUND_PROPERTY_COLOR)!= null? confProps.getProperty(ZelCashUI.PROGRESSBAR_FOREGROUND_PROPERTY_COLOR).trim():ZelCashUI.DEFAULT_COLOR; 
@@ -440,6 +507,8 @@ public class ZelCashUIEditDialog
 				color2 = Color.decode(tier2Color);
 				color3 = Color.decode(tier3Color);
 				colorText = Color.decode(textColor);
+				colorMessageSent = Color.decode(messageSentColor);
+				colorMessageReceived = Color.decode(messageReceivedColor);
 				
 			} finally
 			{
@@ -516,6 +585,8 @@ public class ZelCashUIEditDialog
 				confProps.setProperty(ZelCashUI.TOOLTIP_PROPERTY_COLOR, tier1Color); 
 				confProps.setProperty(ZelCashUI.VIEWPORT_PROPERTY_COLOR, tier1Color); 
 				confProps.setProperty(ZelCashUI.TEXT_PROPERTY_COLOR, textColor); 
+				confProps.setProperty(ZelCashUI.MESSAGE_SENT_PROPERTY_COLOR, messageSentColor);
+				confProps.setProperty(ZelCashUI.MESSAGE_RECEIVED_PROPERTY_COLOR, messageReceivedColor);
 				confProps.setProperty(ZelCashUI.CURRENCY, currencyOptions.getSelectedItem().toString());  
 				confProps.store(fr, "Save zelcash_ui.properties file");
 				
@@ -557,25 +628,5 @@ public class ZelCashUIEditDialog
 		return currencys;
 
 	}
-	
-	public void restartApplication() throws URISyntaxException, IOException
-	{
-	  final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-	  final File currentJar = new File(ZCashUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
-	  /* is it a jar file? */
-	  if(!currentJar.getName().endsWith(".jar"))
-	    return;
-
-	  /* Build command: java -jar application.jar */
-	  final ArrayList<String> command = new ArrayList<String>();
-	  command.add(javaBin);
-	  command.add("-jar");
-	  command.add(currentJar.getPath());
-
-	  final ProcessBuilder builder = new ProcessBuilder(command);
-	  builder.start();
-	  System.exit(0);
-	}
-	
 } // End public class ZelCashUIEditDialog

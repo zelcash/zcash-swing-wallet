@@ -54,10 +54,15 @@ public class ZelCashUI {
 	public static final String TEXTPANE_PROPERTY_COLOR = "textpane.background.color";
 	public static final String TOOLTIP_PROPERTY_COLOR = "tooltip.background.color";
 	public static final String VIEWPORT_PROPERTY_COLOR = "viewport.background.color";
+	public static final String MESSAGE_SENT_PROPERTY_COLOR = "message.sent.color";
+	public static final String MESSAGE_RECEIVED_PROPERTY_COLOR = "message.received.color";
+	
 	public static final String CURRENCY = "currency";
 
 	public static final String DEFAULT_COLOR = "#ffffff";
 	public static final String DEFAULT_COLOR_BLACK = "#000000";
+	public static final String DEFAULT_COLOR_RED = "#ff0000";
+	public static final String DEFAULT_COLOR_BLUE = "#0000ff";
 	public static final String DEFAULT_CURRENCY = "USD";
 	
 	public static Color button;
@@ -100,6 +105,8 @@ public class ZelCashUI {
 	public static Color textpane;
 	public static Color tooltip;
 	public static Color viewport;
+	public static Color messageSent;
+	public static Color messageReceived;
 	public static String currency;
 
 	
@@ -201,6 +208,8 @@ public class ZelCashUI {
 				textpane = Color.decode(confProps.getProperty(TEXTPANE_PROPERTY_COLOR)!= null? confProps.getProperty(TEXTPANE_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				tooltip = Color.decode(confProps.getProperty(TOOLTIP_PROPERTY_COLOR)!= null? confProps.getProperty(TOOLTIP_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
 				viewport = Color.decode(confProps.getProperty(VIEWPORT_PROPERTY_COLOR)!= null? confProps.getProperty(VIEWPORT_PROPERTY_COLOR).trim():DEFAULT_COLOR); 
+				messageSent = Color.decode(confProps.getProperty(MESSAGE_SENT_PROPERTY_COLOR)!= null? confProps.getProperty(MESSAGE_SENT_PROPERTY_COLOR).trim():DEFAULT_COLOR_BLUE); 
+				messageReceived = Color.decode(confProps.getProperty(MESSAGE_RECEIVED_PROPERTY_COLOR)!= null? confProps.getProperty(MESSAGE_RECEIVED_PROPERTY_COLOR).trim():DEFAULT_COLOR_RED); 
 				currency = confProps.getProperty(CURRENCY)!= null? confProps.getProperty(CURRENCY).toUpperCase().trim():DEFAULT_CURRENCY; 
 				
 			} finally

@@ -6,7 +6,7 @@ import javax.swing.JTabbedPane;
 
 public class ZelCashJTabbedPane extends JTabbedPane {
 	private Color backGroundColor = ZelCashUI.tabbedpane;
-	private static Color textColor = ZelCashUI.text;
+	private Color textColor = ZelCashUI.text;
 	public ZelCashJTabbedPane() {
 		super();
 		this.setBackground(backGroundColor);

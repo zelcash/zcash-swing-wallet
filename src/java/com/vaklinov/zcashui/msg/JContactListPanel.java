@@ -348,7 +348,7 @@ public class JContactListPanel
 		ImageIcon contactBlackIcon;
 		ImageIcon contactGroupBlackIcon;
 		ZelCashJLabel    renderer;
-		private static Color backGroundColor = ZelCashUI.startup;
+		private Color backGroundColor = ZelCashUI.startup;
 		public ContactList()
 		{
 			super();
