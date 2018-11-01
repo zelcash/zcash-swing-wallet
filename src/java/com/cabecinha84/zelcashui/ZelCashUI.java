@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
+import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.OSUtil;
 
@@ -109,7 +110,7 @@ public class ZelCashUI {
 	public static Color messageReceived;
 	public static String currency;
 
-	
+	private static LanguageUtil langUtil = LanguageUtil.instance();
 	
 	public ZelCashUI() {
 		Log.info("Loading ZelCashUI");
@@ -142,6 +143,7 @@ public class ZelCashUI {
 		javax.swing.UIManager.put("Button.foreground",ZelCashUI.text);
 		javax.swing.UIManager.put("Panel.background",ZelCashUI.panel);
 		javax.swing.UIManager.put("Panel.foreground",ZelCashUI.text);
+		javax.swing.UIManager.put("OptionPane.okButtonText", langUtil.getString("button.option.ok"));
 			
 		
 		Log.info("Finished loading ZelCashUI");
