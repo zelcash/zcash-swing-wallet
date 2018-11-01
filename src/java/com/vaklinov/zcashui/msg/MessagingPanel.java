@@ -519,10 +519,25 @@ public class MessagingPanel
 		{
 			if (this.messagingStorage.getOwnIdentity() == null)
 			{
-		        JOptionPane.showMessageDialog(
+				Object[] optionsSkip = 
+		        	{ 
+		        		langUtil.getString("button.option.ok"),
+		        		langUtil.getString("button.option.skip")
+		        	};
+				int reply = JOptionPane.showOptionDialog(
 	                this.parentFrame,
 	                langUtil.getString("messaging.panel.welcome.message", OSUtil.getSettingsDirectory()+ File.separator +"messaging"),
-	                langUtil.getString("messaging.panel.welcome"), JOptionPane.INFORMATION_MESSAGE);
+	                langUtil.getString("messaging.panel.welcome"), 
+			        JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        optionsSkip,
+			        JOptionPane.NO_OPTION);
+				
+				if (reply == JOptionPane.NO_OPTION) 
+		        {
+		        	return;
+		        }
 		        	        
 		        // Show the GUI dialog to edit an initially empty messaging identity
 		        boolean identityCreated = this.openOwnIdentityDialog();
@@ -532,7 +547,7 @@ public class MessagingPanel
 		        		langUtil.getString("button.option.no")
 		        	};
 		        // Offer the user to export his messaging identity
-		        int reply = JOptionPane.showOptionDialog(
+		        reply = JOptionPane.showOptionDialog(
 		        	this.parentFrame, 
 		        	langUtil.getString("messaging.panel.export.message"), 
 		        	langUtil.getString("messaging.panel.export"), 
