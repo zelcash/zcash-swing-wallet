@@ -38,13 +38,19 @@ import com.vaklinov.zcashui.ZCashUI;
 public class ZelCashUIEditDialog
 	extends ZelCashJDialog
 {
-	private static final String CURRENCYDEFAULT = "USD";
-	private static final String TIER1DEFAULT = "#ffffff";
-	private static final String TIER2DEFAULT = "#cceeff";
-	private static final String TIER3DEFAULT = "#0069cc";
-	private static final String TEXTDEFAULT = "#000000";
-	private static final String MESSAGESENTDEFAULT = "#0000ff";
-	private static final String MESSAGERECEIVEDDEFAULT = "#ff0000";
+	private static final String WHITETIER1DEFAULT = "#ffffff";
+	private static final String WHITETIER2DEFAULT = "#cceeff";
+	private static final String WHITETIER3DEFAULT = "#0069cc";
+	private static final String WHITETEXTDEFAULT = "#000000";
+	private static final String WHITEMESSAGESENTDEFAULT = "#0000ff";
+	private static final String WHITEMESSAGERECEIVEDDEFAULT = "#ff0000";
+	
+	private static final String BLUETIER1DEFAULT = "#386AF5";
+	private static final String BLUETIER2DEFAULT = "#0033ff";
+	private static final String BLUETIER3DEFAULT = "#0033cc";
+	private static final String BLUETEXTDEFAULT = "#ffffff";
+	private static final String BLUEMESSAGESENTDEFAULT = "#00ff33";
+	private static final String BLUEMESSAGERECEIVEDDEFAULT = "#ff0000";
 	
 	protected ZelCashJTextField tierOneColor;
 	protected ZelCashJTextField tierTwoColor;
@@ -71,7 +77,8 @@ public class ZelCashUIEditDialog
 	
 	private ZelCashJFrame parentFrame;
 	
-	private static ZelCashJButton defaultsButton;
+	private static ZelCashJButton whiteThemeButton;
+	private static ZelCashJButton blueThemeButton;
 	private static ZelCashJButton saveButton;
 	private static ZelCashJButton tier1Button;
 	private static ZelCashJButton tier2Button;
@@ -147,8 +154,11 @@ public class ZelCashUIEditDialog
 		closePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
 		ZelCashJButton closeButon = new ZelCashJButton(langUtil.getString("dialog.about.button.close.text"));
 		closePanel.add(closeButon);
-		defaultsButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.setDefaults"));
-		closePanel.add(defaultsButton);
+		whiteThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.white.theme"));
+		closePanel.add(whiteThemeButton);
+		blueThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.blue.theme"));
+		closePanel.add(blueThemeButton);
+		
 		saveButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.save"));
 		closePanel.add(saveButton);
 
@@ -170,81 +180,24 @@ public class ZelCashUIEditDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				ZelCashUIEditDialog.this.saveZelCashUISettings();			
-				new ZelCashUI();
-				try {
-					ZCashUI z = new ZCashUI(null);
-					ZelCashUIEditDialog.this.parentFrame.setVisible(false);
-					ZelCashUIEditDialog.this.parentFrame.dispose();
-					ZelCashUIEditDialog.this.parentFrame = z;	
-					ZelCashUIEditDialog.this.parentFrame.repaint();
-					ZelCashUIEditDialog.this.parentFrame.setVisible(true);
-					ZelCashUIEditDialog dialog = new ZelCashUIEditDialog(ZelCashUIEditDialog.this.parentFrame);
-					ZelCashUIEditDialog.this.setVisible(false);
-					ZelCashUIEditDialog.this.dispose();
-					dialog.setVisible(true);
-				}
-				catch (WalletCallException wce)
-		        {
-		        	Log.error("Unexpected error: ", wce);
-
-		            if ((wce.getMessage().indexOf("{\"code\":-28,\"message\"") != -1) ||
-		            	(wce.getMessage().indexOf("error code: -28") != -1))
-		            {
-		                JOptionPane.showMessageDialog(
-		                        null,
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.text"),
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.title"),
-		                        JOptionPane.ERROR_MESSAGE);
-		            } else
-		            {
-		                JOptionPane.showMessageDialog(
-		                    null,
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.2.text", wce.getMessage()),
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.2.title"),
-		                    JOptionPane.ERROR_MESSAGE);
-		            }
-
-		            System.exit(2);
-		        } catch (Exception ex)
-		        {
-		        	Log.error("Unexpected error: ", ex);
-		            JOptionPane.showMessageDialog(
-		                null,
-		                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.text", ex.getMessage()),
-		                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.title"),
-		                JOptionPane.ERROR_MESSAGE);
-		            System.exit(3);
-		        } catch (Error err)
-		        {
-		        	// Last resort catch for unexpected problems - just to inform the user
-		            err.printStackTrace();
-		            JOptionPane.showMessageDialog(
-		                null,
-		                    LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", err.getMessage()),
-		                    LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
-		                    JOptionPane.ERROR_MESSAGE);
-		            System.exit(4);
-		        }
+				saveSettings();
 				saveButton.setSelected(false);
 				saveButton.setFocusable(false);
 			}
 		});
 		
 		
-		defaultsButton.addActionListener(new ActionListener()
+		whiteThemeButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				currency = CURRENCYDEFAULT;
-				currencyOptions.setSelectedItem(currency);
-				tier1Color = TIER1DEFAULT;
-				tier2Color = TIER2DEFAULT;
-				tier3Color = TIER3DEFAULT;
-				textColor = TEXTDEFAULT;
-				messageSentColor = MESSAGESENTDEFAULT;
-				messageReceivedColor = MESSAGERECEIVEDDEFAULT;
+				tier1Color = WHITETIER1DEFAULT;
+				tier2Color = WHITETIER2DEFAULT;
+				tier3Color = WHITETIER3DEFAULT;
+				textColor = WHITETEXTDEFAULT;
+				messageSentColor = WHITEMESSAGESENTDEFAULT;
+				messageReceivedColor = WHITEMESSAGERECEIVEDDEFAULT;
 				color1 = Color.decode(tier1Color);
 				color2 = Color.decode(tier2Color);
 				color3 = Color.decode(tier3Color);
@@ -258,63 +211,38 @@ public class ZelCashUIEditDialog
 				messageSentTextField.setForeground(colorMessageSent);
 				messageReceivedTextField.setForeground(colorMessageReceived);
 				ZelCashUIEditDialog.this.saveZelCashUISettings();			
-				new ZelCashUI();
-				try {
-					ZCashUI z = new ZCashUI(null);
-					ZelCashUIEditDialog.this.parentFrame.setVisible(false);
-					ZelCashUIEditDialog.this.parentFrame.dispose();
-					ZelCashUIEditDialog.this.parentFrame = z;	
-					ZelCashUIEditDialog.this.parentFrame.repaint();
-					ZelCashUIEditDialog.this.parentFrame.setVisible(true);
-					ZelCashUIEditDialog dialog = new ZelCashUIEditDialog(ZelCashUIEditDialog.this.parentFrame);
-					ZelCashUIEditDialog.this.setVisible(false);
-					ZelCashUIEditDialog.this.dispose();
-					dialog.setVisible(true);
-				}
-				catch (WalletCallException wce)
-		        {
-		        	Log.error("Unexpected error: ", wce);
-
-		            if ((wce.getMessage().indexOf("{\"code\":-28,\"message\"") != -1) ||
-		            	(wce.getMessage().indexOf("error code: -28") != -1))
-		            {
-		                JOptionPane.showMessageDialog(
-		                        null,
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.text"),
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.title"),
-		                        JOptionPane.ERROR_MESSAGE);
-		            } else
-		            {
-		                JOptionPane.showMessageDialog(
-		                    null,
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.2.text", wce.getMessage()),
-		                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.2.title"),
-		                    JOptionPane.ERROR_MESSAGE);
-		            }
-
-		            System.exit(2);
-		        } catch (Exception ex)
-		        {
-		        	Log.error("Unexpected error: ", ex);
-		            JOptionPane.showMessageDialog(
-		                null,
-		                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.text", ex.getMessage()),
-		                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.title"),
-		                JOptionPane.ERROR_MESSAGE);
-		            System.exit(3);
-		        } catch (Error err)
-		        {
-		        	// Last resort catch for unexpected problems - just to inform the user
-		            err.printStackTrace();
-		            JOptionPane.showMessageDialog(
-		                null,
-		                    LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", err.getMessage()),
-		                    LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
-		                    JOptionPane.ERROR_MESSAGE);
-		            System.exit(4);
-		        }
-				defaultsButton.setSelected(false);
-				defaultsButton.setFocusable(false);
+				saveSettings();
+				whiteThemeButton.setSelected(false);
+				whiteThemeButton.setFocusable(false);
+			}
+		});
+		
+		blueThemeButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				tier1Color = BLUETIER1DEFAULT;
+				tier2Color = BLUETIER2DEFAULT;
+				tier3Color = BLUETIER3DEFAULT;
+				textColor = BLUETEXTDEFAULT;
+				messageSentColor = BLUEMESSAGESENTDEFAULT;
+				messageReceivedColor = BLUEMESSAGERECEIVEDDEFAULT;
+				color1 = Color.decode(tier1Color);
+				color2 = Color.decode(tier2Color);
+				color3 = Color.decode(tier3Color);
+				colorText = Color.decode(textColor);
+				colorMessageSent = Color.decode(messageSentColor);
+				colorMessageReceived = Color.decode(messageReceivedColor);
+				tierOneColor.setBackground(color1);
+				tierTwoColor.setBackground(color2);
+				tierThreeColor.setBackground(color3);
+				textColorTextField.setForeground(colorText);
+				messageSentTextField.setForeground(colorMessageSent);
+				messageReceivedTextField.setForeground(colorMessageReceived);
+				saveSettings();
+				blueThemeButton.setSelected(false);
+				blueThemeButton.setFocusable(false);
 			}
 		});
 		
@@ -332,6 +260,7 @@ public class ZelCashUIEditDialog
 				else {
 					textColor = toHexString(color);
 					textColorTextField.setForeground(color);
+					textColorTextField.setText(textColor);
 				}
 				textButton.setSelected(false);
 				textButton.setFocusable(false);
@@ -353,6 +282,7 @@ public class ZelCashUIEditDialog
 				else {
 					messageSentColor = toHexString(color);
 					messageSentTextField.setForeground(color);
+					messageSentTextField.setText(messageSentColor);
 				}
 				messageSentButton.setSelected(false);
 				messageSentButton.setFocusable(false);
@@ -374,6 +304,7 @@ public class ZelCashUIEditDialog
 				else {
 					messageReceivedColor = toHexString(color);
 					messageReceivedTextField.setForeground(color);
+					messageReceivedTextField.setText(messageReceivedColor);
 				}
 				messageReceivedButton.setSelected(false);
 				messageReceivedButton.setFocusable(false);
@@ -394,6 +325,7 @@ public class ZelCashUIEditDialog
 				}
 				else {
 					tier1Color = toHexString(color);
+					tierOneColor.setText(tier1Color);
 					tierOneColor.setBackground(color);
 				}
 				tier1Button.setSelected(false);
@@ -414,6 +346,7 @@ public class ZelCashUIEditDialog
 				}
 				else {
 					tier2Color = toHexString(color);
+					tierTwoColor.setText(tier2Color);
 					tierTwoColor.setBackground(color);
 				}
 				tier2Button.setSelected(false);
@@ -434,6 +367,7 @@ public class ZelCashUIEditDialog
 				}
 				else {
 					tier3Color = toHexString(color);
+					tierThreeColor.setText(tier3Color);
 					tierThreeColor.setBackground(color);
 				}
 				tier3Button.setSelected(false);
@@ -627,6 +561,66 @@ public class ZelCashUIEditDialog
 		}
 		return currencys;
 
+	}
+	
+	private void saveSettings() {
+		ZelCashUIEditDialog.this.saveZelCashUISettings();			
+		new ZelCashUI();
+		try {
+			ZCashUI z = new ZCashUI(null);
+			ZelCashUIEditDialog.this.parentFrame.setVisible(false);
+			ZelCashUIEditDialog.this.parentFrame.dispose();
+			ZelCashUIEditDialog.this.parentFrame = z;	
+			ZelCashUIEditDialog.this.parentFrame.repaint();
+			ZelCashUIEditDialog.this.parentFrame.setVisible(true);
+			ZelCashUIEditDialog dialog = new ZelCashUIEditDialog(ZelCashUIEditDialog.this.parentFrame);
+			ZelCashUIEditDialog.this.setVisible(false);
+			ZelCashUIEditDialog.this.dispose();
+			dialog.setVisible(true);
+		}
+		catch (WalletCallException wce)
+        {
+        	Log.error("Unexpected error: ", wce);
+
+            if ((wce.getMessage().indexOf("{\"code\":-28,\"message\"") != -1) ||
+            	(wce.getMessage().indexOf("error code: -28") != -1))
+            {
+                JOptionPane.showMessageDialog(
+                        null,
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.text"),
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.title"),
+                        JOptionPane.ERROR_MESSAGE);
+            } else
+            {
+                JOptionPane.showMessageDialog(
+                    null,
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.2.text", wce.getMessage()),
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.communication.error.2.title"),
+                    JOptionPane.ERROR_MESSAGE);
+            }
+
+            System.exit(2);
+        } catch (Exception ex)
+        {
+        	Log.error("Unexpected error: ", ex);
+            JOptionPane.showMessageDialog(
+                null,
+                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.text", ex.getMessage()),
+                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.title"),
+                JOptionPane.ERROR_MESSAGE);
+            System.exit(3);
+        } catch (Error err)
+        {
+        	// Last resort catch for unexpected problems - just to inform the user
+            err.printStackTrace();
+            JOptionPane.showMessageDialog(
+                null,
+                    LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", err.getMessage()),
+                    LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(4);
+        }
+		
 	}
 
 } // End public class ZelCashUIEditDialog
