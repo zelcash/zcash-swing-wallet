@@ -189,8 +189,8 @@ public class ZCashUI
         ZelCashJMenu file = new ZelCashJMenu(langUtil.getString("menu.label.main"));
         file.setMnemonic(KeyEvent.VK_M);
         int accelaratorKeyMask = Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask();
-        file.add(menuItemZelcashUI = new ZelCashJMenuItem(langUtil.getString("menu.label.zelcashui"), KeyEvent.VK_Z));
-        menuItemZelcashUI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelaratorKeyMask));
+        file.add(menuItemZelcashUI = new ZelCashJMenuItem(langUtil.getString("menu.label.zelcashui"), KeyEvent.VK_U));
+        menuItemZelcashUI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, accelaratorKeyMask));
         file.add(menuItemAbout = new ZelCashJMenuItem(langUtil.getString("menu.label.about"), KeyEvent.VK_T));
         menuItemAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, accelaratorKeyMask));
         file.addSeparator();
