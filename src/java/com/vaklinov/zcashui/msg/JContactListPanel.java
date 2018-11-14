@@ -65,6 +65,7 @@ import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJPopupMenu;
 import com.cabecinha84.zelcashui.ZelCashJScrollPane;
 import com.cabecinha84.zelcashui.ZelCashUI;
+import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.StatusUpdateErrorReporter;
 
@@ -82,6 +83,8 @@ public class JContactListPanel
 	private ZelCashJFrame           parentFrame;
 	
 	private ZelCashJPopupMenu popupMenu;
+	
+	private static LanguageUtil langUtil = LanguageUtil.instance();
 	
 	public JContactListPanel(MessagingPanel parent, 
 			ZelCashJFrame parentFrame,
@@ -110,12 +113,12 @@ public class JContactListPanel
         URL removeIconUrl = this.getClass().getClassLoader().getResource("zelcashImages/remove12.png");
         ImageIcon removeIcon = new ImageIcon(removeIconUrl);
         ZelCashJButton addButton = new ZelCashJButton(addIcon);
-        addButton.setToolTipText("Add contact...");
+        addButton.setToolTipText(langUtil.getString("contact.list.add.contact"));
         ZelCashJButton removeButton = new ZelCashJButton(removeIcon);
-        removeButton.setToolTipText("Remove contact...");
+        removeButton.setToolTipText(langUtil.getString("contact.list.remove.contact"));
         ZelCashJButton addGroupButton = new ZelCashJButton(
-        	"<html><span style=\"font-size:0.7em;\">Group</span></html>", addIcon);
-        addGroupButton.setToolTipText("Add group...");
+        	langUtil.getString("contact.list.button.group"), addIcon);
+        addGroupButton.setToolTipText(langUtil.getString("contact.list.add.group"));
         ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 3, 0));
         tempPanel.add(removeButton);
         tempPanel.add(addButton);
@@ -225,7 +228,7 @@ public class JContactListPanel
 		this.popupMenu = new ZelCashJPopupMenu();
 		int accelaratorKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		
-		ZelCashJMenuItem showDetails = new ZelCashJMenuItem("Show details...");
+		ZelCashJMenuItem showDetails = new ZelCashJMenuItem(langUtil.getString("contact.list.show.details"));
         popupMenu.add(showDetails);
         showDetails.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelaratorKeyMask));
         showDetails.addActionListener(new ActionListener() 
@@ -243,7 +246,7 @@ public class JContactListPanel
 			}
 		});
         
-        ZelCashJMenuItem removeContact = new ZelCashJMenuItem("Remove...");
+        ZelCashJMenuItem removeContact = new ZelCashJMenuItem(langUtil.getString("contact.list.remove"));
         popupMenu.add(removeContact);
         removeContact.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, accelaratorKeyMask));
         removeContact.addActionListener(new ActionListener() 
@@ -255,7 +258,7 @@ public class JContactListPanel
 			}
 		});
 
-        ZelCashJMenuItem sendContactDetails = new ZelCashJMenuItem("Send contact details...");
+        ZelCashJMenuItem sendContactDetails = new ZelCashJMenuItem(langUtil.getString("contact.list.send.contact.details"));
         popupMenu.add(sendContactDetails);
         sendContactDetails.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelaratorKeyMask));
         sendContactDetails.addActionListener(new ActionListener() 
@@ -279,21 +282,28 @@ public class JContactListPanel
 			{
 		        JOptionPane.showMessageDialog(
 			        this.parentFrame,
-			        "No messaging contact is selected in the contact list (on the right side of the UI).\n" +
-			        "In order to send contact details you need to select a contact first!",
-				    "No messaging contact is selected...", JOptionPane.ERROR_MESSAGE);					
+			        langUtil.getString("contact.list.no.messaging.contact.message"),
+				    langUtil.getString("contact.list.no.messaging.contact"), JOptionPane.ERROR_MESSAGE);					
 				return;
 			}
 			
 			if (id.isAnonymous())
 			{
-		        int reply = JOptionPane.showConfirmDialog(
+				Object[] options = 
+		        	{ 
+		        		langUtil.getString("button.option.yes"),
+		        		langUtil.getString("button.option.no")
+		        	};
+				
+		        int reply = JOptionPane.showOptionDialog(
 			        this.parentFrame, 
-			        "The contact: " + id.getDiplayString() + "\n" +
-			        "is anonymous. Sending your contact details to them will reveal your messaging\n" +
-			        "identity! Are you sure you want to send your contact details to them?", 
-			        "Are you sure you want to send your contact details", 
-			        JOptionPane.YES_NO_OPTION);
+			        langUtil.getString("contact.list.confirm.anonymous", id.getDiplayString()),
+			        langUtil.getString("contact.list.are.you.sure"), 
+			        JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        options,
+			        JOptionPane.NO_OPTION);
 			        
 			    if (reply == JOptionPane.NO_OPTION) 
 			    {
@@ -338,7 +348,7 @@ public class JContactListPanel
 		ImageIcon contactBlackIcon;
 		ImageIcon contactGroupBlackIcon;
 		ZelCashJLabel    renderer;
-		private static Color backGroundColor = ZelCashUI.startup;
+		private Color backGroundColor = ZelCashUI.startup;
 		public ContactList()
 		{
 			super();

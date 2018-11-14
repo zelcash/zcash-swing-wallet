@@ -189,8 +189,8 @@ public class ZCashUI
         ZelCashJMenu file = new ZelCashJMenu(langUtil.getString("menu.label.main"));
         file.setMnemonic(KeyEvent.VK_M);
         int accelaratorKeyMask = Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask();
-        file.add(menuItemZelcashUI = new ZelCashJMenuItem(langUtil.getString("menu.label.zelcashui"), KeyEvent.VK_Z));
-        menuItemZelcashUI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelaratorKeyMask));
+        file.add(menuItemZelcashUI = new ZelCashJMenuItem(langUtil.getString("menu.label.zelcashui"), KeyEvent.VK_U));
+        menuItemZelcashUI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, accelaratorKeyMask));
         file.add(menuItemAbout = new ZelCashJMenuItem(langUtil.getString("menu.label.about"), KeyEvent.VK_T));
         menuItemAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, accelaratorKeyMask));
         file.addSeparator();
@@ -221,8 +221,8 @@ public class ZCashUI
         messaging.setMnemonic(KeyEvent.VK_S);
         messaging.add(menuItemOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.own.identity"), KeyEvent.VK_D));
         menuItemOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelaratorKeyMask));        
-        messaging.add(menuItemExportOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.export.own.identity"), KeyEvent.VK_X));
-        menuItemExportOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelaratorKeyMask));        
+        messaging.add(menuItemExportOwnIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.export.own.identity"), KeyEvent.VK_L));
+        menuItemExportOwnIdentity.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelaratorKeyMask));        
         messaging.add(menuItemAddMessagingGroup = new ZelCashJMenuItem(langUtil.getString("menu.label.add.messaging.group"), KeyEvent.VK_G));
         menuItemAddMessagingGroup.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, accelaratorKeyMask));
         messaging.add(menuItemImportContactIdentity = new ZelCashJMenuItem(langUtil.getString("menu.label.import.contact.identity"), KeyEvent.VK_Y));
@@ -612,6 +612,7 @@ public class ZCashUI
     {
         try
         {
+        	new ZelCashUI();
         	OS_TYPE os = OSUtil.getOSType();
         	
         	if ((os == OS_TYPE.WINDOWS) || (os == OS_TYPE.MAC_OS))
@@ -688,10 +689,9 @@ public class ZCashUI
                 }
             }
             if (false == AppLock.lock()) {
-                throw new Exception("Duplicate instante detected.");
+                throw new Exception(LanguageUtil.instance().getString("duplicate.instante.detected"));
             }
             installShutdownHook();
-            new ZelCashUI();
     		
             StartupProgressDialog startupBar = null;
             if ((zcashdInfo.status != DAEMON_STATUS.RUNNING) || (daemonStartInProgress))

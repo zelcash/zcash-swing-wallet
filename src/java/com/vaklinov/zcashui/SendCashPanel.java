@@ -317,7 +317,7 @@ public class SendCashPanel
 		this.timers.add(timerBalancesUpdater);
 		
 		// Add a popup menu to the destination address field - for convenience
-		ZelCashJMenuItem paste = new ZelCashJMenuItem(langUtil.getString("send.cash.panel.menu.item.paste"));
+		/*ZelCashJMenuItem paste = new ZelCashJMenuItem(langUtil.getString("send.cash.panel.menu.item.paste"));
 		final ZelCashJPopupMenu popupMenu = new ZelCashJPopupMenu();
         popupMenu.add(paste);
         paste.addActionListener(new ActionListener() 
@@ -362,7 +362,7 @@ public class SendCashPanel
             	}
             }
         });
-		
+		*/
 	}
 	
 	
@@ -477,7 +477,7 @@ public class SendCashPanel
 				  destinationAddress.startsWith("t1") ||
 				  destinationAddress.startsWith("t3")))
 			{
-				Object[] options = { "OK" };
+				Object[] options = { langUtil.getString("button.option.ok") };
 
 				JOptionPane.showOptionDialog(
 					SendCashPanel.this.getRootPane().getParent(), 
@@ -498,11 +498,20 @@ public class SendCashPanel
 			(!Util.stringIsEmpty(memo)) &&
 			(!Util.isZAddress(destinationAddress)))
 		{
-	        int reply = JOptionPane.showConfirmDialog(
+			Object[] options = 
+	        	{ 
+	        		langUtil.getString("button.option.yes"),
+	        		langUtil.getString("button.option.no")
+	        	};
+	        int reply = JOptionPane.showOptionDialog(
 	        		SendCashPanel.this.getRootPane().getParent(), 
 					langUtil.getString("send.cash.panel.option.pane.error.destination.address.notz.text", destinationAddress),
 					langUtil.getString("send.cash.panel.option.pane.error.destination.address.notz.title"),
-			        JOptionPane.YES_NO_OPTION);
+					JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        options,
+			        JOptionPane.NO_OPTION);
 			        
 			if (reply == JOptionPane.NO_OPTION) 
 			{
@@ -513,11 +522,20 @@ public class SendCashPanel
         // Warn the user if there are too many fractional digits in the amount and fee
 		if (hasExcessiveFractionalDigits(amount))
 		{
-	        int reply = JOptionPane.showConfirmDialog(
+			Object[] options = 
+	        	{ 
+	        		langUtil.getString("button.option.yes"),
+	        		langUtil.getString("button.option.no")
+	        	};
+	        int reply = JOptionPane.showOptionDialog(
 	        		SendCashPanel.this.getRootPane().getParent(), 
 					langUtil.getString("send.cash.panel.option.pane.error.destination.amount.fractional.digits", amount),
 					langUtil.getString("send.cash.panel.option.pane.error.destination.fractional.digits.title"),
-			        JOptionPane.YES_NO_OPTION);
+			        JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        options,
+			        JOptionPane.NO_OPTION);
 			        
 			if (reply == JOptionPane.NO_OPTION) 
 			{
@@ -527,11 +545,20 @@ public class SendCashPanel
 		
 		if (hasExcessiveFractionalDigits(fee))
 		{
-	        int reply = JOptionPane.showConfirmDialog(
+			Object[] options = 
+	        	{ 
+	        		langUtil.getString("button.option.yes"),
+	        		langUtil.getString("button.option.no")
+	        	};
+	        int reply = JOptionPane.showOptionDialog(
 	        		SendCashPanel.this.getRootPane().getParent(), 
 					langUtil.getString("send.cash.panel.option.pane.error.destination.fee.fractional.digits", fee),
 					langUtil.getString("send.cash.panel.option.pane.error.destination.fractional.digits.title"),
-			        JOptionPane.YES_NO_OPTION);
+			        JOptionPane.YES_NO_OPTION,
+			        JOptionPane.QUESTION_MESSAGE,
+			        null,
+			        options,
+			        JOptionPane.NO_OPTION);
 			        
 			if (reply == JOptionPane.NO_OPTION) 
 			{

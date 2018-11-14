@@ -40,7 +40,7 @@ public class StartupProgressDialog extends ZelCashJFrame {
     private BorderLayout southPanelLayout = new BorderLayout();
     private ZelCashJProgressBar progressBar = new ZelCashJProgressBar();
     private ImageIcon imageIcon;
-    private static Color backGroundColor = ZelCashUI.progressbar;
+    private Color backGroundColor = ZelCashUI.progressbar;
     
     private final ZCashClientCaller clientCaller;
     
