@@ -52,16 +52,16 @@ public class ZelCashUIEditDialog
 	private static final String BLUEMESSAGESENTDEFAULT = "#00ff33";
 	private static final String BLUEMESSAGERECEIVEDDEFAULT = "#ff0000";
 	
-	private static final String GREENTIER1DEFAULT = "#ffecb3";
-	private static final String GREENTIER2DEFAULT = "#b3e6b3";
+	private static final String GREENTIER1DEFAULT = "#b3e6b3";
+	private static final String GREENTIER2DEFAULT = "#ffecb3";
 	private static final String GREENTIER3DEFAULT = "#39ac39";
 	private static final String GREENTEXTDEFAULT = "#000000";
 	private static final String GREENMESSAGESENTDEFAULT = "#0000ff";
 	private static final String GREENMESSAGERECEIVEDDEFAULT = "#ff0000";
 	
-	private static final String REDTIER1DEFAULT = "#ff1a1a";
+	private static final String REDTIER1DEFAULT = "#ff0000";
 	private static final String REDTIER2DEFAULT = "#ff4d4d";
-	private static final String REDTIER3DEFAULT = "#ff1a1a";
+	private static final String REDTIER3DEFAULT = "#ffffff";
 	private static final String REDTEXTDEFAULT = "#ffffff";
 	private static final String REDMESSAGESENTDEFAULT = "#00ff33";
 	private static final String REDMESSAGERECEIVEDDEFAULT = "#1a1aff";
@@ -72,6 +72,13 @@ public class ZelCashUIEditDialog
 	private static final String GREYTEXTDEFAULT = "#ffffff";
 	private static final String GREYMESSAGESENTDEFAULT = "#00ff33";
 	private static final String GREYMESSAGERECEIVEDDEFAULT = "#1a1aff";
+	
+	private static final String ORANGETIER1DEFAULT = "#FDB813";
+	private static final String ORANGETIER2DEFAULT = "#ffff00";
+	private static final String ORANGETIER3DEFAULT = "#ff0000";
+	private static final String ORANGETEXTDEFAULT = "#ff0000";
+	private static final String ORANGEMESSAGESENTDEFAULT = "#00ff33";
+	private static final String ORANGEMESSAGERECEIVEDDEFAULT = "#1a1aff";
 	
 	protected ZelCashJTextField tierOneColor;
 	protected ZelCashJTextField tierTwoColor;
@@ -98,6 +105,7 @@ public class ZelCashUIEditDialog
 	
 	private ZelCashJFrame parentFrame;
 	
+	private static ZelCashJButton orangeThemeButton;
 	private static ZelCashJButton greyThemeButton;
 	private static ZelCashJButton whiteThemeButton;
 	private static ZelCashJButton blueThemeButton;
@@ -180,13 +188,22 @@ public class ZelCashUIEditDialog
 		themePanel.add(blueThemeButton);
 		greenThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.green.theme"));
 		themePanel.add(greenThemeButton);
-		redThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.red.theme"));
-		themePanel.add(redThemeButton);
-		greyThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.grey.theme"));
-		themePanel.add(greyThemeButton);
 		themePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		
 		detailsPanel.add(themePanel);
+		
+		
+		ZelCashJPanel themePanel2 = new ZelCashJPanel();
+		themePanel2.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
+		redThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.red.theme"));
+		themePanel2.add(redThemeButton);
+		greyThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.grey.theme"));
+		themePanel2.add(greyThemeButton);
+		orangeThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.orange.theme"));
+		themePanel2.add(orangeThemeButton);
+		
+		detailsPanel.add(themePanel2);
+		
 		this.getContentPane().add(detailsPanel, BorderLayout.CENTER);
 	
 		
@@ -249,6 +266,36 @@ public class ZelCashUIEditDialog
 				saveSettings();
 				whiteThemeButton.setSelected(false);
 				whiteThemeButton.setFocusable(false);
+			}
+		});
+		
+		orangeThemeButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				tier1Color = ORANGETIER1DEFAULT;
+				tier2Color = ORANGETIER2DEFAULT;
+				tier3Color = ORANGETIER3DEFAULT;
+				textColor = ORANGETEXTDEFAULT;
+				messageSentColor = ORANGEMESSAGESENTDEFAULT;
+				messageReceivedColor = ORANGEMESSAGERECEIVEDDEFAULT;
+				color1 = Color.decode(tier1Color);
+				color2 = Color.decode(tier2Color);
+				color3 = Color.decode(tier3Color);
+				colorText = Color.decode(textColor);
+				colorMessageSent = Color.decode(messageSentColor);
+				colorMessageReceived = Color.decode(messageReceivedColor);
+				tierOneColor.setBackground(color1);
+				tierTwoColor.setBackground(color2);
+				tierThreeColor.setBackground(color3);
+				textColorTextField.setForeground(colorText);
+				messageSentTextField.setForeground(colorMessageSent);
+				messageReceivedTextField.setForeground(colorMessageReceived);
+				ZelCashUIEditDialog.this.saveZelCashUISettings();			
+				saveSettings();
+				orangeThemeButton.setSelected(false);
+				orangeThemeButton.setFocusable(false);
 			}
 		});
 		
