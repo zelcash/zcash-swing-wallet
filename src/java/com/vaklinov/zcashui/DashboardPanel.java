@@ -405,7 +405,7 @@ public class DashboardPanel extends WalletTabPanel {
 		// TODO: what if ZCash directory is non-default...
 		File walletDAT = new File(OSUtil.getBlockchainDirectory() + "/wallet.dat");
 		if (this.installationObserver.isOnTestNet()) {
-			walletDAT = new File(OSUtil.getBlockchainDirectory() + "/testnet3" + "/wallet.dat");
+			walletDAT = new File(OSUtil.getBlockchainDirectory() + "/testnet5" + "/wallet.dat");
 		}
 
 		if (this.OSInfo == null) {
