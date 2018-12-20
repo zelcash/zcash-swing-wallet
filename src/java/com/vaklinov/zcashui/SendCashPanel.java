@@ -474,6 +474,7 @@ public class SendCashPanel
 		if (!installationObserver.isOnTestNet())
 		{
 			if (!(destinationAddress.startsWith("zc") || 
+				  destinationAddress.startsWith("za") || 
 				  destinationAddress.startsWith("t1") ||
 				  destinationAddress.startsWith("t3")))
 			{
@@ -914,7 +915,7 @@ public class SendCashPanel
 				String urlPrefix = "https://explorer.zel.cash/tx/";
 				if (installationObserver.isOnTestNet())
 				{
-					urlPrefix = "https://testnet.zelcash.online/tx/";
+					urlPrefix = "https://testnet.zel.cash/tx/";
 				}
 				Desktop.getDesktop().browse(new URL(urlPrefix + TXID).toURI());
 		    }
