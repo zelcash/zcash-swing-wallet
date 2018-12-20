@@ -743,13 +743,53 @@ public class ZCashUI
             System.exit(2);
         } catch (Exception e)
         {
+             //here reindex
         	Log.error("Unexpected error: ", e);
-            JOptionPane.showMessageDialog(
-                null,
-                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.text", e.getMessage()),
-                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.title"),
-                JOptionPane.ERROR_MESSAGE);
-            System.exit(3);
+            Object[] options = 
+            { 
+                LanguageUtil.instance().getString("main.frame.reindex.button.agree"),
+                LanguageUtil.instance().getString("main.frame.reindex.button.disagree")
+            };
+                    
+            int option = JOptionPane.showOptionDialog(
+                        null,
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.text", e.getMessage()),
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.title"),
+                        JOptionPane.DEFAULT_OPTION, 
+            			JOptionPane.INFORMATION_MESSAGE,
+            			null, 
+            			options, 
+            			options[0]);
+            if (option == 0)
+            {
+                //start zelcashd with -reindex. FIXME report to UI
+                try {
+                    ZCashClientCaller initialClientCallerA = new ZCashClientCaller(OSUtil.getProgramDirectory());
+                    initialClientCallerA.startDaemon(true);
+                }
+                catch (Exception errr) {
+                JOptionPane.showMessageDialog(
+                    null,
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errr.getMessage()),
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
+                    JOptionPane.ERROR_MESSAGE);
+                    System.exit(5);
+                }
+                 catch (Error errX)
+                {
+        	        // Last resort catch for unexpected problems - just to inform the user
+                    errX.printStackTrace();
+                        JOptionPane.showMessageDialog(
+                        null,
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errX.getMessage()),
+                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
+                        JOptionPane.ERROR_MESSAGE);
+                   System.exit(6);
+                 }
+            } else
+            {
+                System.exit(3);
+            }
         } catch (Error err)
         {
         	// Last resort catch for unexpected problems - just to inform the user
@@ -802,13 +842,11 @@ public class ZCashUI
             configOut.println("rpcallowip=127.0.0.1");                                       
             configOut.println("server=1");
             configOut.println("addnode=node.zel.cash");
-            configOut.println("addnode=node1.zel.cash");
-            configOut.println("addnode=node-eu2.zelcash.com");
-            configOut.println("addnode=node-eu.zelcash.com");
-            configOut.println("addnode=node-asia.zelcash.com");
-            configOut.println("addnode=node-uk.zelcash.com");
-            configOut.println("addnode=zelnode.cloudpools.net");
-            configOut.println("disablesafemode=1");
+            configOut.println("addnode=explorer.zel.cash");
+            configOut.println("addnode=explorer2.zel.cash");
+            configOut.println("addnode=explorer-asia.zel.cash");
+            configOut.println("addnode=explorer.zelcash.online");
+            configOut.println("addnode=explorer.zel.zelcore.io");
 			configOut.println("# The rpcuser/rpcpassword are used for the local call to zelcashd");
 			configOut.println("rpcuser=User" + Math.abs(r.nextInt()));
 			configOut.println("rpcpassword=Pass" + Math.abs(r.nextInt()) + "" + 

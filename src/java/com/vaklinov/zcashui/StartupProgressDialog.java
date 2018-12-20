@@ -111,7 +111,7 @@ public class StartupProgressDialog extends ZelCashJFrame {
         }
         
         final Process daemonProcess = 
-        	shouldStartZCashd ? clientCaller.startDaemon() : null;
+        	shouldStartZCashd ? clientCaller.startDaemon(false) : null;
         
         Thread.sleep(POLL_PERIOD); // just a little extra
         
