@@ -44,9 +44,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -611,6 +613,9 @@ public class ZCashUI
         throws IOException
     {
     	ZCashUI ui = null;
+    	StartupProgressDialog startupBar = null;
+    	ZCashClientCaller initialClientCaller = null;
+    	DaemonInfo zcashdInfo = null;
         try
         {
         	new ZelCashUI();
@@ -662,10 +667,10 @@ public class ZCashUI
             // It may be started but not ready - then also show dialog
             ZCashInstallationObserver initialInstallationObserver = 
             	new ZCashInstallationObserver(OSUtil.getProgramDirectory());
-            DaemonInfo zcashdInfo = initialInstallationObserver.getDaemonInfo();
+            zcashdInfo = initialInstallationObserver.getDaemonInfo();
             initialInstallationObserver = null;
             
-            ZCashClientCaller initialClientCaller = new ZCashClientCaller(OSUtil.getProgramDirectory());
+            initialClientCaller = new ZCashClientCaller(OSUtil.getProgramDirectory());
             boolean daemonStartInProgress = false;
             try
             {
@@ -694,7 +699,6 @@ public class ZCashUI
             }
             installShutdownHook();
     		
-            StartupProgressDialog startupBar = null;
             if ((zcashdInfo.status != DAEMON_STATUS.RUNNING) || (daemonStartInProgress))
             {
             	Log.info(
@@ -745,65 +749,75 @@ public class ZCashUI
         } catch (Exception e)
         {
              //here reindex
+        	
+        	
         	Log.error("Unexpected error: ", e);
-            Object[] options = 
-            { 
-                LanguageUtil.instance().getString("main.frame.reindex.button.agree"),
-                LanguageUtil.instance().getString("main.frame.reindex.button.disagree")
-            };
-                    
-            int option = JOptionPane.showOptionDialog(
+			if (e.getMessage().equals(LanguageUtil.instance().getString("duplicate.instante.detected"))) {
+        		JOptionPane.showMessageDialog(
                         null,
-                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.text", e.getMessage()),
+                        e.getMessage(),
                         LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.title"),
-                        JOptionPane.DEFAULT_OPTION, 
-            			JOptionPane.INFORMATION_MESSAGE,
-            			null, 
-            			options, 
-            			options[0]);
-            if (option == 0)
-            {
-                //start zelcashd with -reindex.
-                try {
-                	AppLock.unlock();
-                    ZCashClientCaller initialClientCallerA = new ZCashClientCaller(OSUtil.getProgramDirectory());
-                    initialClientCallerA.stopDaemon();
-                    initialClientCallerA.startDaemon(true);
-                    if(ui!=null) {
-                    	ui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                        ui.dashboard.stopThreadsAndTimers();
-                        ui.transactionDetailsPanel.stopThreadsAndTimers();
-                        ui.addresses.stopThreadsAndTimers();
-                        ui.sendPanel.stopThreadsAndTimers();
-                        ui.messagingPanel.stopThreadsAndTimers();
-                        ui.setVisible(false);
-                        ui.dispose();
-                    }
-                    main( new String[0]);
-                }
-                catch (Exception errr) {
-                JOptionPane.showMessageDialog(
-                    null,
-                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errr.getMessage()),
-                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
-                    JOptionPane.ERROR_MESSAGE);
-                    System.exit(5);
-                }
-                 catch (Error errX)
-                {
-        	        // Last resort catch for unexpected problems - just to inform the user
-                    errX.printStackTrace();
-                        JOptionPane.showMessageDialog(
-                        null,
-                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errX.getMessage()),
-                        LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
                         JOptionPane.ERROR_MESSAGE);
-                   System.exit(6);
-                 }
-            } else
-            {
-                System.exit(3);
-            }
+                    System.exit(3);
+        	}
+        	else {
+        		Object[] options = 
+                    { 
+                        LanguageUtil.instance().getString("main.frame.reindex.button.agree"),
+                        LanguageUtil.instance().getString("main.frame.reindex.button.disagree")
+                    };
+                            
+                    int option = JOptionPane.showOptionDialog(
+                                null,
+                                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.text", e.getMessage()),
+                                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.title"),
+                                JOptionPane.DEFAULT_OPTION, 
+                    			JOptionPane.INFORMATION_MESSAGE,
+                    			null, 
+                    			options, 
+                    			options[0]);
+                    if (option == 0)
+                    {
+                        //start zelcashd with -reindex.
+                        try {
+                        	AppLock.unlock();
+                            ZCashClientCaller initialClientCallerA = new ZCashClientCaller(OSUtil.getProgramDirectory());
+                            initialClientCallerA.stopDaemon();
+                            initialClientCallerA.startDaemon(true);
+                            if(startupBar!=null) {
+                            	startupBar.setVisible(false);
+                            	startupBar.dispose();
+                            }
+                            if(ui!=null) {
+                                ui.dispose();
+                            }
+                            ZCashUI.restartApplication(null);
+                        }
+                        catch (Exception errr) {
+                        JOptionPane.showMessageDialog(
+                            null,
+                                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errr.getMessage()),
+                                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
+                            JOptionPane.ERROR_MESSAGE);
+                            System.exit(5);
+                        }
+                         catch (Error errX)
+                        {
+                	        // Last resort catch for unexpected problems - just to inform the user
+                            errX.printStackTrace();
+                                JOptionPane.showMessageDialog(
+                                null,
+                                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errX.getMessage()),
+                                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
+                                JOptionPane.ERROR_MESSAGE);
+                           System.exit(6);
+                         }
+                    } else
+                    {
+                        System.exit(3);
+                    }
+        	}
+            
         } catch (Error err)
         {
         	// Last resort catch for unexpected problems - just to inform the user
@@ -892,5 +906,62 @@ public class ZCashUI
 	    };
 	    Runtime.getRuntime().addShutdownHook(new Thread(runner, "Window Prefs Hook"));
 	}
+    
+
+   private static void restartApplication(Runnable runBeforeRestart) throws IOException {
+       try {
+           // java binary
+           String java = System.getProperty("java.home") + "/bin/java";
+           // vm arguments
+           List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+           StringBuffer vmArgsOneLine = new StringBuffer();
+           for (String arg : vmArguments) {
+               // if it's the agent argument : we ignore it otherwise the
+               // address of the old application and the new one will be in conflict
+               if (!arg.contains("-agentlib")) {
+                   vmArgsOneLine.append(arg);
+                   vmArgsOneLine.append(" ");
+               }
+           }
+           // init the command to execute, add the vm args
+           final StringBuffer cmd = new StringBuffer("\"" + java + "\" " + vmArgsOneLine);
+           // program main and program arguments (be careful a sun property. might not be supported by all JVM) 
+           String[] mainCommand = System.getProperty("sun.java.command").split(" ");
+           // program main is a jar
+           if (mainCommand[0].endsWith(".jar")) {
+               // if it's a jar, add -jar mainJar
+               cmd.append("-jar " + new File(mainCommand[0]).getPath());
+           } else {
+               // else it's a .class, add the classpath and mainClass
+               cmd.append("-cp \"" + System.getProperty("java.class.path") + "\" " + mainCommand[0]);
+           }
+           // finally add program arguments
+           for (int i = 1; i < mainCommand.length; i++) {
+               cmd.append(" ");
+               cmd.append(mainCommand[i]);
+           }
+           // execute the command in a shutdown hook, to be sure that all the
+           // resources have been disposed before restarting the application
+           Runtime.getRuntime().addShutdownHook(new Thread() {
+               @Override
+               public void run() {
+                   try {
+                       Runtime.getRuntime().exec(cmd.toString());
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+               }
+           });
+           // execute some custom code before restarting
+           if (runBeforeRestart != null) {
+        	   runBeforeRestart.run();
+           }
+           // exit
+           System.exit(0);
+       } catch (Exception e) {
+           // something went wrong
+           throw new IOException("Error while trying to restart the application", e);
+       }
+   }
     
 }
