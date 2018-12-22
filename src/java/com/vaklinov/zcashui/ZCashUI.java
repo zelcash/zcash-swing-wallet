@@ -85,6 +85,8 @@ import com.vaklinov.zcashui.msg.MessagingPanel;
 public class ZCashUI
     extends ZelCashJFrame
 {
+	private static final long THREAD_WAIT_1_SECOND = 1000;
+	private static final long THREAD_WAIT_5_SECONDS = 5000;
     private ZCashInstallationObserver installationObserver;
     private ZCashClientCaller         clientCaller;
     private StatusUpdateErrorReporter errorReporter;
@@ -615,6 +617,7 @@ public class ZCashUI
     	ZCashUI ui = null;
     	StartupProgressDialog startupBar = null;
     	ZCashClientCaller initialClientCaller = null;
+    	ZCashInstallationObserver initialInstallationObserver = null;
     	DaemonInfo zcashdInfo = null;
         try
         {
@@ -665,7 +668,7 @@ public class ZCashUI
             
             // If zelcashd is currently not running, do a startup of the daemon as a child process
             // It may be started but not ready - then also show dialog
-            ZCashInstallationObserver initialInstallationObserver = 
+            initialInstallationObserver = 
             	new ZCashInstallationObserver(OSUtil.getProgramDirectory());
             zcashdInfo = initialInstallationObserver.getDaemonInfo();
             initialInstallationObserver = null;
@@ -778,25 +781,56 @@ public class ZCashUI
                     			options[0]);
                     if (option == 0)
                     {
+                    	JOptionPane.showMessageDialog(
+                                null,
+    								LanguageUtil.instance().getString("wallet.reindex.restart.message"),
+                                    LanguageUtil.instance().getString("wallet.reindex.restart.title"),
+                                JOptionPane.INFORMATION_MESSAGE);
                         //start zelcashd with -reindex.
                         try {
-                        	AppLock.unlock();
-                            ZCashClientCaller initialClientCallerA = new ZCashClientCaller(OSUtil.getProgramDirectory());
-                            initialClientCallerA.stopDaemon();
-                            initialClientCallerA.startDaemon(true);
-                            if(startupBar!=null) {
-                            	startupBar.setVisible(false);
+                        	if(initialClientCaller == null) {
+                        		initialClientCaller = new ZCashClientCaller(OSUtil.getProgramDirectory());
+                        	}
+                            initialClientCaller.stopDaemon();
+                            initialClientCaller.startDaemon(true);
+                        	if(startupBar!=null) {
                             	startupBar.dispose();
                             }
-                            if(ui!=null) {
-                                ui.dispose();
-                            }
-                            ZCashUI.restartApplication(null);
+                        	for(int i=0 ;i<5; ++i) {
+                        		Log.info("Check if Daemon already start with reindex option");
+                        		initialInstallationObserver = 
+                                    	new ZCashInstallationObserver(OSUtil.getProgramDirectory());
+                                zcashdInfo = initialInstallationObserver.getDaemonInfo();
+                                initialInstallationObserver = null;
+                                if (zcashdInfo.status == DAEMON_STATUS.RUNNING) {
+                                	Log.info("Daemon started.");
+                                	break;
+                                }
+                                Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+                        	}
+                        	Thread.sleep(ZCashUI.THREAD_WAIT_5_SECONDS);
+                        	Log.info("Call stop Daemon.");
+                        	initialClientCaller.stopDaemon();
+                        	Thread.sleep(ZCashUI.THREAD_WAIT_5_SECONDS);
+                        	for(int i=0 ;i<5; ++i) {
+                        		Log.info("Check if Daemon is stopped");
+                        		initialInstallationObserver = 
+                                    	new ZCashInstallationObserver(OSUtil.getProgramDirectory());
+                                zcashdInfo = initialInstallationObserver.getDaemonInfo();
+                                initialInstallationObserver = null;
+                                if (zcashdInfo.status != DAEMON_STATUS.RUNNING) {
+                                	Log.info("Daemon stopped.");
+                                	break;
+                                }
+                                Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+                        	}
+                            Log.info("Restarting the wallet.");
+                            ZCashUI.restartApplication();
                         }
                         catch (Exception errr) {
                         JOptionPane.showMessageDialog(
                             null,
-                                LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errr.getMessage()),
+								LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text", errr.getMessage()),
                                 LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.title"),
                             JOptionPane.ERROR_MESSAGE);
                             System.exit(5);
@@ -908,7 +942,7 @@ public class ZCashUI
 	}
     
 
-   private static void restartApplication(Runnable runBeforeRestart) throws IOException {
+   private static void restartApplication() throws IOException {
        try {
            // java binary
            String java = System.getProperty("java.home") + "/bin/java";
@@ -952,12 +986,9 @@ public class ZCashUI
                    }
                }
            });
-           // execute some custom code before restarting
-           if (runBeforeRestart != null) {
-        	   runBeforeRestart.run();
-           }
+
            // exit
-           System.exit(0);
+           System.exit(5);
        } catch (Exception e) {
            // something went wrong
            throw new IOException("Error while trying to restart the application", e);
