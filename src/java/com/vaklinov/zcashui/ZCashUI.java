@@ -610,6 +610,7 @@ public class ZCashUI
     public static void main(String argv[])
         throws IOException
     {
+    	ZCashUI ui = null;
         try
         {
         	new ZelCashUI();
@@ -645,13 +646,13 @@ public class ZCashUI
             }
             else
             {            
-	            for (LookAndFeelInfo ui : UIManager.getInstalledLookAndFeels())
+	            for (LookAndFeelInfo lf : UIManager.getInstalledLookAndFeels())
 	            {
-	            	Log.info("Available look and feel: " + ui.getName() + " " + ui.getClassName());
-	                if (ui.getName().equals("Nimbus"))
+	            	Log.info("Available look and feel: " + lf.getName() + " " + lf.getClassName());
+	                if (lf.getName().equals("Nimbus"))
 	                {
-	                	Log.info("Setting look and feel: {0}", ui.getClassName());
-	                    UIManager.setLookAndFeel(ui.getClassName());
+	                	Log.info("Setting look and feel: {0}", lf.getClassName());
+	                    UIManager.setLookAndFeel(lf.getClassName());
 	                    break;
 	                };
 	            }
@@ -705,7 +706,7 @@ public class ZCashUI
             initialClientCaller = null;
             
             // Main GUI is created here
-            ZCashUI ui = new ZCashUI(startupBar);
+            ui = new ZCashUI(startupBar);
             ui.setVisible(true);
 
         } catch (InstallationDetectionException ide)
@@ -762,10 +763,23 @@ public class ZCashUI
             			options[0]);
             if (option == 0)
             {
-                //start zelcashd with -reindex. FIXME report to UI
+                //start zelcashd with -reindex.
                 try {
+                	AppLock.unlock();
                     ZCashClientCaller initialClientCallerA = new ZCashClientCaller(OSUtil.getProgramDirectory());
+                    initialClientCallerA.stopDaemon();
                     initialClientCallerA.startDaemon(true);
+                    if(ui!=null) {
+                    	ui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                        ui.dashboard.stopThreadsAndTimers();
+                        ui.transactionDetailsPanel.stopThreadsAndTimers();
+                        ui.addresses.stopThreadsAndTimers();
+                        ui.sendPanel.stopThreadsAndTimers();
+                        ui.messagingPanel.stopThreadsAndTimers();
+                        ui.setVisible(false);
+                        ui.dispose();
+                    }
+                    main( new String[0]);
                 }
                 catch (Exception errr) {
                 JOptionPane.showMessageDialog(
