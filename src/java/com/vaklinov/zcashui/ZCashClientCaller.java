@@ -146,12 +146,22 @@ public class ZCashClientCaller
 	}
 
 	
-	public synchronized Process startDaemon() 
+	public synchronized Process startDaemon(boolean reindex) 
 		throws IOException, InterruptedException 
 	{
 		String exportDir = OSUtil.getUserHomeDirectory().getCanonicalPath();
-		
+		if (reindex == true) {
 	    CommandExecutor starter = new CommandExecutor(
+	        new String[] 
+	        {
+	        	zcashd.getCanonicalPath(), 
+	        	"-exportdir=" + wrapStringParameter(exportDir),
+				"-reindex"
+	        });
+	    
+	    return starter.startChildProcess();
+		} else {
+			CommandExecutor starter = new CommandExecutor(
 	        new String[] 
 	        {
 	        	zcashd.getCanonicalPath(), 
@@ -159,6 +169,8 @@ public class ZCashClientCaller
 	        });
 	    
 	    return starter.startChildProcess();
+		}
+
 	}
 	
 	
