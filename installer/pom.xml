@@ -5,7 +5,7 @@
     <parent>
         <groupId>zel.cash</groupId>
         <artifactId>ZelCashOfficialSwingWalletUI</artifactId>
-        <version>5.0.0</version>
+        <version>6.0.0</version>
     </parent>
 
   <artifactId>installer</artifactId>
@@ -16,7 +16,7 @@
     <staging.dir>${project.build.directory}/staging</staging.dir>
     <installer-output-filename>zelcash-wallet-installer</installer-output-filename>
     <zcash.project.url>https://github.com</zcash.project.url>
-    <zcash.binaries.file.name.windows>zelcash/zelcash/releases/download/1.1.0/zelcashwindows.zip</zcash.binaries.file.name.windows>
+    <zcash.binaries.file.name.windows>zelcash/zelcash/releases/download/v2.0.0/Windows.zip</zcash.binaries.file.name.windows>
     <izpack.version>5.0.6</izpack.version>
   </properties>
 

@@ -1,8 +1,8 @@
 Package: zelcashswingwallet
-Version: 5.0.0
+Version: 6.0.0
 Section: misc
 Priority: low
 Architecture: all
 Description: ZelCash Desktop GUI Wallet 
-Maintainer: miles.manley@zel.cash
+Maintainer: info@zel.cash
 Depends: default-jdk, zelcash

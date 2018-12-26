@@ -6,7 +6,7 @@
 
     <groupId>zel.cash</groupId>
     <artifactId>ZelCashOfficialSwingWalletUI</artifactId>
-    <version>5.0.0</version>
+    <version>6.0.0</version>
     <packaging>pom</packaging>
     <name>ZelCash Official Swing Wallet UI</name>
 
