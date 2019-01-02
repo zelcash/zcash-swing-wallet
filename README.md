@@ -7,15 +7,15 @@ presents the information in a user-friendly manner. Thanks to the Zencash team w
 
 Thank you to the [Zencash Team](https://zencash.com/) 
 
-![Screenshot](https://github.com/zelcash/zelcash-swing-wallet/raw/master/docs/ZelCashWallet.png "Main Window")
+![Screenshot](https://github.com/zelcash/zelcash-swing-wallet/raw/master/docs/ZelCashSwingWallet.png "Main Window")
 
 **This wallet is targeted at advanced users who understand the implications of running a full Zel node on**
 **the local machine, maintaining a full local copy of the blockchain, maintaining and backing up the**
 **Zel nodes's `wallet.dat` file etc! The wallet is not suitable for novice crypto-currency users!**
 
-**SECURITY WARNING: Encryption of the wallet.dat file is not yet supported for ZelCash. The ZelTreZ** 
+**SECURITY WARNING: Encryption of the wallet.dat file is not yet supported for ZelCash. The ZelCore** 
 **wallet is available for download as offers encryption by deafult of the wallet.dat** 
-**You can download it here, https://zeltrez.io Using the wallet** 
+**You can download it here, https://zelcore.io Using the wallet** 
 **on a system infected with malware may result in wallet data/funds being stolen. The**
 **wallet.dat needs to be backed up regularly (not just once - e.g. after every 30-40**
 **outgoing transactions) and it must also be backed up after creating a new Z address.**
