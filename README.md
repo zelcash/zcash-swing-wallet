@@ -7,7 +7,7 @@ presents the information in a user-friendly manner. Thanks to the Zencash team w
 
 Thank you to the [Zencash Team](https://zencash.com/) 
 
-![Screenshot](https://github.com/zelcash/zelcash-swing-wallet/raw/master/docs/ZelCashSwingWallet.png "Main Window")
+![Screenshot](https://github.com/zelcash/zelcash-swing-wallet/raw/master/docs/ZelCashSwingWallet601.png "Main Window")
 
 **This wallet is targeted at advanced users who understand the implications of running a full Zel node on**
 **the local machine, maintaining a full local copy of the blockchain, maintaining and backing up the**
