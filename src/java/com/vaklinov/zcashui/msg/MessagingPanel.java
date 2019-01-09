@@ -782,7 +782,7 @@ public class MessagingPanel
 		try
 		{
 			ZelCashJFileChooser fileChooser = new ZelCashJFileChooser();
-			fileChooser.setDialogTitle("messaging.identity.import.title");
+			fileChooser.setDialogTitle(langUtil.getString("messaging.identity.import.title"));
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			 
 			int result = fileChooser.showOpenDialog(this.parentFrame);
@@ -1067,7 +1067,7 @@ public class MessagingPanel
 					langUtil.getString("messaging.send.error.not.valid", contactIdentity.getDiplayString());
 		
 			errroMessage += contactIdentity.isAnonymous() ?
-				(langUtil.getString("messaging.send.error.anonymou"))
+				(langUtil.getString("messaging.send.error.anonymous"))
 				:
 				(langUtil.getString("messaging.send.error.not.anonymous"));
 	        JOptionPane.showMessageDialog(
