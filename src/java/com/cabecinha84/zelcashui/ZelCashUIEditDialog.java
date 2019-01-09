@@ -715,7 +715,7 @@ public class ZelCashUIEditDialog
 		try {
 			URL u = new URL("https://rates.zel.cash");
 			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
-			huc.setConnectTimeout(5000);
+			huc.setConnectTimeout(2019);
 			int responseCode = huc.getResponseCode();
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
