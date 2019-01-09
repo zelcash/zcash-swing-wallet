@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Properties;
@@ -713,19 +714,31 @@ public class ZelCashUIEditDialog
 		String[] currencys = null;
 		try {
 			URL u = new URL("https://rates.zel.cash");
-			Reader r = new InputStreamReader(u.openStream(), "UTF-8");
-			JsonArray ar = Json.parse(r).asArray();
-			currencys = new String[ar.size()];
-			for (int i = 0; i < ar.size(); ++i) {
-				JsonObject obj = ar.get(i).asObject();
-				String currency = obj.get("code").toString().replaceAll("\"", "");
-				currencys[i] = currency;
-				
+			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+			huc.setConnectTimeout(2019);
+			int responseCode = huc.getResponseCode();
+
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				Log.warning("Could not connect to https://rates.zel.cash");
+			}else {
+				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
+				JsonArray ar = Json.parse(r).asArray();
+				currencys = new String[ar.size()];
+				for (int i = 0; i < ar.size(); ++i) {
+					JsonObject obj = ar.get(i).asObject();
+					String currency = obj.get("code").toString().replaceAll("\"", "");
+					currencys[i] = currency;
+					
+				}
+				Arrays.sort(currencys);
 			}
-			Arrays.sort(currencys);
+			
 		} catch (Exception ioe) {
 			Log.warning("Could not obtain ZEL information from rates.zel.cash due to: {0} {1}",
 					ioe.getClass().getName(), ioe.getMessage());
+		}
+		if(currencys == null) {
+			currencys = new String[]{this.currency};
 		}
 		return currencys;
 
