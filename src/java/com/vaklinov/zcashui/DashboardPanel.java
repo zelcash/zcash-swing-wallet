@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -565,22 +566,21 @@ public class DashboardPanel extends WalletTabPanel {
 		String color3 = totalBalance.equals(totalUCBalance) ? "" : "color:#cc3300;";
 
 		Double currencyBalance = (this.exchangeRatePanel != null) ? this.exchangeRatePanel.getCurrencyPrice() : null;
-		String currencyBalanceStr = "";
+
+		String formattedCurrencyVal = "N/A";
 		if (currencyBalance != null) {
 			currencyBalance = currencyBalance * balance.totalUnconfirmedBalance;
 			DecimalFormat currencyDF = new DecimalFormat("########0.00");
-			String formattedCurrencyVal = currencyDF.format(currencyBalance);
+			formattedCurrencyVal = currencyDF.format(currencyBalance);
 
-			// make sure the ZEL and USD are aligned
+			// make sure the ZEL and currency are aligned
 			int diff = totalUCBalance.length() - formattedCurrencyVal.length();
 			while (diff-- > 0) {
 				formattedCurrencyVal += "&nbsp;";
 			}
-
-			// TODO: Remove
-			// System.out.println("formattedUSDVal = [" + formattedUSDVal + "]");
-			currencyBalanceStr = langUtil.getString("panel.dashboard.marketcap.currency.balance.string", color3, formattedCurrencyVal, ZelCashUI.currency);
+			
 		}
+		String currencyBalanceStr = langUtil.getString("panel.dashboard.marketcap.currency.balance.string", color3, formattedCurrencyVal, ZelCashUI.currency);
 
 		String text = langUtil.getString("panel.dashboard.marketcap.usd.balance.text", color1, transparentUCBalance,
 				color2, privateUCBalance, color3, totalUCBalance, currencyBalanceStr);
@@ -777,14 +777,19 @@ public class DashboardPanel extends WalletTabPanel {
 
 			//JsonObject rates = data.getJSONObject("rates");
 			//Log.info(rates.toString());
-			Double price = rates.getDouble("rate", 0);
-			try
-			{
-				String priceX = String.format("%.3f", price);
-				Double priceD = Double.parseDouble(priceX);
-				price = priceD;
-				this.lastCurrencyPrice = priceD;
-			} catch (NumberFormatException nfe) { /* Do nothing */ }
+			Double price = rates.getDouble("rate", Double.MIN_VALUE);
+			if(price == Double.MIN_VALUE) {
+				this.lastCurrencyPrice = null;
+			}
+			else {
+				try
+				{
+					String priceX = String.format("%.3f", price);
+					Double priceD = Double.parseDouble(priceX);
+					price = priceD;
+					this.lastCurrencyPrice = priceD;
+				} catch (NumberFormatException nfe) { /* Do nothing */ }
+			}
 			
 			String usdMarketCap = cmc.getString("market_cap_usd", "N/A");
 			try
@@ -797,7 +802,7 @@ public class DashboardPanel extends WalletTabPanel {
 			String currencyMessage = langUtil.getString("panel.dashboard.marketcap.price.currency") + ZelCashUI.currency + ":";
 			String tableData[][] = new String[][]
 			{
-				{ currencyMessage,     Double.toString(price)},
+				{ currencyMessage,     lastCurrencyPrice == null ? "N/A" : Double.toString(price)},
 				{ langUtil.getString("panel.dashboard.marketcap.price.btc"),     cmc.getString("price_btc",          "N/A") },
 				{ langUtil.getString("panel.dashboard.marketcap.capitalisation"), usdMarketCap },
 				{ langUtil.getString("panel.dashboard.marketcap.daily.change"), cmc.getString("percent_change_24h", "N/A") + "%"},
@@ -820,9 +825,18 @@ public class DashboardPanel extends WalletTabPanel {
 			try
 			{
 				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zelcash");
-				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
-				JsonArray ar = Json.parse(r).asArray();
-				data.add("cmc", ar.get(0).asObject());
+				HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+				huc.setConnectTimeout(5000);
+				int responseCode = huc.getResponseCode();
+
+				if (responseCode != HttpURLConnection.HTTP_OK) {
+					Log.warning("https://api.coinmarketcap.com/v1/ticker/zelcash");
+				}
+				else {
+					Reader r = new InputStreamReader(u.openStream(), "UTF-8");
+					JsonArray ar = Json.parse(r).asArray();
+					data.add("cmc", ar.get(0).asObject());
+				}
 			} catch (Exception ioe)
 			{
 				Log.warning("Could not obtain ZEL exchange information from coinmarketcap.com due to: {0} {1}", 
@@ -832,20 +846,29 @@ public class DashboardPanel extends WalletTabPanel {
 			try
 			{
 				URL u = new URL("https://rates.zel.cash");
-				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
-				JsonArray ar = Json.parse(r).asArray();
-				Log.info("Looking in https://rates.zel.cash for currency: "+currency);
-				for (int i = 0; i < ar.size(); ++i) {
-					JsonObject obj = ar.get(i).asObject();
-					String id = obj.get("code").toString().replaceAll("\"", "");
-										if (id.equals(currency)) {
-						data.add("rates",obj);
-						break;
-					}
-					if(i+1 == ar.size()) {
-						Log.warning("Could not find the currency in https://rates.zel.cash");
+				HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+				huc.setConnectTimeout(5000);
+				int responseCode = huc.getResponseCode();
+
+				if (responseCode != HttpURLConnection.HTTP_OK) {
+					Log.warning("Could not connect to https://rates.zel.cash");
+				} else {
+					Reader r = new InputStreamReader(u.openStream(), "UTF-8");
+					JsonArray ar = Json.parse(r).asArray();
+					Log.info("Looking in https://rates.zel.cash for currency: "+currency);
+					for (int i = 0; i < ar.size(); ++i) {
+						JsonObject obj = ar.get(i).asObject();
+						String id = obj.get("code").toString().replaceAll("\"", "");
+						if (id.equals(currency)) {
+							data.add("rates",obj);
+							break;
+						}
+						if(i+1 == ar.size()) {
+							Log.warning("Could not find the currency in https://rates.zel.cash");
+						}
 					}
 				}
+				
 			} catch (Exception ioe)
 			{
 				Log.warning("Could not obtain ZEL exchange information from rates.zel.cash due to: {0} {1}", 
