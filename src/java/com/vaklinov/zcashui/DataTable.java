@@ -51,6 +51,7 @@ import com.cabecinha84.zelcashui.ZelCashJFileChooser;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJPopupMenu;
 import com.cabecinha84.zelcashui.ZelCashJTable;
+import com.cabecinha84.zelcashui.ZelCashQRCodeDialog;
 
 
 
@@ -64,6 +65,7 @@ public class DataTable
 	protected int lastColumn = -1;
 	
 	protected ZelCashJPopupMenu popupMenu;
+	protected ZelCashJPopupMenu popupMenuWithQRCode;
 
 	private LanguageUtil langUtil = LanguageUtil.instance();
 	
@@ -76,10 +78,17 @@ public class DataTable
 		this.setRowHeight(new Double(comp.getPreferredSize().getHeight()).intValue() + 2);
 		
 		popupMenu = new ZelCashJPopupMenu();
+		popupMenuWithQRCode = new ZelCashJPopupMenu();
 		int accelaratorKeyMask = Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask();
 		
 		ZelCashJMenuItem copy = new ZelCashJMenuItem(langUtil.getString("data.table.menu.item.copy"));
         popupMenu.add(copy);
+        popupMenuWithQRCode.add(copy);
+        
+        ZelCashJMenuItem qrCode = new ZelCashJMenuItem(langUtil.getString("data.table.menu.item.qrcode"));
+        popupMenu.add(qrCode);
+        popupMenuWithQRCode.add(qrCode);
+        
         copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelaratorKeyMask));
         copy.addActionListener(new ActionListener() 
         {	
@@ -99,9 +108,33 @@ public class DataTable
 			}
 		});
         
+        qrCode.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, accelaratorKeyMask));
+        qrCode.addActionListener(new ActionListener() 
+        {	
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				if ((lastRow >= 0) && (lastColumn == 3))
+				{
+					String text = DataTable.this.getValueAt(lastRow, lastColumn).toString();
+					ZelCashQRCodeDialog ad;
+					try {
+						ad = new ZelCashQRCodeDialog(text);
+						ad.setVisible(true);
+					} catch (IOException e1) {
+						Log.error("Error caused by"+e1.getMessage());
+					}		
+				} else
+				{
+					// Log perhaps
+				}
+			}
+		});
+        
         
         ZelCashJMenuItem exportToCSV = new ZelCashJMenuItem(langUtil.getString("data.table.menu.item.export"));
         popupMenu.add(exportToCSV);
+        popupMenuWithQRCode.add(exportToCSV);
         exportToCSV.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, accelaratorKeyMask));
         exportToCSV.addActionListener(new ActionListener() 
         {	
@@ -139,8 +172,12 @@ public class DataTable
                     {
                         table.changeSelection(lastRow, lastColumn, false, false);
                     }
-
-                    popupMenu.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
+                    if(lastColumn==3) {
+                    	popupMenuWithQRCode.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
+                    }
+                    else {
+                    	popupMenu.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
+                    }
                     e.consume();
                 } else
                 {

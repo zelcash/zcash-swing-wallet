@@ -45,6 +45,7 @@
 	<path id="main-classpath">
 		<pathelement path="${basedir}/lib/bitcoinj-core-0.14.5.jar" />
 		<pathelement path="${basedir}/lib/zxing-core-3.3.3.jar" />
+		<pathelement path="${basedir}/lib/zxing-javase-3.3.3.jar" />
 	</path>
 
 	<path id="jdeb.jar">
@@ -109,7 +110,7 @@
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}" excludes="**/tradetest/*.class">
 			<manifest>
 				<attribute name="Main-Class" value="${main-class}" />
-				<attribute name="Class-Path" value="zxing-core-3.3.3.jar bitcoinj-core-0.14.5.jar sqlite-jdbc-3.21.0.jar" />
+				<attribute name="Class-Path" value="zxing-javase-3.3.3.jar zxing-core-3.3.3.jar bitcoinj-core-0.14.5.jar sqlite-jdbc-3.21.0.jar" />
 			</manifest>
 		</jar>
 		<jar destfile="${jar.dir}/${ant.project.name}-src.jar" basedir="${src.dir}">
@@ -139,6 +140,12 @@
 				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
 			</data>
 			<data src="${jar.dir}/zxing-core-3.3.3_LICENSE.txt" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/zxing-javase-3.3.3.jar" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/zxing-javase-3.3.3_LICENSE.txt" type="file">
 				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
 			</data>
 
@@ -191,6 +198,7 @@
 				<include name="bitcoinj-core-0.14.5*" />
 				<include name="sqlite-jdbc-3.21.0*" />
 				<include name="zxing-core-3.3.3*" />
+				<include name="zxing-javase-3.3.3*" />
 			</fileset>
 		</copy>
 		<!-- As of Nov 2017 the IPFS wallet integration is suspended.

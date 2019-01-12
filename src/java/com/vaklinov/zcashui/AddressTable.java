@@ -70,6 +70,7 @@ public class AddressTable
 		ZelCashJMenuItem obtainPrivateKey = new ZelCashJMenuItem(langUtil.getString("table.address.option.obtain.private.key.label"));
 		obtainPrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelaratorKeyMask));
         popupMenu.add(obtainPrivateKey);
+        popupMenuWithQRCode.add(obtainPrivateKey);
         
         obtainPrivateKey.addActionListener(new ActionListener() 
         {	
