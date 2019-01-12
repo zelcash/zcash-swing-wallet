@@ -700,6 +700,9 @@ public class DashboardPanel extends WalletTabPanel {
 		private ZelCashJScrollPane tablePane;
 
 		private Double lastCurrencyPrice;
+		
+		private String zelRatesInfoPosition;
+		private String lastLoadedCurrency;
 
 		public ExchangeRatePanel(StatusUpdateErrorReporter errorReporter) {
 			//obtain currency
@@ -830,7 +833,7 @@ public class DashboardPanel extends WalletTabPanel {
 				int responseCode = huc.getResponseCode();
 
 				if (responseCode != HttpURLConnection.HTTP_OK) {
-					Log.warning("https://api.coinmarketcap.com/v1/ticker/zelcash");
+					Log.warning("Could not connect to https://api.coinmarketcap.com/v1/ticker/zelcash");
 				}
 				else {
 					Reader r = new InputStreamReader(u.openStream(), "UTF-8");
@@ -856,15 +859,24 @@ public class DashboardPanel extends WalletTabPanel {
 					Reader r = new InputStreamReader(u.openStream(), "UTF-8");
 					JsonArray ar = Json.parse(r).asArray();
 					Log.info("Looking in https://rates.zel.cash for currency: "+currency);
-					for (int i = 0; i < ar.size(); ++i) {
-						JsonObject obj = ar.get(i).asObject();
+					if(this.zelRatesInfoPosition != null && currency.equals(this.lastLoadedCurrency)) {
+						JsonObject obj = ar.get(Integer.parseInt(this.zelRatesInfoPosition)).asObject();
 						String id = obj.get("code").toString().replaceAll("\"", "");
-						if (id.equals(currency)) {
-							data.add("rates",obj);
-							break;
-						}
-						if(i+1 == ar.size()) {
-							Log.warning("Could not find the currency in https://rates.zel.cash");
+						data.add("rates",obj);
+					}
+					else {
+						this.lastLoadedCurrency = currency;
+						for (int i = 0; i < ar.size(); ++i) {
+							JsonObject obj = ar.get(i).asObject();
+							String id = obj.get("code").toString().replaceAll("\"", "");
+							if (id.equals(currency)) {
+								this.zelRatesInfoPosition= Integer.toString(i); 
+								data.add("rates",obj);
+								break;
+							}
+							if(i+1 == ar.size()) {
+								Log.warning("Could not find the currency in https://rates.zel.cash");
+							}
 						}
 					}
 				}
