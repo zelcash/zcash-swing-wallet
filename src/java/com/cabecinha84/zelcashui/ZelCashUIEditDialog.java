@@ -9,12 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
@@ -24,9 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.border.EtchedBorder;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
 import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.OSUtil;
@@ -147,7 +139,7 @@ public class ZelCashUIEditDialog
 		textButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
 		messageSentButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
 		messageReceivedButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.selectColor"));
-		currencyOptions = new ZelCashJComboBox<>(getAvailableCurrencys());
+		currencyOptions = new ZelCashJComboBox<>(ZelCashUI.currencys);
 		currencyOptions.setSelectedItem(currency);
 		
 		ZelCashJPanel detailsPanel = new ZelCashJPanel();
@@ -708,40 +700,6 @@ public class ZelCashUIEditDialog
 			Log.warning("Error obtaining properties from zelcash_ui.properties file due to: {0} {1}",
 					e.getClass().getName(), e.getMessage());
 		}	
-	}
-	
-	private String[] getAvailableCurrencys() {
-		String[] currencys = null;
-		try {
-			URL u = new URL("https://rates.zel.cash");
-			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
-			huc.setConnectTimeout(2019);
-			int responseCode = huc.getResponseCode();
-
-			if (responseCode != HttpURLConnection.HTTP_OK) {
-				Log.warning("Could not connect to https://rates.zel.cash");
-			}else {
-				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
-				JsonArray ar = Json.parse(r).asArray();
-				currencys = new String[ar.size()];
-				for (int i = 0; i < ar.size(); ++i) {
-					JsonObject obj = ar.get(i).asObject();
-					String currency = obj.get("code").toString().replaceAll("\"", "");
-					currencys[i] = currency;
-					
-				}
-				Arrays.sort(currencys);
-			}
-			
-		} catch (Exception ioe) {
-			Log.warning("Could not obtain ZEL information from rates.zel.cash due to: {0} {1}",
-					ioe.getClass().getName(), ioe.getMessage());
-		}
-		if(currencys == null) {
-			currencys = new String[]{this.currency};
-		}
-		return currencys;
-
 	}
 	
 	private void saveSettings() {
