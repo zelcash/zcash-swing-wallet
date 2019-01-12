@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/5.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/5.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>5.0.0</modelVersion>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>zel.cash</groupId>
@@ -130,7 +130,7 @@
                               <overWriteReleases>true</overWriteReleases>
                               <overWriteSnapshots>true</overWriteSnapshots>
                               <overWriteIfNewer>true</overWriteIfNewer>
-                              <includeArtifactIds>zelcash-wallet-swing,bitcoinj-core,sqlite-jdbc,minimal-json</includeArtifactIds>
+                              <includeArtifactIds>zelcash-wallet-swing,bitcoinj-core,sqlite-jdbc,minimal-json,zxing-core</includeArtifactIds>
                            </configuration>
                         </execution>
                    </executions>

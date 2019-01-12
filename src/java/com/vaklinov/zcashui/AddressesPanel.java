@@ -54,6 +54,8 @@ import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJScrollPane;
 import com.cabecinha84.zelcashui.ZelCashJTable;
+import com.cabecinha84.zelcashui.ZelCashQRCodeDialog;
+import com.cabecinha84.zelcashui.ZelCashUIEditDialog;
 import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 
@@ -90,7 +92,7 @@ public class AddressesPanel
 	private ZCashInstallationObserver installationObserver;
 
 
-	public AddressesPanel(ZelCashJFrame parentFrame, ZCashClientCaller clientCaller, StatusUpdateErrorReporter errorReporter, LabelStorage labelStorage,
+	public AddressesPanel(final ZelCashJFrame parentFrame, ZCashClientCaller clientCaller, StatusUpdateErrorReporter errorReporter, LabelStorage labelStorage,
 			              ZCashInstallationObserver installationObserver)
 			throws IOException, InterruptedException, WalletCallException
 	{
@@ -123,6 +125,8 @@ public class AddressesPanel
  		buttonPanel.add(newZAddressButtonSapling);
 		buttonPanel.add(newZAddressButton);
 		buttonPanel.add(new ZelCashJLabel("           "));
+		ZelCashJButton qrCodeButton = new ZelCashJButton(langUtil.getString("panel.address.button.address.qrcode"));
+		buttonPanel.add(qrCodeButton);
 		ZelCashJButton refreshButton = new ZelCashJButton(langUtil.getString("panel.address.button.refresh"));
 		buttonPanel.add(refreshButton);
 
@@ -227,6 +231,31 @@ public class AddressesPanel
  			public void actionPerformed(ActionEvent e)
  			{
  				createNewAddress(true, true);
+			}
+		});
+  		
+  		qrCodeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try
+				{
+					String address = getSelectedAddress();
+					if(address == null || address.isEmpty()) {
+						JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("panel.address.button.no.address.qrcode"),
+								LanguageUtil.instance().getString("panel.address.button.no.address.qrcode.tittle"),
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+					else {
+						ZelCashQRCodeDialog ad = new ZelCashQRCodeDialog(parentFrame, address);
+						ad.setVisible(true);
+					}
+				} catch (Exception ex)
+				{
+					Log.error("Unexpected error: ", ex);
+					AddressesPanel.this.errorReporter.reportError(ex, false);
+				}
 			}
 		});
 
