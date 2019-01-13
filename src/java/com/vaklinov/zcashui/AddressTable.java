@@ -137,6 +137,7 @@ public class AddressTable
         ZelCashJMenuItem setLabel = new ZelCashJMenuItem("Set label...");
 		setLabel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelaratorKeyMask));
         popupMenu.add(setLabel);
+        popupMenuWithQRCode.add(setLabel);
         
         setLabel.addActionListener(new ActionListener() 
         {	
@@ -182,6 +183,7 @@ public class AddressTable
         ZelCashJMenuItem showInExplorer = new ZelCashJMenuItem(langUtil.getString("table.address.show.in.explorer"));
 		showInExplorer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelaratorKeyMask));
         popupMenu.add(showInExplorer);
+        popupMenuWithQRCode.add(showInExplorer);
         
         showInExplorer.addActionListener(new ActionListener() 
         {	
