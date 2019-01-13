@@ -32,14 +32,14 @@ public class ZelCashQRCodeDialog
 	extends ZelCashJDialog
 {
 	
-	public ZelCashQRCodeDialog(String qrCodeMessage)
+	public ZelCashQRCodeDialog(String qrCodeMessage, ZelCashJFrame parentFrame)
 			throws IOException
 	{
-
 		LanguageUtil langUtil = LanguageUtil.instance();
 		this.setTitle(langUtil.getString("dialog.zelcashqrcode.title"));
 		this.setSize(255, 300);
 	    this.setLocation(100, 100);
+	    this.setLocationRelativeTo(parentFrame);
 		this.setModal(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 

@@ -35,6 +35,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.JOptionPane;
@@ -45,6 +46,7 @@ import javax.swing.table.TableModel;
 
 import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
+import com.cabecinha84.zelcashui.ZelCashQRCodeDialog;
 
 
 
@@ -56,12 +58,14 @@ public class AddressTable
 {	
 	private LabelStorage labelStorage;
 	private ZCashInstallationObserver installationObserver;
+	private ZelCashJFrame parentFrame;
 	
 	public AddressTable(final Object[][] rowData, final Object[] columnNames, 
-			            final ZCashClientCaller caller, LabelStorage labelStorage, 	ZCashInstallationObserver installationObserver)
+			            final ZCashClientCaller caller, LabelStorage labelStorage, 	ZCashInstallationObserver installationObserver,
+			            ZelCashJFrame parentFrame)
 	{
 		super(rowData, columnNames);
-		
+		this.parentFrame = parentFrame;
 		this.labelStorage = labelStorage;
 		this.installationObserver = installationObserver;
 		
@@ -70,7 +74,6 @@ public class AddressTable
 		ZelCashJMenuItem obtainPrivateKey = new ZelCashJMenuItem(langUtil.getString("table.address.option.obtain.private.key.label"));
 		obtainPrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelaratorKeyMask));
         popupMenu.add(obtainPrivateKey);
-        popupMenuWithQRCode.add(obtainPrivateKey);
         
         obtainPrivateKey.addActionListener(new ActionListener() 
         {	
@@ -133,11 +136,36 @@ public class AddressTable
 			}
 		});
         
+        ZelCashJMenuItem qrCode = new ZelCashJMenuItem(langUtil.getString("data.table.menu.item.qrcode"));
+        popupMenu.add(qrCode);
+        
+        qrCode.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, accelaratorKeyMask));
+        qrCode.addActionListener(new ActionListener() 
+        {	
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				if ((lastRow >= 0) && (lastColumn >= 0))
+				{
+					String address = AddressTable.this.getModel().getValueAt(lastRow, 3).toString();
+					ZelCashQRCodeDialog ad;
+					try {
+						ad = new ZelCashQRCodeDialog(address, AddressTable.this.parentFrame);
+						ad.setVisible(true);
+					} catch (IOException e1) {
+						Log.error("Error caused by"+e1.getMessage());
+					}		
+				} else
+				{
+					// Log perhaps
+				}
+			}
+		});
+        
         
         ZelCashJMenuItem setLabel = new ZelCashJMenuItem("Set label...");
 		setLabel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelaratorKeyMask));
         popupMenu.add(setLabel);
-        popupMenuWithQRCode.add(setLabel);
         
         setLabel.addActionListener(new ActionListener() 
         {	
@@ -183,7 +211,6 @@ public class AddressTable
         ZelCashJMenuItem showInExplorer = new ZelCashJMenuItem(langUtil.getString("table.address.show.in.explorer"));
 		showInExplorer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelaratorKeyMask));
         popupMenu.add(showInExplorer);
-        popupMenuWithQRCode.add(showInExplorer);
         
         showInExplorer.addActionListener(new ActionListener() 
         {	

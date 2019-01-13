@@ -78,7 +78,6 @@ public class TransactionTable
 		ZelCashJMenuItem showDetails = new ZelCashJMenuItem("Show details...");
 		showDetails.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelaratorKeyMask));
         popupMenu.add(showDetails);
-        popupMenuWithQRCode.add(showDetails);
         
         showDetails.addActionListener(new ActionListener() 
         {	
