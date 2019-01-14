@@ -28,117 +28,126 @@
  *
 -->
 <project name="ZelCashSwingWalletUI" basedir="../.." default="buildit">
-	
-    <property name="zelcash.swing.module.dir"     value="${basedir}/zelcash-wallet-swing"/>
-    <property name="src.dir"     value="src"/>
-	<property name="lib.dir"     value="lib"/>
-	<property name="deb.dir"  value="${zelcash.swing.module.dir}/src/deb"/>
-	<property name="deb.resource.dir"  value="${deb.dir}/resources"/>
-    <property name="build.dir"   value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-	<property name="temp.dir"    value="${build.dir}/temp"/>
-    <property name="jar.dir"     value="${build.dir}/jars"/>
-	<property name="ubuntu.package.dir" value="${build.dir}/ubuntu-package"/>
 
-    <property name="main-class"  value="com.vaklinov.zcashui.ZCashUI"/>
+	<property name="zelcash.swing.module.dir" value="${basedir}/zelcash-wallet-swing" />
+	<property name="src.dir" value="src" />
+	<property name="lib.dir" value="lib" />
+	<property name="deb.dir" value="${zelcash.swing.module.dir}/src/deb" />
+	<property name="deb.resource.dir" value="${deb.dir}/resources" />
+	<property name="build.dir" value="build" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="temp.dir" value="${build.dir}/temp" />
+	<property name="jar.dir" value="${build.dir}/jars" />
+	<property name="ubuntu.package.dir" value="${build.dir}/ubuntu-package" />
+
+	<property name="main-class" value="com.vaklinov.zcashui.ZCashUI" />
 
 	<path id="main-classpath">
 		<pathelement path="${basedir}/lib/bitcoinj-core-0.14.5.jar" />
+		<pathelement path="${basedir}/lib/zxing-core-3.3.3.jar" />
+		<pathelement path="${basedir}/lib/zxing-javase-3.3.3.jar" />
 	</path>
-	
+
 	<path id="jdeb.jar">
-	    <pathelement path="${basedir}/lib/jdeb-1.5.jar" />
+		<pathelement path="${basedir}/lib/jdeb-1.5.jar" />
 	</path>
-	<taskdef name="deb" classpathref="jdeb.jar" classname="org.vafer.jdeb.ant.DebAntTask"/>
-	
+	<taskdef name="deb" classpathref="jdeb.jar" classname="org.vafer.jdeb.ant.DebAntTask" />
+
 	<condition property="isMacOS">
-	    <os family="mac" />
+		<os family="mac" />
 	</condition>
 
 	<condition property="isWindows">
-	    <os family="windows" />
+		<os family="windows" />
 	</condition>
 
 	<condition property="isUnix">
-	    <os family="unix" />
+		<os family="unix" />
 	</condition>
-	
-    <condition property="isJava9OrLater">
-	    <or>
-	        <equals arg1="${ant.java.version}" arg2="9" />
-    		<equals arg1="${ant.java.version}" arg2="10" />
-    	</or>
-    </condition>	
-	
-    <!-- TARGETS -->
-	
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
-	
-    <target name="copyResources" depends="clean">
-    	<copy todir="${classes.dir}" >  
-    	    <fileset dir="${src.dir}/resources">  
-    	        <include name="images/**"/>
-    	        <include name="keys/**"/>
-				<include name="messages/**"/>
-    	    	<include name="ui/**"/>
-    	    	<include name="zelcashImages/**"/>
-    	    </fileset>
-    	</copy>
-    </target>
 
-    <target name="compileJDK9" depends="clean" if="isJava9OrLater">
-        <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
-        	<compilerarg line="--add-modules java.xml.bind" />
-        	<classpath refid="main-classpath"/>
-        </javac>
-    </target>
-	
-    <target name="compile" depends="clean" unless="isJava9OrLater">
-        <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
-        	<classpath refid="main-classpath"/>
-        </javac>
-    </target>
+	<condition property="isJava9OrLater">
+		<or>
+			<equals arg1="${ant.java.version}" arg2="9" />
+			<equals arg1="${ant.java.version}" arg2="10" />
+		</or>
+	</condition>
 
-    <target name="jar" depends="compile,compileJDK9,copyResources">
-        <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" 
-        	 basedir="${classes.dir}"
-        	 excludes="**/tradetest/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="${main-class}"/>
-                <attribute name="Class-Path" value="bitcoinj-core-0.14.5.jar sqlite-jdbc-3.21.0.jar"/>
-            </manifest>
-        </jar>
-        <jar destfile="${jar.dir}/${ant.project.name}-src.jar" 
-        	 basedir="${src.dir}">
-        </jar>
-    </target>
-	
-    <target name="ubuntuPackage" depends="jar,copyothers">	
-    	<mkdir dir="${ubuntu.package.dir}"/>
-	    <deb destfile="${ubuntu.package.dir}/zelcashSwingWallet-6.0.1.deb" 
-	    	 control="${deb.dir}/control"
-	    	 verbose="true">
-	    	
-	      <data src="${jar.dir}/${ant.project.name}.jar" type="file">
-	        <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet"/>
-	      </data>
-	      <data src="${jar.dir}/bitcoinj-core-0.14.5.jar" type="file">
-	        <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet"/>
-	      </data>
-	      <data src="${jar.dir}/bitcoinj-core-0.14.5_LICENSE.txt" type="file">
-	        <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet"/>
-	      </data>
-		  <data src="${jar.dir}/sqlite-jdbc-3.21.0.jar" type="file">
-			 <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet"/>
-		  </data>
-		  <data src="${jar.dir}/sqlite-jdbc-3.21.0_LICENSE.txt" type="file">
-			 <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet"/>
-		  </data>
+	<!-- TARGETS -->
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="copyResources" depends="clean">
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}/resources">
+				<include name="images/**" />
+				<include name="keys/**" />
+				<include name="messages/**" />
+				<include name="ui/**" />
+				<include name="zelcashImages/**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compileJDK9" depends="clean" if="isJava9OrLater">
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
+			<compilerarg line="--add-modules java.xml.bind" />
+			<classpath refid="main-classpath" />
+		</javac>
+	</target>
+
+	<target name="compile" depends="clean" unless="isJava9OrLater">
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
+			<classpath refid="main-classpath" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile,compileJDK9,copyResources">
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}" excludes="**/tradetest/*.class">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}" />
+				<attribute name="Class-Path" value="zxing-javase-3.3.3.jar zxing-core-3.3.3.jar bitcoinj-core-0.14.5.jar sqlite-jdbc-3.21.0.jar" />
+			</manifest>
+		</jar>
+		<jar destfile="${jar.dir}/${ant.project.name}-src.jar" basedir="${src.dir}">
+		</jar>
+	</target>
+
+	<target name="ubuntuPackage" depends="jar,copyothers">
+		<mkdir dir="${ubuntu.package.dir}" />
+		<deb destfile="${ubuntu.package.dir}/zelcashSwingWallet-6.0.1.deb" control="${deb.dir}/control" verbose="true">
+
+			<data src="${jar.dir}/${ant.project.name}.jar" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/bitcoinj-core-0.14.5.jar" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/bitcoinj-core-0.14.5_LICENSE.txt" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/sqlite-jdbc-3.21.0.jar" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/sqlite-jdbc-3.21.0_LICENSE.txt" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/zxing-core-3.3.3.jar" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/zxing-core-3.3.3_LICENSE.txt" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/zxing-javase-3.3.3.jar" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+			<data src="${jar.dir}/zxing-javase-3.3.3_LICENSE.txt" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
 
 			<!-- TODO: As of Nov 2017 the IPFS wallet integration is suspended.
             <data src="${jar.dir}/go-ipfs/ipfs" type="file">
@@ -151,18 +160,18 @@
               <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet/go-ipfs"/>
             </data>
             -->
-	      <data src="${deb.resource.dir}/zelcashswingwallet" type="file">
-	        <mapper type="perm" filemode="755" prefix="/usr/bin"/>
-	      </data>
-	      <data src="${deb.resource.dir}/ZelCashWallet.desktop" type="file">
-	        <mapper type="perm" filemode="755" prefix="/usr/share/applications"/>
-	      </data>
-	      <data src="${deb.resource.dir}/ZelCash-icon.png" type="file">
-	        <mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet"/>
-	      </data>	    	
-	    </deb>
+			<data src="${deb.resource.dir}/zelcashswingwallet" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/bin" />
+			</data>
+			<data src="${deb.resource.dir}/ZelCashWallet.desktop" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/share/applications" />
+			</data>
+			<data src="${deb.resource.dir}/ZelCash-icon.png" type="file">
+				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
+			</data>
+		</deb>
 	</target>
-	
+
 	<!-- TODO: As of Nov 2017 the IPFS wallet integration is suspended. 
 	<target name="unpackIPFSForMacOS" if="isMacOS">
 	    <echo message="Using the IPFS packaged executable on macOS..." />
@@ -182,24 +191,26 @@
 		<gunzip src="${basedir}/lib/go-ipfs_v0.4.11_linux-amd64.tar.gz" dest="${temp.dir}/ipfs.tar"/>
 	</target>
 	-->
-	
+
 	<target name="copyothers">
-    	<copy todir="${jar.dir}" >  
-    	    <fileset dir="${lib.dir}">  
-    	        <include name="bitcoinj-core-0.14.5*"/>
-				<include name="sqlite-jdbc-3.21.0*"/>
-    	    </fileset>
-    	</copy>
+		<copy todir="${jar.dir}">
+			<fileset dir="${lib.dir}">
+				<include name="bitcoinj-core-0.14.5*" />
+				<include name="sqlite-jdbc-3.21.0*" />
+				<include name="zxing-core-3.3.3*" />
+				<include name="zxing-javase-3.3.3*" />
+			</fileset>
+		</copy>
 		<!-- As of Nov 2017 the IPFS wallet integration is suspended.
 		<untar src="${temp.dir}/ipfs.tar" dest="${jar.dir}"/>
 		-->
 	</target>
-	
-    <target name="buildit" depends="clean,jar,copyothers,ubuntuPackage">
-    	<echo message="Built ZelCash Desktop GUI Wallet with JDK ${ant.java.version}"/>
-    	<!-- Final cleanup -->
-    	<delete dir="${classes.dir}"/>
-    	<delete dir="${temp.dir}"/>
+
+	<target name="buildit" depends="clean,jar,copyothers,ubuntuPackage">
+		<echo message="Built ZelCash Desktop GUI Wallet with JDK ${ant.java.version}" />
+		<!-- Final cleanup -->
+		<delete dir="${classes.dir}" />
+		<delete dir="${temp.dir}" />
 	</target>
 
 </project>

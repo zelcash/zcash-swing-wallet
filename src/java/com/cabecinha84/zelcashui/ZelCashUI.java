@@ -4,11 +4,19 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Properties;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.OSUtil;
@@ -109,6 +117,8 @@ public class ZelCashUI {
 	public static Color messageSent;
 	public static Color messageReceived;
 	public static String currency;
+	
+	public static String[] currencys;
 
 	private static LanguageUtil langUtil = LanguageUtil.instance();
 	
@@ -145,6 +155,15 @@ public class ZelCashUI {
 		javax.swing.UIManager.put("Panel.foreground",ZelCashUI.text);
 		javax.swing.UIManager.put("OptionPane.okButtonText", langUtil.getString("button.option.ok"));
 			
+		
+		Runnable r = new Runnable() {
+	         public void run() {
+	        	 Log.info("Loading Available Currencys in Background.");
+	        	 getAvailableCurrencys();
+	         }
+	     };
+
+	     new Thread(r).start();
 		
 		Log.info("Finished loading ZelCashUI");
 	}
@@ -241,5 +260,38 @@ public class ZelCashUI {
 
 
     }
+	
+	private void getAvailableCurrencys() {
+		String[] currencys = null;
+		try {
+			URL u = new URL("https://rates.zel.cash");
+			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+			huc.setConnectTimeout(2019);
+			int responseCode = huc.getResponseCode();
+
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				Log.warning("Could not connect to https://rates.zel.cash");
+			}else {
+				Reader r = new InputStreamReader(u.openStream(), "UTF-8");
+				JsonArray ar = Json.parse(r).asArray();
+				currencys = new String[ar.size()];
+				for (int i = 0; i < ar.size(); ++i) {
+					JsonObject obj = ar.get(i).asObject();
+					String currency = obj.get("code").toString().replaceAll("\"", "");
+					currencys[i] = currency;
+					
+				}
+				Arrays.sort(currencys);
+			}
+			
+		} catch (Exception ioe) {
+			Log.warning("Could not obtain ZEL information from rates.zel.cash due to: {0} {1}",
+					ioe.getClass().getName(), ioe.getMessage());
+		}
+		if(currencys == null) {
+			currencys = new String[]{ZelCashUI.currency};
+		}
+		ZelCashUI.currencys = currencys;
+	}
 
 }

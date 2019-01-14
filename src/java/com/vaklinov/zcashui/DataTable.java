@@ -48,9 +48,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
 
 import com.cabecinha84.zelcashui.ZelCashJFileChooser;
+import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJPopupMenu;
 import com.cabecinha84.zelcashui.ZelCashJTable;
+import com.cabecinha84.zelcashui.ZelCashQRCodeDialog;
 
 
 
@@ -80,6 +82,7 @@ public class DataTable
 		
 		ZelCashJMenuItem copy = new ZelCashJMenuItem(langUtil.getString("data.table.menu.item.copy"));
         popupMenu.add(copy);
+        
         copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelaratorKeyMask));
         copy.addActionListener(new ActionListener() 
         {	
@@ -99,7 +102,7 @@ public class DataTable
 			}
 		});
         
-        
+
         ZelCashJMenuItem exportToCSV = new ZelCashJMenuItem(langUtil.getString("data.table.menu.item.export"));
         popupMenu.add(exportToCSV);
         exportToCSV.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, accelaratorKeyMask));
@@ -140,8 +143,9 @@ public class DataTable
                         table.changeSelection(lastRow, lastColumn, false, false);
                     }
 
-                    popupMenu.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
+                	popupMenu.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
                     e.consume();
+                    
                 } else
                 {
                 	lastColumn = -1;
