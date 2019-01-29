@@ -67,8 +67,10 @@ import com.cabecinha84.zelcashui.ZelCashJMenu;
 import com.cabecinha84.zelcashui.ZelCashJMenuBar;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
+import com.cabecinha84.zelcashui.ZelCashZelNodeDialog;
 import com.cabecinha84.zelcashui.ZelCashUI;
 import com.cabecinha84.zelcashui.ZelCashUIEditDialog;
+import com.cabecinha84.zelcashui.ZelNodesPanel;
 import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 import com.vaklinov.zcashui.ZCashClientCaller.NetworkAndBlockchainInfo;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
@@ -81,8 +83,8 @@ import com.vaklinov.zcashui.msg.MessagingPanel;
  * Main ZelCash Window.
  */
 public class ZCashUI extends ZelCashJFrame {
-	private static final long THREAD_WAIT_1_SECOND = 1000;
-	private static final long THREAD_WAIT_5_SECONDS = 5000;
+	public static final long THREAD_WAIT_1_SECOND = 1000;
+	public static final long THREAD_WAIT_5_SECONDS = 5000;
 	private ZCashInstallationObserver installationObserver;
 	private ZCashClientCaller clientCaller;
 	private StatusUpdateErrorReporter errorReporter;
@@ -106,13 +108,16 @@ public class ZCashUI extends ZelCashJFrame {
 	private ZelCashJMenuItem menuItemMessagingOptions;
 	private ZelCashJMenuItem menuItemShareFileViaIPFS;
 	private ZelCashJMenuItem menuItemExportToArizen;
+	private ZelCashJMenuItem menuItemNewZelnode;
 
-	private DashboardPanel dashboard;
-	private TransactionsDetailPanel transactionDetailsPanel;
-	private AddressesPanel addresses;
-	private SendCashPanel sendPanel;
-	private AddressBookPanel addressBookPanel;
-	private MessagingPanel messagingPanel;
+	public DashboardPanel dashboard;
+	public TransactionsDetailPanel transactionDetailsPanel;
+	public AddressesPanel addresses;
+	public SendCashPanel sendPanel;
+	public AddressBookPanel addressBookPanel;
+	public MessagingPanel messagingPanel;
+	public ZelNodesPanel zelNodesPanel;
+	
 	private LanguageUtil langUtil;
 
 	private static File walletLock;
@@ -171,6 +176,9 @@ public class ZCashUI extends ZelCashJFrame {
 		tabs.addTab(langUtil.getString("main.frame.tab.messaging.title"),
 				new ImageIcon(cl.getResource("zelcashImages/messaging.png")),
 				messagingPanel = new MessagingPanel(this, sendPanel, tabs, clientCaller, errorReporter, labelStorage));
+		tabs.addTab(langUtil.getString("main.frame.tab.zelnodes.title"),
+				new ImageIcon(cl.getResource("zelcashImages/zelNodes.png")),
+				zelNodesPanel = new ZelNodesPanel(this, tabs, clientCaller, errorReporter, labelStorage));
 		contentPane.add(tabs);
 
 		this.walletOps = new WalletOperations(this, tabs, dashboard, addresses, sendPanel, installationObserver,
@@ -248,6 +256,14 @@ public class ZCashUI extends ZelCashJFrame {
 		menuItemShareFileViaIPFS.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, accelaratorKeyMask));
 
 		mb.add(messaging);
+		
+		ZelCashJMenu zelNodes = new ZelCashJMenu(langUtil.getString("menu.label.zelnodes"));
+		zelNodes.setMnemonic(KeyEvent.VK_Z);
+		zelNodes.add(menuItemNewZelnode = new ZelCashJMenuItem(langUtil.getString("menu.label.zelnodes.new"),
+				KeyEvent.VK_Z));
+		menuItemNewZelnode.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelaratorKeyMask));
+		
+		mb.add(zelNodes);
 
 		ActionListener languageSelectionAction = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -321,6 +337,19 @@ public class ZCashUI extends ZelCashJFrame {
 					ZelCashUIEditDialog ad = new ZelCashUIEditDialog(ZCashUI.this);
 					ad.setVisible(true);
 				} catch (UnsupportedEncodingException uee) {
+					Log.error("Unexpected error: ", uee);
+					ZCashUI.this.errorReporter.reportError(uee);
+				}
+			}
+		});
+		
+		menuItemNewZelnode.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZCashUI.this, clientCaller, installationObserver, null);
+					ad.setVisible(true);
+				} catch (Exception uee) {
 					Log.error("Unexpected error: ", uee);
 					ZCashUI.this.errorReporter.reportError(uee);
 				}

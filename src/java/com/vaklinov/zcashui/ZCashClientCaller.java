@@ -1189,6 +1189,62 @@ public class ZCashClientCaller
 		throw new WalletCallException("Unexpected response from wallet: " + strResult);
 	}
 	
+	public synchronized String getZelNodeKey()
+			throws WalletCallException, IOException, InterruptedException
+		{
+
+			String objResponse = this.executeCommandAndGetSingleStringResponse("createzelnodekey");
+	    	return objResponse;
+		}
+	
+	public synchronized JsonObject startZelNode(String zelNodeAlias)
+			throws WalletCallException, IOException, InterruptedException
+		{
+
+			String objResponse = this.executeCommandAndGetSingleStringResponse("startzelnode", "alias", "false", zelNodeAlias);
+			JsonValue response = null;
+			try
+			{
+				response = Json.parse(objResponse);
+			} catch (ParseException pe)
+			{
+			  	throw new WalletCallException(objResponse + "\n" + pe.getMessage() + "\n", pe);
+			}
+
+			if (response.isObject())
+			{
+				return response.asObject();
+			} else
+			{
+				throw new WalletCallException("Unexpected non-object response from wallet: " + response.toString());
+			}
+		}
+	
+	
+	public synchronized JsonArray getZelNodeOutputs()
+			throws WalletCallException, IOException, InterruptedException
+		{
+
+			JsonArray objResponse = this.executeCommandAndGetJsonArray("getzelnodeoutputs", null);
+	    	return objResponse;
+		}
+	
+	public synchronized JsonArray getZelNodeList()
+			throws WalletCallException, IOException, InterruptedException
+		{
+
+			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodes", null);
+	    	return objResponse;
+		}
+	
+	
+	public synchronized JsonArray getZelNodeStatus(String txHash)
+			throws WalletCallException, IOException, InterruptedException
+		{
+
+			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodes", txHash);
+	    	return objResponse;
+		}
 
 	private JsonObject executeCommandAndGetJsonObject(String command1, String command2)
 		throws WalletCallException, IOException, InterruptedException
