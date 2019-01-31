@@ -155,11 +155,9 @@ public class ZelCashZelNodeDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				try {
-					zelNodeKey.setText(clientCaller.getZelNodeKey().replaceAll("[\n\r\"]", ""));
-				} catch (WalletCallException | IOException | InterruptedException e1) {
-					Log.error("Error obtaining zelNodeKey. " + e1.getMessage());
-				}
+				getZelNodeKeyButton.setEnabled(false);
+				gelZelNodeKey();
+				getZelNodeKeyButton.setEnabled(false);
 			}
 		});
 		
@@ -168,7 +166,9 @@ public class ZelCashZelNodeDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				getZelNodeOutputButton.setEnabled(false);
 				getZelNodeOutputs();
+				getZelNodeOutputButton.setEnabled(false);
 			}
 		});
 		
@@ -198,10 +198,23 @@ public class ZelCashZelNodeDialog
 		pack();
 	}
 	
+	private void gelZelNodeKey() {
+		Log.info("gelZelNodeKey start");
+		try {
+			zelNodeKey.setText(clientCaller.getZelNodeKey().replaceAll("[\n\r\"]", ""));
+		} catch (WalletCallException | IOException | InterruptedException e) {
+			Log.error("Error obtaining gelZelNodeKey. " + e.getMessage());
+		} finally {
+			Log.info("gelZelNodeKey end");
+		}
+	}
+	
 	private void getZelNodeOutputs() {
+		Log.info("getZelNodeOutputs start");
+		int outputsCount=0;
 		try {
 			JsonArray ja = clientCaller.getZelNodeOutputs();
-			Log.info("ZelNodesOutputSize:"+ja.size());
+			outputsCount = ja.size();
 			zelNodeOutput.removeAllItems();
 			zelNodeOutput.addItem(this.langUtil.getString("dialog.zelcashnewzelnode.select.output"));
 			for (int i = 0; i < ja.size(); ++i) {
@@ -213,6 +226,8 @@ public class ZelCashZelNodeDialog
 			zelNodeOutput.setEnabled(true);
 		} catch (WalletCallException | IOException | InterruptedException e1) {
 			Log.error("Error obtaining zelNodeOutputs. " + e1.getMessage());
+		} finally {
+			Log.info("getZelNodeOutputs end - outputscount:" +outputsCount);
 		}
 	}
 	

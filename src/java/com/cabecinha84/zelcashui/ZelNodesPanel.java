@@ -60,6 +60,8 @@ public class ZelNodesPanel extends WalletTabPanel {
 	protected int lastColumn = -1;
 	
 	protected ZelCashJPopupMenu popupMenu;
+	
+	ZelCashJButton refresh;
 
 	public ZelNodesPanel(ZelCashJFrame parentFrame, ZelCashJTabbedPane parentTabs, ZCashClientCaller clientCaller,
 			StatusUpdateErrorReporter errorReporter, LabelStorage labelStorage)
@@ -135,30 +137,39 @@ public class ZelNodesPanel extends WalletTabPanel {
 		// Build panel of buttons
 		ZelCashJPanel buttonPanel = new ZelCashJPanel();
 		buttonPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		ZelCashJButton refresh = new ZelCashJButton(langUtil.getString("panel.address.button.refresh"));
+		refresh = new ZelCashJButton(langUtil.getString("panel.address.button.refresh"));
 		buttonPanel.add(refresh);
 		zelNodesPanel.add(buttonPanel,BorderLayout.SOUTH);
 
 		refresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				refreshTables();
+				refresh.setText(langUtil.getString("zelnodespanel.zelnodes.button.refreshing"));
+				refresh.setEnabled(false);
+				refreshZelNodesTables();
+				refresh.setText(langUtil.getString("panel.address.button.refresh"));
+				refresh.setEnabled(true);
+				
 			}
 		});
 	}
 	
-	private void refreshTables() {
+	private void refreshZelNodesTables() {
+		Log.info("refreshZelNodesTables start");
 		gelMyZelNodeList();
 		gelZelNodeList();
 		ZelNodesPanel.this.revalidate();
 		ZelNodesPanel.this.repaint();
+		Log.info("refreshZelNodesTables end");
 	}
 
 	private void gelMyZelNodeList() {
+		Log.info("gelMyZelNodeList start");
 		ZelCashJTable table = null;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 		String format = null;
 		Vector<Vector<String>> dataList = new Vector<>();
+		int myZelNodeCount = 0;
 		try {
 			String blockchainDir = OSUtil.getBlockchainDirectory();
 			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
@@ -185,6 +196,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 							continue;
 						}
 						else {
+							++myZelNodeCount;
 							data = new Vector<>();
 							zelNodeInfo = st.split("\\s+");
 							data.add(zelNodeInfo[0]);
@@ -243,7 +255,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.title"),
 				                        JOptionPane.INFORMATION_MESSAGE);
 							}
-							refreshTables();
+							refreshZelNodesTables();
 						} catch (WalletCallException | IOException | InterruptedException e1) {
 							Log.error("Error calling startZelNode: "+e1.getMessage());
 						}
@@ -269,7 +281,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 						try {
 							ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZelNodesPanel.this.parentFrame, clientCaller, installationObserver, zelNodeAlias);
 							ad.setVisible(true);
-							refreshTables();
+							refreshZelNodesTables();
 						} catch (Exception uee) {
 							Log.error("Unexpected error: ", uee);
 						}
@@ -314,7 +326,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 			    	    	return;
 			    	    }
 						ZelCashZelNodeDialog.removeZelNode(zelNodeAlias);
-						refreshTables();
+						refreshZelNodesTables();
 					} else
 					{
 						// Log perhaps
@@ -359,9 +371,12 @@ public class ZelNodesPanel extends WalletTabPanel {
 		} catch (IOException e1) {
 			Log.error("Error obtaining zelNodeList. " + e1.getMessage());
 		}
+		
+		Log.info("gelMyZelNodeList end - myZelNodeCount:"+myZelNodeCount);
 	}
 	
 	private void gelZelNodeStatus(String zelNodeTxHash, Vector<String> data) {
+		Log.info("gelZelNodeStatus start");
 		ZelCashJTable table = null;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 		String format = null;
@@ -390,10 +405,12 @@ public class ZelNodesPanel extends WalletTabPanel {
 		} catch (WalletCallException | IOException | InterruptedException e1) {
 			Log.error("Error obtaining zelNodeList. " + e1.getMessage());
 		}
+		Log.info("gelZelNodeStatus end");
 	}
 
 	
 	private void gelZelNodeList() {
+		Log.info("gelZelNodeList start");
 		ZelCashJTable table = null;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 		String format = null;
@@ -401,6 +418,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 		int basicCount=0;
 		int superCount=0;
 		int bamfCount=0;
+		int totalNodes=0;
 		String tier;
 		try {
 			JsonArray ja = clientCaller.getZelNodeList();
@@ -452,13 +470,15 @@ public class ZelNodesPanel extends WalletTabPanel {
 					++bamfCount;
 				}
 			}
-			zelnodescount.setText(langUtil.getString("zelnodespanel.zelnodes.count",dataList.size(), basicCount, superCount, bamfCount));
+			totalNodes = dataList.size();
+			zelnodescount.setText(langUtil.getString("zelnodespanel.zelnodes.count",totalNodes, basicCount, superCount, bamfCount));
 
 		} catch (WalletCallException | IOException | InterruptedException e1) {
 			Log.error("Error obtaining zelNodeList. " + e1.getMessage());
 		}
 		finally {
 			dtm.fireTableDataChanged();
+			Log.info("gelZelNodeList end - count:" + totalNodes);
 		}
 	}
 
