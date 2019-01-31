@@ -155,9 +155,11 @@ public class ZelCashZelNodeDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				getZelNodeKeyButton.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
 				getZelNodeKeyButton.setEnabled(false);
 				gelZelNodeKey();
-				getZelNodeKeyButton.setEnabled(false);
+				getZelNodeKeyButton.setText(langUtil.getString("dialog.zelcashnewzelnode.button.getprivatekey"));
+				getZelNodeKeyButton.setEnabled(true);
 			}
 		});
 		
@@ -166,9 +168,12 @@ public class ZelCashZelNodeDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				getZelNodeOutputButton.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
 				getZelNodeOutputButton.setEnabled(false);
 				getZelNodeOutputs();
-				getZelNodeOutputButton.setEnabled(false);
+				getZelNodeOutputButton.setEnabled(true);
+				getZelNodeOutputButton.setText(langUtil.getString("dialog.zelcashnewzelnode.button.getoutputs"));
+				
 			}
 		});
 		

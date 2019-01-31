@@ -144,7 +144,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 		refresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				refresh.setText(langUtil.getString("zelnodespanel.zelnodes.button.refreshing"));
+				refresh.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
 				refresh.setEnabled(false);
 				refreshZelNodesTables();
 				refresh.setText(langUtil.getString("panel.address.button.refresh"));
