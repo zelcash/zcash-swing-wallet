@@ -15,9 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,12 +26,10 @@ import javax.swing.border.EtchedBorder;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import com.vaklinov.zcashui.LabelStorage;
 import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.OSUtil;
-import com.vaklinov.zcashui.StatusUpdateErrorReporter;
 import com.vaklinov.zcashui.ZCashClientCaller;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 import com.vaklinov.zcashui.ZCashInstallationObserver;
@@ -55,23 +51,23 @@ public class ZelCashZelNodeDialog
 
 	private ZelCashJFrame parentFrame;
 	
-	private static ZelCashJButton getZelNodeKeyButton;
-	private static ZelCashJButton getZelNodeOutputButton;
 	private static ZelCashJButton saveButton;
 	
 	private ZCashClientCaller clientCaller;
 	private ZCashInstallationObserver installationObserver;
 	private String aliastoEdit;
+	protected LabelStorage labelStorage;
 	
 	final LanguageUtil langUtil = LanguageUtil.instance();
 	
-	public ZelCashZelNodeDialog(ZelCashJFrame parent, final ZCashClientCaller clientCaller, final ZCashInstallationObserver installationObserver, String aliasToEdit)
+	public ZelCashZelNodeDialog(ZelCashJFrame parent, final ZCashClientCaller clientCaller, final ZCashInstallationObserver installationObserver, String aliasToEdit, final LabelStorage labelStorage)
 			throws IOException
 	{
 		parentFrame = parent;
 		this.clientCaller = clientCaller;
 		this.aliastoEdit = aliasToEdit;
 		this.installationObserver = installationObserver;
+		this.labelStorage = labelStorage;
 		
 		this.setTitle(langUtil.getString("dialog.zelcashnewzelnode.title"));
 		this.setSize(900, 650);
@@ -90,13 +86,10 @@ public class ZelCashZelNodeDialog
 		ZelCashJPanel detailsPanel = new ZelCashJPanel();
 		detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
 		
-		getZelNodeKeyButton = new ZelCashJButton(langUtil.getString("dialog.zelcashnewzelnode.button.getprivatekey"));
-		getZelNodeOutputButton = new ZelCashJButton(langUtil.getString("dialog.zelcashnewzelnode.button.getoutputs"));
-		
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.name"),  zelNodeName = new ZelCashJTextField(50));
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.ip"),  zelNodeIP = new ZelCashJTextField(50));
-		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.key"),  zelNodeKey = new ZelCashJTextField(50), getZelNodeKeyButton);
-		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.output"),  zelNodeOutput = new ZelCashJComboBox<String>(), getZelNodeOutputButton);
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.key"),  zelNodeKey = new ZelCashJTextField(50));
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.output"),  zelNodeOutput = new ZelCashJComboBox<String>());
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.address"),  zelNodeAddress = new ZelCashJTextField(50));
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.amount"),  zelNodeAmount = new ZelCashJTextField(50));
 		zelNodeName.setEditable(true);
@@ -106,9 +99,9 @@ public class ZelCashZelNodeDialog
 		zelNodeAmount.setEditable(false);
 		zelNodeAddress.setEditable(false);
 		
+		getZelNodeOutputs();
 		if(this.aliastoEdit != null) {
 			zelNodeName.setText(this.aliastoEdit);
-			getZelNodeOutputs();
 			
 			String blockchainDir = OSUtil.getBlockchainDirectory();
 			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
@@ -151,6 +144,15 @@ public class ZelCashZelNodeDialog
 									}
 								}
 								
+								if ((address != null) && (address.length() > 0))
+								{
+									String label = this.labelStorage.getLabel(address);
+									if ((label != null) && (label.length() > 0))
+									{
+										address = label + " - " + address;
+									}
+								}
+								
 								Float floatAmount=Float.parseFloat(detailAmount);
 								DecimalFormat df = new DecimalFormat("0.00");
 								df.setMaximumFractionDigits(2);
@@ -164,6 +166,9 @@ public class ZelCashZelNodeDialog
 					}
 				}
 			}
+		}
+		else {
+			gelZelNodeKey();
 		}
 		
 
@@ -187,33 +192,6 @@ public class ZelCashZelNodeDialog
 					ZelCashZelNodeDialog.this.setVisible(false);
 					ZelCashZelNodeDialog.this.dispose();
 				}
-		});
-		
-		getZelNodeKeyButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				getZelNodeKeyButton.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
-				getZelNodeKeyButton.setEnabled(false);
-				gelZelNodeKey();
-				getZelNodeKeyButton.setText(langUtil.getString("dialog.zelcashnewzelnode.button.getprivatekey"));
-				getZelNodeKeyButton.setEnabled(true);
-			}
-		});
-		
-		getZelNodeOutputButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				getZelNodeOutputButton.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
-				getZelNodeOutputButton.setEnabled(false);
-				getZelNodeOutputs();
-				getZelNodeOutputButton.setEnabled(true);
-				getZelNodeOutputButton.setText(langUtil.getString("dialog.zelcashnewzelnode.button.getoutputs"));
-				
-			}
 		});
 		
 		saveButton.addActionListener(new ActionListener()
@@ -268,6 +246,14 @@ public class ZelCashZelNodeDialog
 										detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
 										address = obj.get("address").toString().replaceAll("[\n\r\"]", "");
 										break;
+									}
+								}
+								if ((address != null) && (address.length() > 0))
+								{
+									String label = labelStorage.getLabel(address);
+									if ((label != null) && (label.length() > 0))
+									{
+										address = label + " - " + address;
 									}
 								}
 								Float floatAmount=Float.parseFloat(detailAmount);

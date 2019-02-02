@@ -41,6 +41,7 @@ import com.vaklinov.zcashui.ZCashInstallationObserver;
 public class ZelNodesPanel extends WalletTabPanel {
 	private StatusUpdateErrorReporter errorReporter;
 	private ZCashInstallationObserver installationObserver;
+	private LabelStorage labelStorage;
 	private LanguageUtil langUtil;
 	private ZelCashJFrame parentFrame;
 	private ZCashClientCaller clientCaller;
@@ -69,7 +70,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 		this.parentFrame = parentFrame;
 		this.clientCaller = clientCaller;
 		this.errorReporter = errorReporter;
-
+		this.labelStorage = labelStorage;
 		this.langUtil = LanguageUtil.instance();
 
 		// Build content
@@ -279,7 +280,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 					{
 						String zelNodeAlias = ZelNodesPanel.this.myZelNodesTable.getValueAt(lastRow, 0).toString();
 						try {
-							ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZelNodesPanel.this.parentFrame, clientCaller, installationObserver, zelNodeAlias);
+							ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZelNodesPanel.this.parentFrame, clientCaller, installationObserver, zelNodeAlias, labelStorage);
 							ad.setVisible(true);
 							refreshZelNodesTables();
 						} catch (Exception uee) {

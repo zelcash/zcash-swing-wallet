@@ -87,6 +87,7 @@ public class ZCashUI extends ZelCashJFrame {
 	public static final long THREAD_WAIT_5_SECONDS = 5000;
 	private ZCashInstallationObserver installationObserver;
 	private ZCashClientCaller clientCaller;
+	private LabelStorage labelStorage;
 	private StatusUpdateErrorReporter errorReporter;
 
 	private WalletOperations walletOps;
@@ -155,7 +156,7 @@ public class ZCashUI extends ZelCashJFrame {
 		Font newTabFont = new Font(oldTabFont.getName(), Font.BOLD | Font.ITALIC, oldTabFont.getSize() * 57 / 50);
 		tabs.setFont(newTabFont);
 		BackupTracker backupTracker = new BackupTracker(this);
-		LabelStorage labelStorage = new LabelStorage();
+		labelStorage = new LabelStorage();
 		tabs.addTab(langUtil.getString("main.frame.tab.overview.title"),
 				new ImageIcon(cl.getResource("zelcashImages/overview.png")), dashboard = new DashboardPanel(this,
 						installationObserver, clientCaller, errorReporter, backupTracker, labelStorage));
@@ -347,7 +348,7 @@ public class ZCashUI extends ZelCashJFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZCashUI.this, clientCaller, installationObserver, null);
+					ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZCashUI.this, clientCaller, installationObserver, null, labelStorage);
 					ad.setVisible(true);
 				} catch (Exception uee) {
 					Log.error("Unexpected error: ", uee);
