@@ -428,10 +428,11 @@ public class ZelNodesPanel extends WalletTabPanel {
 			for (int i = 0; i < ja.size(); i++) {
 
 				JsonObject jsonObj = ja.get(i).asObject();
+				Log.info("zelnode:"+jsonObj.toString());
 				Vector<String> data = new Vector<>();
 				
 				//data.add(jsonObj.get("rank").toString().replaceAll("[\n\r\"]", ""));
-				data.add(jsonObj.get("ip").toString().replaceAll("[\n\r\"]", ""));
+				data.add(jsonObj.get("ipaddress").toString().replaceAll("[\n\r\"]", ""));
 				
 				data.add(jsonObj.get("status").toString().replaceAll("[\n\r\"]", ""));
 				//data.add(jsonObj.get("version").toString().replaceAll("[\n\r\"]", ""));
