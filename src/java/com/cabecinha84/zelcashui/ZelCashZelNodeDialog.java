@@ -138,7 +138,7 @@ public class ZelCashZelNodeDialog
 								JsonArray details = txinfo.get("details").asArray();
 								String vout;
 								String category;
-								String detailAmount=""; 
+								String detailAmount="0"; 
 								String address ="";
 								for(int i=0; i< details.size(); ++i) {
 									JsonObject obj = details.get(i).asObject();
@@ -257,7 +257,7 @@ public class ZelCashZelNodeDialog
 								JsonArray details = txinfo.get("details").asArray();
 								String vout;
 								String category;
-								String detailAmount=""; 
+								String detailAmount="0"; 
 								String address ="";
 								for(int i=0; i< details.size(); ++i) {
 									JsonObject obj = details.get(i).asObject();
