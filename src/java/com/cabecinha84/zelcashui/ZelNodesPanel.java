@@ -431,7 +431,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 				Vector<String> data = new Vector<>();
 				
 				//data.add(jsonObj.get("rank").toString().replaceAll("[\n\r\"]", ""));
-				data.add(jsonObj.get("addr").toString().replaceAll("[\n\r\"]", ""));
+				data.add(jsonObj.get("ip").toString().replaceAll("[\n\r\"]", ""));
 				
 				data.add(jsonObj.get("status").toString().replaceAll("[\n\r\"]", ""));
 				//data.add(jsonObj.get("version").toString().replaceAll("[\n\r\"]", ""));
