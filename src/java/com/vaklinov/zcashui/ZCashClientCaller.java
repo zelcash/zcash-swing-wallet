@@ -476,6 +476,13 @@ public class ZCashClientCaller
 
 		return jsonTransaction.toString(WriterConfig.PRETTY_PRINT);
 	}
+	
+	public synchronized JsonObject getTransactionInfo(String txID)
+			throws WalletCallException, IOException, InterruptedException
+		{
+			return this.executeCommandAndGetJsonObject(
+				"gettransaction", wrapStringParameter(txID));
+		}
 
 
 	// return UNIX time as tring

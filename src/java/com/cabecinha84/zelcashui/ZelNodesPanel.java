@@ -166,7 +166,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 	private void gelMyZelNodeList() {
 		Log.info("gelMyZelNodeList start");
 		ZelCashJTable table = null;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String format = null;
 		Vector<Vector<String>> dataList = new Vector<>();
 		int myZelNodeCount = 0;
@@ -378,7 +378,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 	private void gelZelNodeStatus(String zelNodeTxHash, Vector<String> data) {
 		Log.info("gelZelNodeStatus start");
 		ZelCashJTable table = null;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String format = null;
 		try {
 			JsonArray ja = clientCaller.getZelNodeStatus(zelNodeTxHash.trim());
@@ -412,7 +412,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 	private void gelZelNodeList() {
 		Log.info("gelZelNodeList start");
 		ZelCashJTable table = null;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String format = null;
 		DefaultTableModel dtm = (DefaultTableModel) zelNodesTable.getModel();
 		int basicCount=0;

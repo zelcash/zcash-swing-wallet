@@ -5,13 +5,17 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -24,6 +28,7 @@ import javax.swing.border.EtchedBorder;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.vaklinov.zcashui.LabelStorage;
 import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
@@ -45,6 +50,8 @@ public class ZelCashZelNodeDialog
 	protected ZelCashJTextField zelNodeKey;
 	private ZelCashJComboBox<String> zelNodeOutput;
 	protected ZelCashJTextField zelNodeOutputText;
+	protected ZelCashJTextField zelNodeAmount;
+	protected ZelCashJTextField zelNodeAddress;
 
 	private ZelCashJFrame parentFrame;
 	
@@ -90,14 +97,19 @@ public class ZelCashZelNodeDialog
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.ip"),  zelNodeIP = new ZelCashJTextField(50));
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.key"),  zelNodeKey = new ZelCashJTextField(50), getZelNodeKeyButton);
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.output"),  zelNodeOutput = new ZelCashJComboBox<String>(), getZelNodeOutputButton);
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.address"),  zelNodeAddress = new ZelCashJTextField(50));
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.amount"),  zelNodeAmount = new ZelCashJTextField(50));
 		zelNodeName.setEditable(true);
 		zelNodeIP.setEditable(true);
 		zelNodeKey.setEditable(false);
 		zelNodeOutput.setEnabled(false);
+		zelNodeAmount.setEditable(false);
+		zelNodeAddress.setEditable(false);
 		
 		if(this.aliastoEdit != null) {
 			zelNodeName.setText(this.aliastoEdit);
 			getZelNodeOutputs();
+			
 			String blockchainDir = OSUtil.getBlockchainDirectory();
 			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
 			if (!zelnodeConf.exists())
@@ -108,8 +120,6 @@ public class ZelCashZelNodeDialog
 				Log.info("File zelnode.conf found");
 				BufferedReader br = new BufferedReader(new FileReader(zelnodeConf)); 
 				String st; 
-				String alias;
-				String zelnodekey;
 				String emptyLine;
 				while ((st = br.readLine()) != null) {
 					emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
@@ -118,10 +128,39 @@ public class ZelCashZelNodeDialog
 					}
 					else {
 						String[] zelNodeInfo = st.split("\\s+");
-						zelNodeIP.setText(zelNodeInfo[1]);
-						zelNodeKey.setText(zelNodeInfo[2]);
-						String output = zelNodeInfo[3] + " " + zelNodeInfo[4];
-						zelNodeOutput.setSelectedItem(output);
+						if(zelNodeInfo[0].equals(this.aliastoEdit)) {
+							zelNodeIP.setText(zelNodeInfo[1]);
+							zelNodeKey.setText(zelNodeInfo[2]);
+							String output = zelNodeInfo[3] + " " + zelNodeInfo[4];
+							zelNodeOutput.setSelectedItem(output);
+							try {
+								JsonObject txinfo = clientCaller.getTransactionInfo(zelNodeInfo[3]);
+								JsonArray details = txinfo.get("details").asArray();
+								String vout;
+								String category;
+								String detailAmount=""; 
+								String address ="";
+								for(int i=0; i< details.size(); ++i) {
+									JsonObject obj = details.get(i).asObject();
+									vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
+									category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
+									if(vout.equals(zelNodeInfo[4]) && "send".equals(category)) {
+										detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
+										address = obj.get("address").toString().replaceAll("[\n\r\"]", "");
+										break;
+									}
+								}
+								
+								Float floatAmount=Float.parseFloat(detailAmount);
+								DecimalFormat df = new DecimalFormat("0.00");
+								df.setMaximumFractionDigits(2);
+								zelNodeAmount.setText(df.format(floatAmount));
+								zelNodeAddress.setText(address);
+				            } catch (WalletCallException | IOException | InterruptedException e) {
+								Log.error("Error calling getRawTransactionDetails:"+e.getMessage());
+							}
+							break;
+						}
 					}
 				}
 			}
@@ -197,6 +236,53 @@ public class ZelCashZelNodeDialog
 					return;
 				}
 				saveSettings();
+			}
+		});
+		
+		zelNodeOutput.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent event) {
+				if(event.getStateChange() == ItemEvent.SELECTED) {
+					Object source = event.getSource();
+		            if (source instanceof ZelCashJComboBox) {
+		            	ZelCashJComboBox<String> cb = (ZelCashJComboBox<String>)source;
+		            	int index = cb.getSelectedIndex();
+		            	if(index!=0) {
+		            		zelNodeAmount.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
+		            		zelNodeAddress.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
+		            		String[] outputinfo = cb.getSelectedItem().toString().split(" ");
+			                try {
+			                	JsonObject txinfo = clientCaller.getTransactionInfo(outputinfo[0]);
+								JsonArray details = txinfo.get("details").asArray();
+								String vout;
+								String category;
+								String detailAmount=""; 
+								String address ="";
+								for(int i=0; i< details.size(); ++i) {
+									JsonObject obj = details.get(i).asObject();
+									vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
+									category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
+									
+									if(vout.equals(outputinfo[1]) && "send".equals(category)) {
+										detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
+										address = obj.get("address").toString().replaceAll("[\n\r\"]", "");
+										break;
+									}
+								}
+								Float floatAmount=Float.parseFloat(detailAmount);
+								DecimalFormat df = new DecimalFormat("0.00");
+								df.setMaximumFractionDigits(2);
+								zelNodeAmount.setText(df.format(floatAmount));
+								zelNodeAddress.setText(address);
+			                } catch (WalletCallException | IOException | InterruptedException e) {
+								Log.error("Error calling getRawTransactionDetails:"+e.getMessage());
+							}
+		            	}
+		                
+		            }
+				}
+				
 			}
 		});
 		

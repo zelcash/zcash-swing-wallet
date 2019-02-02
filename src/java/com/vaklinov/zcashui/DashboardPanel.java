@@ -39,7 +39,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -51,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -555,21 +558,26 @@ public class DashboardPanel extends WalletTabPanel {
 
 		String transparentBalance = df.format(balance.transparentBalance);
 		String privateBalance = df.format(balance.privateBalance);
-		String totalBalance = df.format(balance.totalBalance);
+		Float zelNodeAmountLocked = getZelNodesAmountLocked();
+		String totalBalance = df.format(balance.totalBalance + zelNodeAmountLocked);
 
 		String transparentUCBalance = df.format(balance.transparentUnconfirmedBalance);
 		String privateUCBalance = df.format(balance.privateUnconfirmedBalance);
-		String totalUCBalance = df.format(balance.totalUnconfirmedBalance);
+		
+		String totalUCBalance = df.format(balance.totalUnconfirmedBalance + zelNodeAmountLocked);
+		String zelNodesBalance= df.format(getZelNodesAmountLocked());
 
 		String color1 = transparentBalance.equals(transparentUCBalance) ? "" : "color:#cc3300;";
 		String color2 = privateBalance.equals(privateUCBalance) ? "" : "color:#cc3300;";
 		String color3 = totalBalance.equals(totalUCBalance) ? "" : "color:#cc3300;";
 
+
+		
 		Double currencyBalance = (this.exchangeRatePanel != null) ? this.exchangeRatePanel.getCurrencyPrice() : null;
 
 		String formattedCurrencyVal = "N/A";
 		if (currencyBalance != null) {
-			currencyBalance = currencyBalance * balance.totalUnconfirmedBalance;
+			currencyBalance = currencyBalance * (balance.totalUnconfirmedBalance + zelNodeAmountLocked);
 			DecimalFormat currencyDF = new DecimalFormat("########0.00");
 			formattedCurrencyVal = currencyDF.format(currencyBalance);
 
@@ -583,7 +591,7 @@ public class DashboardPanel extends WalletTabPanel {
 		String currencyBalanceStr = langUtil.getString("panel.dashboard.marketcap.currency.balance.string", color3, formattedCurrencyVal, ZelCashUI.currency);
 
 		String text = langUtil.getString("panel.dashboard.marketcap.usd.balance.text", color1, transparentUCBalance,
-				color2, privateUCBalance, color3, totalUCBalance, currencyBalanceStr);
+				color2, privateUCBalance, zelNodesBalance, color3, totalUCBalance, currencyBalanceStr);
 
 		// TODO: Remove
 		// System.out.println("totalUCBalance = [" + totalUCBalance + "]");
@@ -604,6 +612,49 @@ public class DashboardPanel extends WalletTabPanel {
 		if (this.parentFrame.isVisible()) {
 			this.backupTracker.handleWalletBalanceUpdate(balance.totalBalance);
 		}
+	}
+	
+	private Float getZelNodesAmountLocked() {
+		Float zelNodesAmountLocked = Float.valueOf("0");
+		try {
+			String blockchainDir = OSUtil.getBlockchainDirectory();
+			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
+			if (zelnodeConf.exists())
+			{
+				BufferedReader br = new BufferedReader(new FileReader(zelnodeConf)); 
+				String st; 
+				String emptyLine;
+				while ((st = br.readLine()) != null) {
+					emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
+					if(st.contains("#") || emptyLine.equals("")) {
+						continue;
+					}
+					else {
+						String[] zelNodeInfo = st.split("\\s+");
+						JsonObject txinfo = clientCaller.getTransactionInfo(zelNodeInfo[3]);
+						JsonArray details = txinfo.get("details").asArray();
+						String vout;
+						String category;
+						String detailAmount="0"; 
+						for(int i=0; i< details.size(); ++i) {
+							JsonObject obj = details.get(i).asObject();
+							vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
+							category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
+							if(vout.equals(zelNodeInfo[4]) && "send".equals(category)) {
+								detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
+								zelNodesAmountLocked+=Float.parseFloat(detailAmount);
+								break;
+							}
+						}
+						
+					}
+				}
+			}
+		}
+		catch (WalletCallException | IOException | InterruptedException e) {
+			Log.error("Error on getZelNodesAmountLocked:"+e.getMessage());
+		}
+		return zelNodesAmountLocked;
 	}
 
 	private String[][] getTransactionsDataFromWallet() throws WalletCallException, IOException, InterruptedException {
