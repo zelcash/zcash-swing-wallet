@@ -544,13 +544,65 @@ public class ZCashUI extends ZelCashJFrame {
 
 		System.exit(0);
 	}
+	
+	public void restartDaemon(boolean reindex) {
+		Log.info("restartDaemon ...");
 
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		try {
+			this.dashboard.stopThreadsAndTimers();
+			this.transactionDetailsPanel.stopThreadsAndTimers();
+			this.addresses.stopThreadsAndTimers();
+			this.sendPanel.stopThreadsAndTimers();
+			this.messagingPanel.stopThreadsAndTimers();
+			Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+			
+			this.clientCaller.stopDaemon();
+			ZCashInstallationObserver initialInstallationObserver;
+			DaemonInfo zcashdInfo;
+			for (int i = 0; i < 5; ++i) {
+				Log.info("Check if Daemon is stopped");
+				initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
+				zcashdInfo = initialInstallationObserver.getDaemonInfo();
+				initialInstallationObserver = null;
+				if (zcashdInfo.status != DAEMON_STATUS.RUNNING) {
+					Log.info("Daemon stopped.");
+					break;
+				}
+				Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+			}
+			this.clientCaller.startDaemon(reindex);
+			for (int i = 0; i < 5; ++i) {
+				Log.info("Check if Daemon is running");
+				initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
+				zcashdInfo = initialInstallationObserver.getDaemonInfo();
+				initialInstallationObserver = null;
+				if (zcashdInfo.status == DAEMON_STATUS.RUNNING) {
+					Log.info("Daemon running.");
+					break;
+				}
+				Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+			}
+			Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+		}
+		catch (Exception e) {
+			Log.error("Error on restartDaemon: "+e.getMessage());
+		}
+		
+	}
+	
 	public static void main(String argv[]) throws IOException {
 		ZCashUI ui = null;
 		StartupProgressDialog startupBar = null;
 		ZCashClientCaller initialClientCaller = null;
 		ZCashInstallationObserver initialInstallationObserver = null;
 		DaemonInfo zcashdInfo = null;
+		boolean reindex = false;
+		for (int i = 0; i < argv.length; i++) {
+			if("reindex".equals(argv[i])) {
+				reindex = true;
+			}
+		}
 		try {
 			new ZelCashUI();
 			OS_TYPE os = OSUtil.getOSType();
@@ -629,7 +681,7 @@ public class ZCashUI extends ZelCashJFrame {
 						"zelcashd is not running at the moment or has not started/synchronized 100% - showing splash...");
 				startupBar = new StartupProgressDialog(initialClientCaller);
 				startupBar.setVisible(true);
-				startupBar.waitForStartup();
+				startupBar.waitForStartup(reindex);
 			}
 			initialClientCaller = null;
 
@@ -682,35 +734,20 @@ public class ZCashUI extends ZelCashJFrame {
 						JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 				if (option == 0) {
 					try {
+						
 						if (initialClientCaller == null) {
 							initialClientCaller = new ZCashClientCaller(OSUtil.getProgramDirectory());
 						}
 						initialClientCaller.stopDaemon();
-						initialClientCaller.startDaemon(true);
+						
 						JOptionPane.showMessageDialog(null,
 								LanguageUtil.instance().getString("wallet.reindex.restart.message"),
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
-						// start zelcashd with -reindex.
 
 						if (startupBar != null) {
 							startupBar.dispose();
 						}
-						for (int i = 0; i < 5; ++i) {
-							Log.info("Check if Daemon already start with reindex option");
-							initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
-							zcashdInfo = initialInstallationObserver.getDaemonInfo();
-							initialInstallationObserver = null;
-							if (zcashdInfo.status == DAEMON_STATUS.RUNNING) {
-								Log.info("Daemon started.");
-								break;
-							}
-							Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
-						}
-						Thread.sleep(ZCashUI.THREAD_WAIT_5_SECONDS);
-						Log.info("Call stop Daemon.");
-						initialClientCaller.stopDaemon();
-						Thread.sleep(ZCashUI.THREAD_WAIT_5_SECONDS);
 						for (int i = 0; i < 5; ++i) {
 							Log.info("Check if Daemon is stopped");
 							initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
@@ -723,7 +760,8 @@ public class ZCashUI extends ZelCashJFrame {
 							Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
 						}
 						Log.info("Restarting the wallet.");
-						ZCashUI.main(null);
+						String args[] = {"reindex"};
+						ZCashUI.main(args);
 					} catch (Exception errr) {
 						JOptionPane.showMessageDialog(null,
 								LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text",

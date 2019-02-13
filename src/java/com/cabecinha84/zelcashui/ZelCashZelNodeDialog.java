@@ -32,6 +32,7 @@ import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.OSUtil;
 import com.vaklinov.zcashui.ZCashClientCaller;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
+import com.vaklinov.zcashui.ZCashInstallationObserver.DAEMON_STATUS;
 import com.vaklinov.zcashui.ZCashInstallationObserver;
 import com.vaklinov.zcashui.ZCashUI;
 
@@ -49,7 +50,7 @@ public class ZelCashZelNodeDialog
 	protected ZelCashJTextField zelNodeAmount;
 	protected ZelCashJTextField zelNodeAddress;
 
-	private ZelCashJFrame parentFrame;
+	private ZCashUI parentFrame;
 	
 	private static ZelCashJButton saveButton;
 	
@@ -60,7 +61,7 @@ public class ZelCashZelNodeDialog
 	
 	final LanguageUtil langUtil = LanguageUtil.instance();
 	
-	public ZelCashZelNodeDialog(ZelCashJFrame parent, final ZCashClientCaller clientCaller, final ZCashInstallationObserver installationObserver, String aliasToEdit, final LabelStorage labelStorage)
+	public ZelCashZelNodeDialog(ZCashUI parent, final ZCashClientCaller clientCaller, final ZCashInstallationObserver installationObserver, String aliasToEdit, final LabelStorage labelStorage)
 			throws IOException
 	{
 		parentFrame = parent;
@@ -358,7 +359,7 @@ public class ZelCashZelNodeDialog
 			Properties confProps = new Properties();
 			FileInputStream fis = null;
 			String property = null;
-			boolean daemonNeedsToBeRestarted = false;
+			boolean daemonNeedsToBeReindexed = false;
 			try
 			{
 				fis = new FileInputStream(zelcashConf);
@@ -368,31 +369,31 @@ public class ZelCashZelNodeDialog
 				if(property == null) {
 					fw.write(System.getProperty("line.separator") + "server=1"); 
 					Log.info("Adding server=1");
-					daemonNeedsToBeRestarted = true;
+					daemonNeedsToBeReindexed = true;
 				}
 				property = confProps.getProperty("daemon");
 				if(property == null) {
 					fw.write(System.getProperty("line.separator") + "daemon=1"); 
 					Log.info("Adding server=1");
-					daemonNeedsToBeRestarted = true;
+					daemonNeedsToBeReindexed = true;
 				}
 				property = confProps.getProperty("txindex");
 				if(property == null) {
 					fw.write(System.getProperty("line.separator") + "txindex=1"); 
 					Log.info("Adding txindex=1");
-					daemonNeedsToBeRestarted = true;
+					daemonNeedsToBeReindexed = true;
 				}
 				property = confProps.getProperty("logtimestamps");
 				if(property == null) {
 					fw.write(System.getProperty("line.separator") + "logtimestamps=1"); 
 					Log.info("Adding logtimestamps=1");
-					daemonNeedsToBeRestarted = true;
+					daemonNeedsToBeReindexed = true;
 				}
 				property = confProps.getProperty("maxconnections");
 				if(property == null) {
 					fw.write(System.getProperty("line.separator") + "maxconnections=256"); 
 					Log.info("Adding maxconnections=256");
-					daemonNeedsToBeRestarted = true;
+					daemonNeedsToBeReindexed = true;
 				}
 				
 			} finally
@@ -417,14 +418,7 @@ public class ZelCashZelNodeDialog
 					fw.close();
 				}
 			}
-			/*if(daemonNeedsToBeRestarted) {
-			//nice to have, restart your wallet here if it`s needed.
-			JOptionPane.showMessageDialog(null,
-					LanguageUtil.instance().getString("wallet.zelnodes.restart.message"),
-					LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
-					JOptionPane.INFORMATION_MESSAGE);
-
-			}*/
+			
 			if(this.aliastoEdit==null) {
 				if(this.installationObserver.isOnTestNet()) {
 					JOptionPane.showMessageDialog(null,
@@ -433,26 +427,38 @@ public class ZelCashZelNodeDialog
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
-					JOptionPane.showMessageDialog(null,
-							LanguageUtil.instance().getString("wallet.zelnodes.restart.message"),
-							LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
-							JOptionPane.INFORMATION_MESSAGE);
+					
+					Object[] options = { LanguageUtil.instance().getString("ipfs.wrapper.options.yes"),
+							LanguageUtil.instance().getString("ipfs.wrapper.options.no") };
+					if(daemonNeedsToBeReindexed) {					
+						int option = JOptionPane.showOptionDialog(null,
+								LanguageUtil.instance().getString("wallet.zelnodes.restart.reindex.message"),
+								LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
+								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+						if (option == 0) {
+							JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("wallet.reindex.restart.message"),
+									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
+									JOptionPane.INFORMATION_MESSAGE);
+							ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true);
+						}
+					}
+					else {
+						int option = JOptionPane.showOptionDialog(null,
+								LanguageUtil.instance().getString("wallet.zelnodes.restart.message"),
+								LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
+								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+						if (option == 0) {
+							JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("wallet.restart.message"),
+									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
+									JOptionPane.INFORMATION_MESSAGE);
+							ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false);
+						} 
+					}
 				}
-				
 			}
-			
-
-			Log.info("Restarting the wallet.");
-			ZCashUI z = new ZCashUI(null);
-			ZelCashZelNodeDialog.this.parentFrame.setVisible(false);
-			ZelCashZelNodeDialog.this.parentFrame.dispose();
-			ZelCashZelNodeDialog.this.parentFrame = z;	
-			ZelCashZelNodeDialog.this.parentFrame.repaint();
-			ZelCashZelNodeDialog.this.parentFrame.setVisible(true);
-			ZelCashZelNodeDialog.this.setVisible(false);
-			ZelCashZelNodeDialog.this.dispose();
-
-
+			restartUI();
 		}
 		catch (WalletCallException wce)
         {
@@ -497,6 +503,23 @@ public class ZelCashZelNodeDialog
             System.exit(4);
         }
 		
+	}
+	
+	public void restartUI() throws IOException, InterruptedException, WalletCallException {
+		Log.info("Restarting the UI.");
+		ZCashUI z = new ZCashUI(null);
+		this.parentFrame.setVisible(false);
+		this.parentFrame.dispose();
+		this.parentFrame = z;	
+		this.parentFrame.repaint();
+		this.parentFrame.setVisible(true);
+		this.setVisible(false);
+		this.dispose();
+	}
+	
+	public void disposeMenu() {
+		this.setVisible(false);
+		this.dispose();	
 	}
 	
 	public static void removeZelNode(String zelNodeAlias) {

@@ -34,6 +34,7 @@ import com.vaklinov.zcashui.WalletTabPanel;
 import com.vaklinov.zcashui.ZCashClientCaller;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
 import com.vaklinov.zcashui.ZCashInstallationObserver;
+import com.vaklinov.zcashui.ZCashUI;
 
 /**
  * Provides the functionality for sending cash
@@ -43,7 +44,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 	private ZCashInstallationObserver installationObserver;
 	private LabelStorage labelStorage;
 	private LanguageUtil langUtil;
-	private ZelCashJFrame parentFrame;
+	private ZCashUI parentFrame;
 	private ZCashClientCaller clientCaller;
 	private ZelCashJTable zelNodesTable = null;
 	private ZelCashJScrollPane zelNodesTablePane = null;
@@ -64,7 +65,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 	
 	ZelCashJButton refresh;
 
-	public ZelNodesPanel(ZelCashJFrame parentFrame, ZelCashJTabbedPane parentTabs, ZCashClientCaller clientCaller,
+	public ZelNodesPanel(ZCashUI parentFrame, ZelCashJTabbedPane parentTabs, ZCashClientCaller clientCaller,
 			StatusUpdateErrorReporter errorReporter, LabelStorage labelStorage)
 			throws IOException, InterruptedException, WalletCallException {
 		this.parentFrame = parentFrame;
@@ -88,12 +89,13 @@ public class ZelNodesPanel extends WalletTabPanel {
 		myZelNodesTablePane = new ZelCashJScrollPane();
 		Vector<Vector<String>> dataList = new Vector<>();
 		Vector<String> columnNames = new Vector<>();
-		columnNames.add(langUtil.getString("dialog.zelcashnewzelnode.name"));
+		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.alias"));
 		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.ip"));
 		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.status"));
 		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.tier"));
 		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.activetime"));
-		//columnNames.add(langUtil.getString("zelnodespanel.zelnodes.laspaid"));
+		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.laspaid"));
+		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.rank"));
 		
 		myZelNodesTable = new ZelCashJTable(dataList, columnNames);
 		myZelNodesTable.setAutoCreateRowSorter(true);
@@ -396,10 +398,22 @@ public class ZelNodesPanel extends WalletTabPanel {
 					format = formatter.format(aux);
 					data.add(format);
 				}
+				String lastPaid = jsonObj.get("lastpaid").toString().replaceAll("[\n\r\"]", "");
+				if(lastPaid == null || lastPaid == "" || lastPaid == "0") {
+					data.add("-1");
+				}
+				else {
+					Date aux = new Date(Long.parseLong(lastPaid) * 1000);
+					format = formatter.format(aux);
+					data.add(format);
+				}
+				data.add(jsonObj.get("rank").toString().replaceAll("[\n\r\"]", ""));
 				return;
 			}
 
 			data.add(langUtil.getString("zelnodespanel.myzelnodes.status.missing"));
+			data.add("-1");
+			data.add("-1");
 			data.add("-1");
 			data.add("-1");
 
