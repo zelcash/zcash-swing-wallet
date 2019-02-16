@@ -239,6 +239,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 						String zelNodeALias = ZelNodesPanel.this.myZelNodesTable.getValueAt(lastRow, 0).toString();
 					
 						try {
+							Log.info("Start zelnodealias: "+zelNodeALias);
 							JsonObject response = clientCaller.startZelNode(zelNodeALias);
 							JsonArray detailResponse = response.get("detail").asArray();
 							JsonObject jsonObj = detailResponse.get(0).asObject();
@@ -247,14 +248,14 @@ public class ZelNodesPanel extends WalletTabPanel {
 								String error = jsonObj.get("errorMessage").toString().replaceAll("[\n\r\"]", "");
 								JOptionPane.showMessageDialog(
 				                        null,
-				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.error", error),
+				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.error", zelNodeALias, error),
 				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.title"),
 				                        JOptionPane.ERROR_MESSAGE);
 							}
 							else {
 								JOptionPane.showMessageDialog(
 				                        null,
-				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.success"),
+				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.success", zelNodeALias),
 				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.title"),
 				                        JOptionPane.INFORMATION_MESSAGE);
 							}
