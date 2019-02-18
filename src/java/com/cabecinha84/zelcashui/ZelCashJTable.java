@@ -13,14 +13,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import com.vaklinov.zcashui.DataTable;
-import com.vaklinov.zcashui.Log;
-
 public class ZelCashJTable extends JTable {
 	private Color backGroundColor = ZelCashUI.table;
 	private Color headerBackGroundColor = ZelCashUI.tableHeader;
 	private Color textColor = ZelCashUI.text;
-	private boolean keyEventExecuted = false;
 	public ZelCashJTable() {
 		super();
 		this.setBackground(backGroundColor);
@@ -88,8 +84,7 @@ public class ZelCashJTable extends JTable {
 	    this.addKeyListener(new KeyAdapter() {
 	        @Override
 	        public void keyReleased(KeyEvent e) {
-	            if (e.getKeyCode() == KeyEvent.VK_C  && !keyEventExecuted) {
-	            	keyEventExecuted = true;
+	            if (e.getKeyCode() == KeyEvent.VK_C) {
 	            	int lastRow = getSelectedRow();
 	            	int lastColumn = getSelectedColumn();
 	            	if ((lastRow >= 0) && (lastColumn >= 0))
@@ -102,26 +97,10 @@ public class ZelCashJTable extends JTable {
 					{
 						// Log perhaps
 					}
-	            	
-                	Runnable r = new Runnable() {
-            		public void run() {
-           	        	try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							Log.error("Error sleeping thread for processkeyAction: "+e.getMessage());
-						}
-           	        	 processKeyAction();
-	           	         }
-	           	    };
-	
-	           	    new Thread(r).start();
 	            }
 	        }
 	    });
 	}
 	
-	private void processKeyAction() {
-		keyEventExecuted = false;
-	}
 }
 
