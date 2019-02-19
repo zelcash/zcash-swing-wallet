@@ -75,7 +75,7 @@ public class StartupProgressDialog extends ZelCashJFrame {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
     
-    public void waitForStartup() throws IOException,
+    public void waitForStartup(boolean reindex) throws IOException,
         InterruptedException,WalletCallException,InvocationTargetException {
         
         // special handling of Windows/macOS app launch
@@ -111,7 +111,7 @@ public class StartupProgressDialog extends ZelCashJFrame {
         }
         
         final Process daemonProcess = 
-        	shouldStartZCashd ? clientCaller.startDaemon(false) : null;
+        	shouldStartZCashd ? clientCaller.startDaemon(reindex) : null;
         
         Thread.sleep(POLL_PERIOD); // just a little extra
         

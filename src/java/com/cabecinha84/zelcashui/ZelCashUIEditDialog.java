@@ -66,12 +66,12 @@ public class ZelCashUIEditDialog
 	private static final String GREYMESSAGESENTDEFAULT = "#00ff33";
 	private static final String GREYMESSAGERECEIVEDDEFAULT = "#1a1aff";
 	
-	private static final String ORANGETIER1DEFAULT = "#FDB813";
-	private static final String ORANGETIER2DEFAULT = "#ffff00";
-	private static final String ORANGETIER3DEFAULT = "#ff0000";
-	private static final String ORANGETEXTDEFAULT = "#ff0000";
-	private static final String ORANGEMESSAGESENTDEFAULT = "#00ff33";
-	private static final String ORANGEMESSAGERECEIVEDDEFAULT = "#1a1aff";
+	private static final String THUNDERTIER1DEFAULT = "#212121";
+	private static final String THUNDERTIER2DEFAULT = "#484848";
+	private static final String THUNDERTIER3DEFAULT = "#484848";
+	private static final String THUNDERTEXTDEFAULT = "#4dd0e1";
+	private static final String THUNDERMESSAGESENTDEFAULT = "#00e676";
+	private static final String THUNDERMESSAGERECEIVEDDEFAULT = "#40c4ff";
 	
 	protected ZelCashJTextField tierOneColor;
 	protected ZelCashJTextField tierTwoColor;
@@ -98,7 +98,7 @@ public class ZelCashUIEditDialog
 	
 	private ZelCashJFrame parentFrame;
 	
-	private static ZelCashJButton orangeThemeButton;
+	private static ZelCashJButton thunderThemeButton;
 	private static ZelCashJButton greyThemeButton;
 	private static ZelCashJButton whiteThemeButton;
 	private static ZelCashJButton blueThemeButton;
@@ -192,8 +192,8 @@ public class ZelCashUIEditDialog
 		themePanel2.add(redThemeButton);
 		greyThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.grey.theme"));
 		themePanel2.add(greyThemeButton);
-		orangeThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.orange.theme"));
-		themePanel2.add(orangeThemeButton);
+		thunderThemeButton = new ZelCashJButton(langUtil.getString("dialog.zelcashuiedit.set.thunder.theme"));
+		themePanel2.add(thunderThemeButton);
 		
 		detailsPanel.add(themePanel2);
 		
@@ -261,17 +261,17 @@ public class ZelCashUIEditDialog
 			}
 		});
 		
-		orangeThemeButton.addActionListener(new ActionListener()
+		thunderThemeButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				tier1Color = ORANGETIER1DEFAULT;
-				tier2Color = ORANGETIER2DEFAULT;
-				tier3Color = ORANGETIER3DEFAULT;
-				textColor = ORANGETEXTDEFAULT;
-				messageSentColor = ORANGEMESSAGESENTDEFAULT;
-				messageReceivedColor = ORANGEMESSAGERECEIVEDDEFAULT;
+				tier1Color = THUNDERTIER1DEFAULT;
+				tier2Color = THUNDERTIER2DEFAULT;
+				tier3Color = THUNDERTIER3DEFAULT;
+				textColor = THUNDERTEXTDEFAULT;
+				messageSentColor = THUNDERMESSAGESENTDEFAULT;
+				messageReceivedColor = THUNDERMESSAGERECEIVEDDEFAULT;
 				color1 = Color.decode(tier1Color);
 				color2 = Color.decode(tier2Color);
 				color3 = Color.decode(tier3Color);
@@ -285,8 +285,8 @@ public class ZelCashUIEditDialog
 				messageSentTextField.setForeground(colorMessageSent);
 				messageReceivedTextField.setForeground(colorMessageReceived);		
 				saveSettings();
-				orangeThemeButton.setSelected(false);
-				orangeThemeButton.setFocusable(false);
+				thunderThemeButton.setSelected(false);
+				thunderThemeButton.setFocusable(false);
 			}
 		});
 		

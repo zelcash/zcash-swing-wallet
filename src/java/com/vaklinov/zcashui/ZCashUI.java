@@ -67,8 +67,10 @@ import com.cabecinha84.zelcashui.ZelCashJMenu;
 import com.cabecinha84.zelcashui.ZelCashJMenuBar;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
+import com.cabecinha84.zelcashui.ZelCashZelNodeDialog;
 import com.cabecinha84.zelcashui.ZelCashUI;
 import com.cabecinha84.zelcashui.ZelCashUIEditDialog;
+import com.cabecinha84.zelcashui.ZelNodesPanel;
 import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 import com.vaklinov.zcashui.ZCashClientCaller.NetworkAndBlockchainInfo;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
@@ -81,10 +83,11 @@ import com.vaklinov.zcashui.msg.MessagingPanel;
  * Main ZelCash Window.
  */
 public class ZCashUI extends ZelCashJFrame {
-	private static final long THREAD_WAIT_1_SECOND = 1000;
-	private static final long THREAD_WAIT_5_SECONDS = 5000;
+	public static final long THREAD_WAIT_1_SECOND = 1000;
+	public static final long THREAD_WAIT_5_SECONDS = 5000;
 	private ZCashInstallationObserver installationObserver;
 	private ZCashClientCaller clientCaller;
+	private LabelStorage labelStorage;
 	private StatusUpdateErrorReporter errorReporter;
 
 	private WalletOperations walletOps;
@@ -106,13 +109,16 @@ public class ZCashUI extends ZelCashJFrame {
 	private ZelCashJMenuItem menuItemMessagingOptions;
 	private ZelCashJMenuItem menuItemShareFileViaIPFS;
 	private ZelCashJMenuItem menuItemExportToArizen;
+	private ZelCashJMenuItem menuItemNewZelnode;
 
-	private DashboardPanel dashboard;
-	private TransactionsDetailPanel transactionDetailsPanel;
-	private AddressesPanel addresses;
-	private SendCashPanel sendPanel;
-	private AddressBookPanel addressBookPanel;
-	private MessagingPanel messagingPanel;
+	public DashboardPanel dashboard;
+	public TransactionsDetailPanel transactionDetailsPanel;
+	public AddressesPanel addresses;
+	public SendCashPanel sendPanel;
+	public AddressBookPanel addressBookPanel;
+	public MessagingPanel messagingPanel;
+	public ZelNodesPanel zelNodesPanel;
+	
 	private LanguageUtil langUtil;
 
 	private static File walletLock;
@@ -150,7 +156,7 @@ public class ZCashUI extends ZelCashJFrame {
 		Font newTabFont = new Font(oldTabFont.getName(), Font.BOLD | Font.ITALIC, oldTabFont.getSize() * 57 / 50);
 		tabs.setFont(newTabFont);
 		BackupTracker backupTracker = new BackupTracker(this);
-		LabelStorage labelStorage = new LabelStorage();
+		labelStorage = new LabelStorage();
 		tabs.addTab(langUtil.getString("main.frame.tab.overview.title"),
 				new ImageIcon(cl.getResource("zelcashImages/overview.png")), dashboard = new DashboardPanel(this,
 						installationObserver, clientCaller, errorReporter, backupTracker, labelStorage));
@@ -171,6 +177,9 @@ public class ZCashUI extends ZelCashJFrame {
 		tabs.addTab(langUtil.getString("main.frame.tab.messaging.title"),
 				new ImageIcon(cl.getResource("zelcashImages/messaging.png")),
 				messagingPanel = new MessagingPanel(this, sendPanel, tabs, clientCaller, errorReporter, labelStorage));
+		tabs.addTab(langUtil.getString("main.frame.tab.zelnodes.title"),
+				new ImageIcon(cl.getResource("zelcashImages/zelNodes.png")),
+				zelNodesPanel = new ZelNodesPanel(this, tabs, clientCaller, errorReporter, labelStorage));
 		contentPane.add(tabs);
 
 		this.walletOps = new WalletOperations(this, tabs, dashboard, addresses, sendPanel, installationObserver,
@@ -248,6 +257,14 @@ public class ZCashUI extends ZelCashJFrame {
 		menuItemShareFileViaIPFS.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, accelaratorKeyMask));
 
 		mb.add(messaging);
+		
+		ZelCashJMenu zelNodes = new ZelCashJMenu(langUtil.getString("menu.label.zelnodes"));
+		zelNodes.setMnemonic(KeyEvent.VK_Z);
+		zelNodes.add(menuItemNewZelnode = new ZelCashJMenuItem(langUtil.getString("menu.label.zelnodes.new"),
+				KeyEvent.VK_Z));
+		menuItemNewZelnode.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelaratorKeyMask));
+		
+		mb.add(zelNodes);
 
 		ActionListener languageSelectionAction = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -321,6 +338,19 @@ public class ZCashUI extends ZelCashJFrame {
 					ZelCashUIEditDialog ad = new ZelCashUIEditDialog(ZCashUI.this);
 					ad.setVisible(true);
 				} catch (UnsupportedEncodingException uee) {
+					Log.error("Unexpected error: ", uee);
+					ZCashUI.this.errorReporter.reportError(uee);
+				}
+			}
+		});
+		
+		menuItemNewZelnode.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZCashUI.this, clientCaller, installationObserver, null, labelStorage);
+					ad.setVisible(true);
+				} catch (Exception uee) {
 					Log.error("Unexpected error: ", uee);
 					ZCashUI.this.errorReporter.reportError(uee);
 				}
@@ -514,13 +544,65 @@ public class ZCashUI extends ZelCashJFrame {
 
 		System.exit(0);
 	}
+	
+	public void restartDaemon(boolean reindex) {
+		Log.info("restartDaemon ...");
 
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		try {
+			this.dashboard.stopThreadsAndTimers();
+			this.transactionDetailsPanel.stopThreadsAndTimers();
+			this.addresses.stopThreadsAndTimers();
+			this.sendPanel.stopThreadsAndTimers();
+			this.messagingPanel.stopThreadsAndTimers();
+			Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+			
+			this.clientCaller.stopDaemon();
+			ZCashInstallationObserver initialInstallationObserver;
+			DaemonInfo zcashdInfo;
+			for (int i = 0; i < 5; ++i) {
+				Log.info("Check if Daemon is stopped");
+				initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
+				zcashdInfo = initialInstallationObserver.getDaemonInfo();
+				initialInstallationObserver = null;
+				if (zcashdInfo.status != DAEMON_STATUS.RUNNING) {
+					Log.info("Daemon stopped.");
+					break;
+				}
+				Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+			}
+			this.clientCaller.startDaemon(reindex);
+			for (int i = 0; i < 5; ++i) {
+				Log.info("Check if Daemon is running");
+				initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
+				zcashdInfo = initialInstallationObserver.getDaemonInfo();
+				initialInstallationObserver = null;
+				if (zcashdInfo.status == DAEMON_STATUS.RUNNING) {
+					Log.info("Daemon running.");
+					break;
+				}
+				Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+			}
+			Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+		}
+		catch (Exception e) {
+			Log.error("Error on restartDaemon: "+e.getMessage());
+		}
+		
+	}
+	
 	public static void main(String argv[]) throws IOException {
 		ZCashUI ui = null;
 		StartupProgressDialog startupBar = null;
 		ZCashClientCaller initialClientCaller = null;
 		ZCashInstallationObserver initialInstallationObserver = null;
 		DaemonInfo zcashdInfo = null;
+		boolean reindex = false;
+		for (int i = 0; i < argv.length; i++) {
+			if("reindex".equals(argv[i])) {
+				reindex = true;
+			}
+		}
 		try {
 			new ZelCashUI();
 			OS_TYPE os = OSUtil.getOSType();
@@ -599,7 +681,7 @@ public class ZCashUI extends ZelCashJFrame {
 						"zelcashd is not running at the moment or has not started/synchronized 100% - showing splash...");
 				startupBar = new StartupProgressDialog(initialClientCaller);
 				startupBar.setVisible(true);
-				startupBar.waitForStartup();
+				startupBar.waitForStartup(reindex);
 			}
 			initialClientCaller = null;
 
@@ -652,35 +734,20 @@ public class ZCashUI extends ZelCashJFrame {
 						JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 				if (option == 0) {
 					try {
+						
 						if (initialClientCaller == null) {
 							initialClientCaller = new ZCashClientCaller(OSUtil.getProgramDirectory());
 						}
 						initialClientCaller.stopDaemon();
-						initialClientCaller.startDaemon(true);
+						
 						JOptionPane.showMessageDialog(null,
 								LanguageUtil.instance().getString("wallet.reindex.restart.message"),
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
-						// start zelcashd with -reindex.
 
 						if (startupBar != null) {
 							startupBar.dispose();
 						}
-						for (int i = 0; i < 5; ++i) {
-							Log.info("Check if Daemon already start with reindex option");
-							initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
-							zcashdInfo = initialInstallationObserver.getDaemonInfo();
-							initialInstallationObserver = null;
-							if (zcashdInfo.status == DAEMON_STATUS.RUNNING) {
-								Log.info("Daemon started.");
-								break;
-							}
-							Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
-						}
-						Thread.sleep(ZCashUI.THREAD_WAIT_5_SECONDS);
-						Log.info("Call stop Daemon.");
-						initialClientCaller.stopDaemon();
-						Thread.sleep(ZCashUI.THREAD_WAIT_5_SECONDS);
 						for (int i = 0; i < 5; ++i) {
 							Log.info("Check if Daemon is stopped");
 							initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
@@ -693,7 +760,8 @@ public class ZCashUI extends ZelCashJFrame {
 							Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
 						}
 						Log.info("Restarting the wallet.");
-						ZCashUI.main(null);
+						String args[] = {"reindex"};
+						ZCashUI.main(args);
 					} catch (Exception errr) {
 						JOptionPane.showMessageDialog(null,
 								LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text",
