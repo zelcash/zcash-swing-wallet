@@ -15,13 +15,14 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 
 import com.vaklinov.zcashui.LanguageUtil;
+import com.vaklinov.zcashui.OSUtil;
+import com.vaklinov.zcashui.OSUtil.OS_TYPE;
 
 public class ZelCashJTextField extends JTextField {
 	private Color backGroundColor = ZelCashUI.textarea;
 	private Color textColor = ZelCashUI.text;
 	private static LanguageUtil langUtil = LanguageUtil.instance();
     private ZelCashJTextField keyActionAux;
-    private Timer timer;
 	public ZelCashJTextField() {
 		super();
 		this.setBackground(backGroundColor);
@@ -91,49 +92,20 @@ public class ZelCashJTextField extends JTextField {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_C ) {
-                	if(timer != null) {
-                		timer.cancel();
-                	}
-                	keyActionAux = (ZelCashJTextField) e.getSource();
-                	timer = new Timer(true);
-                	timer.schedule(new java.util.TimerTask() {
-                	            @Override
-                	            public void run() {
-                	            	
-                	            	keyActionAux.copy();
-                	            }
-                	        }, 
-                			250 );
+    				keyActionAux = (ZelCashJTextField) e.getSource();
+    				keyActionAux.copy();
                 }
 				if (e.getKeyCode() == KeyEvent.VK_X) {
-					if(timer != null) {
-                		timer.cancel();
-                	}
-					keyActionAux = (ZelCashJTextField) e.getSource();
-                	timer = new Timer(true);
-                	timer.schedule(new java.util.TimerTask() {
-                	            @Override
-                	            public void run() {
-                	            	
-                	            	keyActionAux.cut();
-                	            }
-                	        }, 
-                			250 );
+    				keyActionAux = (ZelCashJTextField) e.getSource();
+    				keyActionAux.cut();
                 }
                 if (e.getKeyCode() == KeyEvent.VK_V) {
-                	if(timer != null) {
-                		timer.cancel();
-                	}
-					keyActionAux = (ZelCashJTextField) e.getSource();
-                	timer = new Timer(true);
-                	timer.schedule(new java.util.TimerTask() {
-                	            @Override
-                	            public void run() {
-                	            	
-                	            	keyActionAux.paste();
-                	            }
-                	        }, 
-                			250 );
+                	OS_TYPE os = OSUtil.getOSType();
+
+        			if (os == OS_TYPE.WINDOWS) {
+        				keyActionAux = (ZelCashJTextField) e.getSource();
+        				keyActionAux.paste();
+        			}
                 }
             }
         });
