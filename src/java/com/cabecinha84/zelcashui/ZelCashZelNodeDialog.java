@@ -1,6 +1,7 @@
 package com.cabecinha84.zelcashui;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -55,7 +56,7 @@ public class ZelCashZelNodeDialog
 	private static ZelCashJButton saveButton;
 	
 	private ZCashClientCaller clientCaller;
-	private ZCashInstallationObserver installationObserver;
+	private static ZCashInstallationObserver installationObserver;
 	private String aliastoEdit;
 	protected LabelStorage labelStorage;
 	
@@ -214,6 +215,30 @@ public class ZelCashZelNodeDialog
 	                        JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
+				if (!zelNodeName.getText().matches("\\w+"))
+				{
+					JOptionPane.showMessageDialog(
+	                        null,
+	                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.alias.wrong"),
+	                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+	                        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				boolean testnet = false;
+				try {
+					testnet = ZelCashZelNodeDialog.installationObserver.isOnTestNet();
+				} catch (IOException e1) {
+					Log.error("Error checking if on testnet:"+e1.getMessage());
+				}
+				if (!zelNodeIP.getText().endsWith(":16125") && !testnet)
+				{
+					JOptionPane.showMessageDialog(
+	                        null,
+	                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.ip.wrong"),
+	                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+	                        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				saveSettings();
 			}
 		});
@@ -233,11 +258,13 @@ public class ZelCashZelNodeDialog
 		            		String[] outputinfo = cb.getSelectedItem().toString().split(" ");
 			                try {
 			                	JsonObject txinfo = clientCaller.getTransactionInfo(outputinfo[0]);
-								JsonArray details = txinfo.get("details").asArray();
+			                	JsonArray details = txinfo.get("details").asArray();
 								String vout;
 								String category;
 								String detailAmount="0"; 
 								String address ="";
+								Log.debug("details array size:"+details.size());
+								boolean addressFound = false;
 								for(int i=0; i< details.size(); ++i) {
 									JsonObject obj = details.get(i).asObject();
 									vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
@@ -246,7 +273,21 @@ public class ZelCashZelNodeDialog
 									if(vout.equals(outputinfo[1]) && "send".equals(category)) {
 										detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
 										address = obj.get("address").toString().replaceAll("[\n\r\"]", "");
+										addressFound = true;
 										break;
+									}
+								}
+								if(!addressFound) {
+									for(int i=0; i< details.size(); ++i) {
+										JsonObject obj = details.get(i).asObject();
+										vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
+										category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
+
+										if(vout.equals(outputinfo[1]) && "receive".equals(category)) {
+											detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "");
+											address = obj.get("address").toString().replaceAll("[\n\r\"]", "");
+											break;
+										}
 									}
 								}
 								if ((address != null) && (address.length() > 0))
@@ -254,6 +295,7 @@ public class ZelCashZelNodeDialog
 									String label = labelStorage.getLabel(address);
 									if ((label != null) && (label.length() > 0))
 									{
+										Log.debug("found the address label:"+label);
 										address = label + " - " + address;
 									}
 								}
@@ -440,6 +482,7 @@ public class ZelCashZelNodeDialog
 									LanguageUtil.instance().getString("wallet.reindex.restart.message"),
 									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 									JOptionPane.INFORMATION_MESSAGE);
+							this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true);
 						}
 					}
@@ -453,6 +496,7 @@ public class ZelCashZelNodeDialog
 									LanguageUtil.instance().getString("wallet.restart.message"),
 									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 									JOptionPane.INFORMATION_MESSAGE);
+							this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false);
 						} 
 					}

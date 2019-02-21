@@ -560,7 +560,7 @@ public class ZCashUI extends ZelCashJFrame {
 			this.clientCaller.stopDaemon();
 			ZCashInstallationObserver initialInstallationObserver;
 			DaemonInfo zcashdInfo;
-			for (int i = 0; i < 5; ++i) {
+			for (int i = 0; i < 10; ++i) {
 				Log.info("Check if Daemon is stopped");
 				initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
 				zcashdInfo = initialInstallationObserver.getDaemonInfo();
@@ -572,7 +572,7 @@ public class ZCashUI extends ZelCashJFrame {
 				Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
 			}
 			this.clientCaller.startDaemon(reindex);
-			for (int i = 0; i < 5; ++i) {
+			for (int i = 0; i < 10; ++i) {
 				Log.info("Check if Daemon is running");
 				initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
 				zcashdInfo = initialInstallationObserver.getDaemonInfo();
@@ -583,7 +583,18 @@ public class ZCashUI extends ZelCashJFrame {
 				}
 				Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
 			}
-			Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+			for (int i = 0; i < 30; ++i) {
+				Log.info("Checking if Daemon is ready for gui wallet.");
+				try {
+					clientCaller.getNetworkAndBlockchainInfo();
+					Log.info("Daemon is ready.");
+				}
+				catch(Exception e) {
+					Log.info("Daemon not ready.");
+					Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
+				}
+			}
+			Log.info("restartDaemon finished ...");
 		}
 		catch (Exception e) {
 			Log.error("Error on restartDaemon: "+e.getMessage());
