@@ -848,7 +848,7 @@ public class ZCashUI extends ZelCashJFrame {
 			configOut.println("# Creation date: " + new Date().toString());
 			configOut.println("#############################################################################");
 			configOut.println("");
-			configOut.println("rpcallowip=127.0.0.1");
+			configOut.println("rpcallowip=127.0.1.1");
 			configOut.println("server=1");
 			configOut.println("addnode=node.zel.cash");
 			configOut.println("addnode=explorer.zel.cash");
