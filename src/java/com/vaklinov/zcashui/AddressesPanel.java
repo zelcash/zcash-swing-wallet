@@ -151,15 +151,19 @@ public class AddressesPanel
 						long start = System.currentTimeMillis();
 						String[][] data = AddressesPanel.this.getAddressBalanceDataFromWallet();
 						long end = System.currentTimeMillis();
-						Log.info("Gathering of address/balance table data done in " + (end - start) + "ms." );
-
+						Log.info("AddressPanel: Gathering of address/balance table data done in " + (end - start) + "ms." );
+						start = System.currentTimeMillis();
+						AddressesPanel.this.updateWalletAddressBalanceTableAutomated(data);
+						end = System.currentTimeMillis();
+						Log.info("AddressPanel: Updating UI address/balance table data done in " + (end - start) + "ms." );
+						
 						return data;
 					}
 				},
-				this.errorReporter, 25000);
+				this.errorReporter, 60000);
 		this.threads.add(this.balanceGatheringThread);
 
-		ActionListener alBalances = new ActionListener()
+		/*ActionListener alBalances = new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -176,7 +180,7 @@ public class AddressesPanel
 		};
 		Timer t = new Timer(5000, alBalances);
 		t.start();
-		this.timers.add(t);
+		this.timers.add(t);*/
 
 		// Button actions
 		refreshButton.addActionListener(new ActionListener()
@@ -357,20 +361,19 @@ public class AddressesPanel
 
 
 	// Interactive and non-interactive are mutually exclusive
-	private synchronized void updateWalletAddressBalanceTableAutomated()
+	private synchronized void updateWalletAddressBalanceTableAutomated(String[][] data)
 			throws WalletCallException, IOException, InterruptedException
 	{
+		
 		// Make sure it is > 1 min since the last interactive refresh
 		if ((System.currentTimeMillis() - lastInteractiveRefresh) < (60 * 1000))
 		{
 			return;
 		}
 
-		String[][] newAddressBalanceData = this.balanceGatheringThread.getLastData();
+		String[][] newAddressBalanceData = data;
 
-		if ((newAddressBalanceData != null) &&
-				Util.arraysAreDifferent(lastAddressBalanceData, newAddressBalanceData))
-		{
+
 			Log.info("Updating table of addresses/balances A...");
 			this.remove(addressBalanceTablePane);
 			this.add(addressBalanceTablePane = new ZelCashJScrollPane(
@@ -379,7 +382,7 @@ public class AddressesPanel
 			lastAddressBalanceData = newAddressBalanceData;
 			this.validate();
 			this.repaint();
-		}
+		
 	}
 
 
@@ -404,7 +407,7 @@ public class AddressesPanel
         table.getColumnModel().getColumn(1).setPreferredWidth(160);
         table.getColumnModel().getColumn(2).setPreferredWidth(140);
         table.getColumnModel().getColumn(3).setPreferredWidth(1000);
-
+        table.setAutoCreateRowSorter(true);
 		return table;
 	}
 

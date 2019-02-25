@@ -1,6 +1,7 @@
 package com.cabecinha84.zelcashui;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.vaklinov.zcashui.AddressesPanel;
 import com.vaklinov.zcashui.LabelStorage;
 import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
@@ -147,23 +149,34 @@ public class ZelNodesPanel extends WalletTabPanel {
 		refresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				refresh.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
-				refresh.setEnabled(false);
-				refreshZelNodesTables();
-				refresh.setText(langUtil.getString("panel.address.button.refresh"));
-				refresh.setEnabled(true);
+				Cursor oldCursor = ZelNodesPanel.this.getCursor();
+				try {
+					ZelNodesPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+					refresh.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
+					refresh.setEnabled(false);
+					refreshZelNodesTables();
+					refresh.setText(langUtil.getString("panel.address.button.refresh"));
+					refresh.setEnabled(true);	
+				}
+				finally {
+					ZelNodesPanel.this.setCursor(oldCursor);
+				}
+				
 				
 			}
 		});
 	}
 	
 	private void refreshZelNodesTables() {
-		Log.info("refreshZelNodesTables start");
+		long start = System.currentTimeMillis();
 		gelMyZelNodeList();
 		gelZelNodeList();
 		ZelNodesPanel.this.revalidate();
 		ZelNodesPanel.this.repaint();
-		Log.info("refreshZelNodesTables end");
+		long end = System.currentTimeMillis();
+		Log.info("refresh ZelNodesTables data done in " + (end - start) + "ms." );
+		
 	}
 
 	private void gelMyZelNodeList() {
@@ -195,7 +208,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 					dtm.setRowCount(0);
 					while ((st = br.readLine()) != null) {
 						emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
-						if(st.contains("#") || emptyLine.equals("")) {
+						if(st.startsWith("#") || emptyLine.equals("")) {
 							continue;
 						}
 						else {

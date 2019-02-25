@@ -287,34 +287,16 @@ public class SendCashPanel
 					long start = System.currentTimeMillis();
 					String[][] data = SendCashPanel.this.getAddressPositiveBalanceDataFromWallet();
 					long end = System.currentTimeMillis();
-					Log.info("Gathering of address/balance table data done in " + (end - start) + "ms." );
-					
+					Log.info("SendCashPanel: Gathering of address/balance table data done in " + (end - start) + "ms." );
+					start = System.currentTimeMillis();
+					SendCashPanel.this.updateWalletAddressPositiveBalanceComboBox(data);
+					end = System.currentTimeMillis();
+					Log.info("SendCashPanel: Updating from combobox done in " + (end - start) + "ms." );
 					return data;
 				}
 			}, 
-			this.errorReporter, 10000, true);
+			this.errorReporter, 30000, true);
 		this.threads.add(addressBalanceGatheringThread);
-		
-		ActionListener alBalancesUpdater = new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				try
-				{
-					// TODO: if the user has opened the combo box - this closes it (maybe fix)
-					SendCashPanel.this.updateWalletAddressPositiveBalanceComboBox();
-				} catch (Exception ex)
-				{
-					Log.error("Unexpected error: ", ex);
-					SendCashPanel.this.errorReporter.reportError(ex);
-				}
-			}
-		};
-		Timer timerBalancesUpdater = new Timer(15000, alBalancesUpdater);
-		timerBalancesUpdater.setInitialDelay(3000);
-		timerBalancesUpdater.start();
-		this.timers.add(timerBalancesUpdater);
 		
 		// Add a popup menu to the destination address field - for convenience
 		/*ZelCashJMenuItem paste = new ZelCashJMenuItem(langUtil.getString("send.cash.panel.menu.item.paste"));
@@ -776,10 +758,10 @@ public class SendCashPanel
 	}
 	
 	
-	private void updateWalletAddressPositiveBalanceComboBox()
+	private void updateWalletAddressPositiveBalanceComboBox(String[][] data)
 		throws WalletCallException, IOException, InterruptedException
 	{
-		String[][] newAddressBalanceData = this.addressBalanceGatheringThread.getLastData();
+		String[][] newAddressBalanceData = data;
 		
 		// The data may be null if nothing is yet obtained
 		if (newAddressBalanceData == null)

@@ -115,6 +115,8 @@ public class DashboardPanel extends WalletTabPanel {
 	// Confirmation symbols
 	private static String confirmedSymbol = "\u2690";
 	private static String notConfirmedSymbol = "\u2691";
+	
+	private static float zelNodesAmountLocked = 0;
 
 	static {
 		// Windows does not support the flag symbol (Windows 7 by default)
@@ -256,27 +258,13 @@ public class DashboardPanel extends WalletTabPanel {
 						DaemonInfo daemonInfo = DashboardPanel.this.installationObserver.getDaemonInfo();
 						long end = System.currentTimeMillis();
 						Log.info("Gathering of dashboard daemon status data done in " + (end - start) + "ms.");
-
+						DashboardPanel.this.updateDaemonStatusLabel(daemonInfo);
 						return daemonInfo;
 					}
-				}, this.errorReporter, 2000, true);
+				}, this.errorReporter, 3000, true);
 		this.threads.add(this.daemonInfoGatheringThread);
 
-		ActionListener alDeamonStatus = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					DashboardPanel.this.updateDaemonStatusLabel();
-				} catch (Exception ex) {
-					Log.error("Unexpected error: ", ex);
-					DashboardPanel.this.errorReporter.reportError(ex);
-				}
-			}
-		};
-		Timer t = new Timer(1000, alDeamonStatus);
-		t.start();
-		this.timers.add(t);
-
+		getZelNodesAmountLocked();
 		// Thread and timer to update the wallet balance
 		this.walletBalanceGatheringThread = new DataGatheringThread<WalletBalance>(
 				new DataGatheringThread.DataGatherer<WalletBalance>() {
@@ -285,36 +273,17 @@ public class DashboardPanel extends WalletTabPanel {
 						WalletBalance balance = DashboardPanel.this.clientCaller.getWalletInfo();
 						long end = System.currentTimeMillis();
 
-						// TODO: move this call to a dedicated one-off gathering thread - this is the
-						// wrong place
-						// it works but a better design is needed.
 						if (DashboardPanel.this.walletIsEncrypted == null) {
 							DashboardPanel.this.walletIsEncrypted = DashboardPanel.this.clientCaller
 									.isWalletEncrypted();
 						}
 
 						Log.info("Gathering of dashboard wallet balance data done in " + (end - start) + "ms.");
-
+						DashboardPanel.this.updateWalletStatusLabel(balance);
 						return balance;
 					}
 				}, this.errorReporter, 8000, true);
 		this.threads.add(this.walletBalanceGatheringThread);
-
-		ActionListener alWalletBalance = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					DashboardPanel.this.updateWalletStatusLabel();
-				} catch (Exception ex) {
-					Log.error("Unexpected error: ", ex);
-					DashboardPanel.this.errorReporter.reportError(ex);
-				}
-			}
-		};
-		Timer walletBalanceTimer = new Timer(2000, alWalletBalance);
-		walletBalanceTimer.setInitialDelay(1000);
-		walletBalanceTimer.start();
-		this.timers.add(walletBalanceTimer);
 
 		// Thread and timer to update the transactions table
 		this.transactionGatheringThread = new DataGatheringThread<String[][]>(
@@ -339,27 +308,11 @@ public class DashboardPanel extends WalletTabPanel {
 						NetworkAndBlockchainInfo data = DashboardPanel.this.clientCaller.getNetworkAndBlockchainInfo();
 						long end = System.currentTimeMillis();
 						Log.info("Gathering of network and blockchain info data done in " + (end - start) + "ms.");
-
+						DashboardPanel.this.updateNetworkAndBlockchainLabel(data);
 						return data;
 					}
-				}, this.errorReporter, 10000, true);
+				}, this.errorReporter, 20000, true);
 		this.threads.add(this.netInfoGatheringThread);
-
-		ActionListener alNetAndBlockchain = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					DashboardPanel.this.updateNetworkAndBlockchainLabel();
-				} catch (Exception ex) {
-					Log.error("Unexpected error: ", ex);
-					DashboardPanel.this.errorReporter.reportError(ex);
-				}
-			}
-		};
-		Timer netAndBlockchainTimer = new Timer(5000, alNetAndBlockchain);
-		netAndBlockchainTimer.setInitialDelay(1000);
-		netAndBlockchainTimer.start();
-		this.timers.add(netAndBlockchainTimer);
 	}
 	
 	public void setDetailsPanelForSelection(TransactionsDetailPanel detailsPanel) {
@@ -375,9 +328,7 @@ public class DashboardPanel extends WalletTabPanel {
 		return this.transactionGatheringThread;
 	}
 
-	private void updateDaemonStatusLabel() throws IOException, InterruptedException, WalletCallException {
-		DaemonInfo daemonInfo = this.daemonInfoGatheringThread.getLastData();
-
+	private void updateDaemonStatusLabel(DaemonInfo daemonInfo) throws IOException, InterruptedException, WalletCallException {
 		// It is possible there has been no gathering initially
 		if (daemonInfo == null) {
 			return;
@@ -435,16 +386,14 @@ public class DashboardPanel extends WalletTabPanel {
 
 	}
 
-	private void updateNetworkAndBlockchainLabel() throws IOException, InterruptedException {
-		NetworkAndBlockchainInfo info = this.netInfoGatheringThread.getLastData();
-
+	private void updateNetworkAndBlockchainLabel(NetworkAndBlockchainInfo info) throws IOException, InterruptedException {
 		// It is possible there has been no gathering initially
 		if (info == null) {
 			return;
 		}
 
 		// TODO: Get the start date right after ZCash release - from first block!!!
-		final Date startDate = new Date("06 Nov 2016 02:00:00 GMT");
+		final Date startDate = new Date("28 Jan 2018 19:00:00 GMT");
 		final Date nowDate = new Date(System.currentTimeMillis());
 
 		long fullTime = nowDate.getTime() - startDate.getTime();
@@ -545,8 +494,7 @@ public class DashboardPanel extends WalletTabPanel {
 		}
 	}
 
-	private void updateWalletStatusLabel() throws WalletCallException, IOException, InterruptedException {
-		WalletBalance balance = this.walletBalanceGatheringThread.getLastData();
+	private void updateWalletStatusLabel(WalletBalance balance ) throws WalletCallException, IOException, InterruptedException {
 
 		// It is possible there has been no gathering initially
 		if (balance == null) {
@@ -558,14 +506,14 @@ public class DashboardPanel extends WalletTabPanel {
 
 		String transparentBalance = df.format(balance.transparentBalance);
 		String privateBalance = df.format(balance.privateBalance);
-		Float zelNodeAmountLocked = getZelNodesAmountLocked();
+		Float zelNodeAmountLocked = zelNodesAmountLocked;
 		String totalBalance = df.format(balance.totalBalance + zelNodeAmountLocked);
 
 		String transparentUCBalance = df.format(balance.transparentUnconfirmedBalance);
 		String privateUCBalance = df.format(balance.privateUnconfirmedBalance);
 		
 		String totalUCBalance = df.format(balance.totalUnconfirmedBalance + zelNodeAmountLocked);
-		String zelNodesBalance= df.format(getZelNodesAmountLocked());
+		String zelNodesBalance= df.format(zelNodeAmountLocked);
 
 		String color1 = transparentBalance.equals(transparentUCBalance) ? "" : "color:#cc3300;";
 		String color2 = privateBalance.equals(privateUCBalance) ? "" : "color:#cc3300;";
@@ -614,8 +562,8 @@ public class DashboardPanel extends WalletTabPanel {
 		}
 	}
 	
-	private Float getZelNodesAmountLocked() {
-		Float zelNodesAmountLocked = Float.valueOf("0");
+	private void getZelNodesAmountLocked() {
+		Float zelNodesAmountLockedAux = Float.valueOf("0");
 		try {
 			String blockchainDir = OSUtil.getBlockchainDirectory();
 			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
@@ -626,7 +574,7 @@ public class DashboardPanel extends WalletTabPanel {
 				String emptyLine;
 				while ((st = br.readLine()) != null) {
 					emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
-					if(st.contains("#") || emptyLine.equals("")) {
+					if(st.startsWith("#") || emptyLine.equals("")) {
 						continue;
 					}
 					else {
@@ -642,7 +590,7 @@ public class DashboardPanel extends WalletTabPanel {
 							category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
 							if(vout.equals(zelNodeInfo[4]) && "send".equals(category)) {
 								detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
-								zelNodesAmountLocked+=Float.parseFloat(detailAmount);
+								zelNodesAmountLockedAux+=Float.parseFloat(detailAmount);
 								break;
 							}
 						}
@@ -654,7 +602,7 @@ public class DashboardPanel extends WalletTabPanel {
 		catch (WalletCallException | IOException | InterruptedException e) {
 			Log.error("Error on getZelNodesAmountLocked:"+e.getMessage());
 		}
-		return zelNodesAmountLocked;
+		zelNodesAmountLocked =  zelNodesAmountLockedAux;
 	}
 
 	private String[][] getTransactionsDataFromWallet() throws WalletCallException, IOException, InterruptedException {

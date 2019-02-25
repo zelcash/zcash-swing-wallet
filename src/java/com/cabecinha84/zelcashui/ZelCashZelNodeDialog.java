@@ -14,6 +14,8 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -118,7 +120,7 @@ public class ZelCashZelNodeDialog
 				String emptyLine;
 				while ((st = br.readLine()) != null) {
 					emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
-					if(st.contains("#") || emptyLine.equals("")) {
+					if(st.startsWith("#") || emptyLine.equals("")) {
 						continue;
 					}
 					else {
@@ -238,6 +240,23 @@ public class ZelCashZelNodeDialog
 	                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
 	                        JOptionPane.ERROR_MESSAGE);
 					return;
+				}
+				String ip = zelNodeIP.getText().replaceAll(":16125", "").replaceAll(":26125", "");
+
+				try {
+					Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
+				}
+				catch (Exception ex1) {
+					try {
+						Inet6Address address = (Inet6Address) Inet6Address.getByName(ip);
+					}
+					catch (Exception ex) {
+						JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}							
 				}
 				saveSettings();
 			}
@@ -584,7 +603,7 @@ public class ZelCashZelNodeDialog
 		      String emptyLine = null;
 		      while ((st = br.readLine()) != null) {
 					emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
-					if(st.contains("#") || "".equals(emptyLine)) {
+					if(st.startsWith("#") || "".equals(emptyLine)) {
 					  coll.add(st);
 					}
 					else {

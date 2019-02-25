@@ -38,18 +38,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -85,6 +92,7 @@ import com.vaklinov.zcashui.msg.MessagingPanel;
 public class ZCashUI extends ZelCashJFrame {
 	public static final long THREAD_WAIT_1_SECOND = 1000;
 	public static final long THREAD_WAIT_5_SECONDS = 5000;
+	private static final String REGEXIPV4IPV6 = "/((^\\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\\s*$)|(^\\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?\\s*$))/";
 	private ZCashInstallationObserver installationObserver;
 	private ZCashClientCaller clientCaller;
 	private LabelStorage labelStorage;
@@ -654,6 +662,70 @@ public class ZCashUI extends ZelCashJFrame {
 					}
 					;
 				}
+			}
+			
+			Log.info("Checking if zelnodes.conf exists and is properly set...");
+			String blockchainDir = OSUtil.getBlockchainDirectory();
+			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
+			if (!zelnodeConf.exists())
+			{
+				Log.info("Could not find file: {0} !", zelnodeConf.getAbsolutePath());
+			} 
+			else {
+				BufferedReader br = new BufferedReader(new FileReader(zelnodeConf)); 
+				String emptyLine;
+				String st; 
+				String[] zelNodeInfo;
+				while ((st = br.readLine()) != null) {
+					emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
+					if(st.startsWith("#") || emptyLine.equals("")) {
+						continue;
+					}
+					else {
+						zelNodeInfo = st.split("\\s+");
+						if(zelNodeInfo.length != 5) {
+							Log.error("Zelnode.conf file not ok. One of the lines doesn`t have 5 strings.");
+							JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.number"),
+									LanguageUtil.instance().getString("parsing.error.zelnodesconf.title"),
+									JOptionPane.ERROR_MESSAGE);
+							System.exit(1);
+						}
+						else {
+							
+							if(!zelNodeInfo[1].endsWith(":16125") && !zelNodeInfo[1].endsWith(":26125")) {
+								Log.error("Zelnode.conf file not ok. ip not ending with correct port: "+zelNodeInfo[1]);
+								JOptionPane.showMessageDialog(null,
+										LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.port", zelNodeInfo[1]),
+										LanguageUtil.instance().getString("parsing.error.zelnodesconf.title"),
+										JOptionPane.ERROR_MESSAGE);
+								System.exit(1);
+							}
+							
+							String ip = zelNodeInfo[1].replaceAll(":16125", "").replaceAll(":26125", "");
+
+							try {
+								Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
+							}
+							catch (Exception e) {
+								try {
+									Inet6Address address = (Inet6Address) Inet6Address.getByName(ip);
+								}
+								catch (Exception ex) {
+									Log.error("Zelnode.conf file not ok. ip not valid for ipv4 and ipv6:"+ip);
+									JOptionPane.showMessageDialog(null,
+											LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
+											LanguageUtil.instance().getString("parsing.error.zelnodesconf.title"),
+											JOptionPane.ERROR_MESSAGE);
+									System.exit(1);
+								}							
+							}
+							
+							
+						}
+					}
+				}
+				Log.info("zelnodes.conf exists and is properly set...");
 			}
 
 			// If zelcashd is currently not running, do a startup of the daemon as a child
