@@ -3,6 +3,7 @@
 package com.vaklinov.zcashui;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -24,6 +25,8 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -36,12 +39,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import com.cabecinha84.zelcashui.ZelCashJButton;
+import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJMenuItem;
 import com.cabecinha84.zelcashui.ZelCashJPanel;
 import com.cabecinha84.zelcashui.ZelCashJPopupMenu;
 import com.cabecinha84.zelcashui.ZelCashJScrollPane;
 import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
 import com.cabecinha84.zelcashui.ZelCashJTable;
+import com.cabecinha84.zelcashui.ZelCashJTextField;
 
 public class AddressBookPanel extends ZelCashJPanel {
     
@@ -199,34 +204,33 @@ public class AddressBookPanel extends ZelCashJPanel {
     
     private class NewContactActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String name = (String) JOptionPane.showInputDialog(AddressBookPanel.this,
-                    langUtil.getString("panel.address.book.option.pane.new.contact.msg"),
+        	ZelCashJPanel myPanel = new ZelCashJPanel();
+        	myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
+        	ZelCashJTextField name;
+        	ZelCashJTextField address;
+    		addFormField(myPanel, langUtil.getString("panel.address.book.option.pane.new.contact.msg"),  name = new ZelCashJTextField(50));
+    		addFormField(myPanel, langUtil.getString("panel.address.book.option.pane.new.contact.address"),  address = new ZelCashJTextField(50));
+    		            
+            int result = JOptionPane.showConfirmDialog(AddressBookPanel.this,
+            		myPanel,
                     langUtil.getString("panel.address.book.option.pane.new.contact.title"),
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    null,
-                    "");
-            if (name == null || "".equals(name))
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.CANCEL_OPTION) {
+            	return;
+            }
+            if (name == null || "".equals(name.getText()) || address == null || "".equals(address.getText()))
                 return; // cancelled
 
             // TODO: check for dupes
-            names.add(name);
+            names.add(name.getText());
             
-            String address = (String) JOptionPane.showInputDialog(AddressBookPanel.this,
-                    langUtil.getString("panel.address.book.option.pane.new.contact.address", name),
-                    langUtil.getString("panel.address.book.option.pane.new.contact.address.title"),
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    null,
-                    "");
-            if (address == null || "".equals(address))
-                return; // cancelled
-            entries.add(new AddressBookEntry(name,address));
+            
+            entries.add(new AddressBookEntry(name.getText(),address.getText()));
             
             // Add the address also to the label storage
             try
             {
-            	AddressBookPanel.this.labelStorage.setLabel(address, name);
+            	AddressBookPanel.this.labelStorage.setLabel(address.getText(), name.getText());
             } catch (IOException ioe)
             {
             	Log.error("Saving labels from within address book failed!", ioe);
@@ -358,4 +362,16 @@ public class AddressBookPanel extends ZelCashJPanel {
             }
         }
     }
+    
+    private void addFormField(ZelCashJPanel detailsPanel, String name, JComponent field)
+	{
+		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
+		// TODO: hard sizing of labels may not scale!
+		final int width = new ZelCashJLabel("Sender identification T address:").getPreferredSize().width + 10;
+		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
+		tempPanel.add(tempLabel);
+		tempPanel.add(field);
+		detailsPanel.add(tempPanel);
+	}
 }

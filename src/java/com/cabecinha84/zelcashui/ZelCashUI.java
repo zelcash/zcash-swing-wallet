@@ -154,6 +154,7 @@ public class ZelCashUI {
 		javax.swing.UIManager.put("Panel.background",ZelCashUI.panel);
 		javax.swing.UIManager.put("Panel.foreground",ZelCashUI.text);
 		javax.swing.UIManager.put("OptionPane.okButtonText", langUtil.getString("button.option.ok"));
+		javax.swing.UIManager.put("OptionPane.cancelButtonText", langUtil.getString("button.option.cancel"));
 			
 		
 		Runnable r = new Runnable() {
