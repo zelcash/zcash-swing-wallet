@@ -226,13 +226,8 @@ public class ZelCashZelNodeDialog
 	                        JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				boolean testnet = false;
-				try {
-					testnet = ZelCashZelNodeDialog.installationObserver.isOnTestNet();
-				} catch (IOException e1) {
-					Log.error("Error checking if on testnet:"+e1.getMessage());
-				}
-				if (!zelNodeIP.getText().endsWith(":16125") && !testnet)
+
+				if (!zelNodeIP.getText().endsWith(":16125") && !zelNodeIP.getText().endsWith(":26125"))
 				{
 					JOptionPane.showMessageDialog(
 	                        null,
@@ -241,6 +236,7 @@ public class ZelCashZelNodeDialog
 	                        JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+
 				String ip = zelNodeIP.getText().replaceAll(":16125", "").replaceAll(":26125", "");
 
 				try {
@@ -398,6 +394,7 @@ public class ZelCashZelNodeDialog
 
 	
 	private void saveSettings() {
+		Log.info("Starting save zelnode");
 		try {
 			removeEmptyLinesFromNodesConfigurationFile();
 			if(this.aliastoEdit!=null) {
@@ -480,14 +477,16 @@ public class ZelCashZelNodeDialog
 				}
 			}
 			
-			if(this.installationObserver.isOnTestNet()) {
+			ZCashInstallationObserver initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
+			if(initialInstallationObserver.isOnTestNet()) {
+				initialInstallationObserver = null;
 				JOptionPane.showMessageDialog(null,
 						LanguageUtil.instance().getString("wallet.zelnodes.restart.testnet.message"),
 						LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 			else {
-				
+				initialInstallationObserver = null;
 				Object[] options = { LanguageUtil.instance().getString("ipfs.wrapper.options.yes"),
 						LanguageUtil.instance().getString("ipfs.wrapper.options.no") };
 				if(daemonNeedsToBeReindexed) {					
@@ -585,6 +584,7 @@ public class ZelCashZelNodeDialog
 	}
 	
 	public static void removeZelNode(String zelNodeAlias) {
+		Log.info("Removing zelnode alias:"+zelNodeAlias);
 		removeEmptyLinesFromNodesConfigurationFile();
 	    try {
 	    	String blockchainDir = OSUtil.getBlockchainDirectory();
@@ -634,6 +634,9 @@ public class ZelCashZelNodeDialog
 	    catch(Exception ex) {
 	    	Log.error("Error deleting zelnode "+ zelNodeAlias + ":" + ex.getMessage());
 	    }
+	    finally {
+			Log.info("Zelnode removed from configuration file. Alias removed:"+zelNodeAlias);
+		}
 	}
 	
 	public static void removeEmptyLinesFromNodesConfigurationFile() {
