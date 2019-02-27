@@ -305,7 +305,7 @@ public class JContactListPanel
 			        options,
 			        JOptionPane.NO_OPTION);
 			        
-			    if (reply == JOptionPane.NO_OPTION) 
+			    if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION) 
 			    {
 			      	return;
 			    }

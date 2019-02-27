@@ -304,7 +304,7 @@ public class WalletOperations
 	        null,
 	        options,
 	        JOptionPane.NO_OPTION);
-		if (option == JOptionPane.NO_OPTION)
+		if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION)
 		{
 		  	return;
 		}
@@ -481,7 +481,7 @@ public class WalletOperations
     			        null,
     			        options,
     			        JOptionPane.NO_OPTION);
-				if (r == 1) {
+				if (r == 1 || r == JOptionPane.CLOSED_OPTION) {
 					return;
 				}
 				Files.delete(f.toPath());
@@ -629,7 +629,7 @@ public class WalletOperations
                                       langUtil.getString("wallet.operations.option.pane.backup.directory.warning.message.ok")  },
 	        JOptionPane.NO_OPTION);
 	        
-	    if (reply == JOptionPane.NO_OPTION) 
+	    if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION) 
 	    {
 	    	return;
 	    }

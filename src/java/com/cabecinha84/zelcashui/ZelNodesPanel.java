@@ -338,12 +338,11 @@ public class ZelNodesPanel extends WalletTabPanel {
 			    			    options, 
 			    			    options[1]);
 						
-						if (option == 1)
+						if (option == 0)
 			    	    {
-			    	    	return;
+							ZelCashZelNodeDialog.removeZelNode(zelNodeAlias);
+							refreshZelNodesTables();
 			    	    }
-						ZelCashZelNodeDialog.removeZelNode(zelNodeAlias);
-						refreshZelNodesTables();
 					} else
 					{
 						// Log perhaps

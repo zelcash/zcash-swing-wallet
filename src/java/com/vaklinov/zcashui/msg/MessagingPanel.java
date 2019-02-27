@@ -346,7 +346,7 @@ public class MessagingPanel
 			        		langUtil.getString("messaging.panel.message.spamming.ignore.cancel")}, 
 			        JOptionPane.NO_OPTION);
 			        
-			    if (reply1 == JOptionPane.NO_OPTION) 
+			    if (reply1 == JOptionPane.NO_OPTION || reply1 == JOptionPane.CLOSED_OPTION)
 			    {
 			    	return;
 			    }
@@ -534,7 +534,7 @@ public class MessagingPanel
 			        optionsSkip,
 			        JOptionPane.NO_OPTION);
 				
-				if (reply == JOptionPane.NO_OPTION) 
+				if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION)
 		        {
 		        	return;
 		        }
@@ -978,7 +978,7 @@ public class MessagingPanel
 		        options,
 		        JOptionPane.NO_OPTION);
 	        
-	        if (reply == JOptionPane.NO_OPTION) 
+	        if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION)
 	        {
 	        	return;
 	        }
@@ -1144,7 +1144,7 @@ public class MessagingPanel
 			        options,
 			        JOptionPane.NO_OPTION);
 			        
-			    if (reply == JOptionPane.NO_OPTION) 
+			    if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION) 
 			    {
 			       	return;
 			    }

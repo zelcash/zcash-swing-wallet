@@ -496,7 +496,7 @@ public class SendCashPanel
 			        options,
 			        JOptionPane.NO_OPTION);
 			        
-			if (reply == JOptionPane.NO_OPTION) 
+			if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION) 
 			{
 			   	return;
 			}
@@ -520,7 +520,7 @@ public class SendCashPanel
 			        options,
 			        JOptionPane.NO_OPTION);
 			        
-			if (reply == JOptionPane.NO_OPTION) 
+			if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION)
 			{
 			   	return;
 			}
@@ -543,7 +543,7 @@ public class SendCashPanel
 			        options,
 			        JOptionPane.NO_OPTION);
 			        
-			if (reply == JOptionPane.NO_OPTION) 
+			if (reply == JOptionPane.NO_OPTION || reply == JOptionPane.CLOSED_OPTION) 
 			{
 			   	return;
 			}
@@ -594,7 +594,7 @@ public class SendCashPanel
     	    	sendCashNotToBeShownFlagFile.createNewFile();
     	    }
     	    
-    	    if (option == 1)
+    	    if (option == 1 || option == JOptionPane.CLOSED_OPTION)
     	    {
     	    	return;
     	    }
@@ -981,7 +981,7 @@ public class SendCashPanel
     	    	sendChangeBackNotToBeShownFlagFile.createNewFile();
     	    }
     	    
-    	    if (option == 1)
+    	    if (option == 1 || option == JOptionPane.CLOSED_OPTION)
     	    {
     	    	return false;
     	    }
