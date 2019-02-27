@@ -480,47 +480,46 @@ public class ZelCashZelNodeDialog
 				}
 			}
 			
-			if(this.aliastoEdit==null) {
-				if(this.installationObserver.isOnTestNet()) {
-					JOptionPane.showMessageDialog(null,
-							LanguageUtil.instance().getString("wallet.zelnodes.restart.testnet.message"),
+			if(this.installationObserver.isOnTestNet()) {
+				JOptionPane.showMessageDialog(null,
+						LanguageUtil.instance().getString("wallet.zelnodes.restart.testnet.message"),
+						LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+			else {
+				
+				Object[] options = { LanguageUtil.instance().getString("ipfs.wrapper.options.yes"),
+						LanguageUtil.instance().getString("ipfs.wrapper.options.no") };
+				if(daemonNeedsToBeReindexed) {					
+					int option = JOptionPane.showOptionDialog(null,
+							LanguageUtil.instance().getString("wallet.zelnodes.restart.reindex.message"),
 							LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
-							JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					if (option == 0) {
+						JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("wallet.reindex.restart.message"),
+								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
+								JOptionPane.INFORMATION_MESSAGE);
+						this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true);
+					}
 				}
 				else {
-					
-					Object[] options = { LanguageUtil.instance().getString("ipfs.wrapper.options.yes"),
-							LanguageUtil.instance().getString("ipfs.wrapper.options.no") };
-					if(daemonNeedsToBeReindexed) {					
-						int option = JOptionPane.showOptionDialog(null,
-								LanguageUtil.instance().getString("wallet.zelnodes.restart.reindex.message"),
-								LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
-								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-						if (option == 0) {
-							JOptionPane.showMessageDialog(null,
-									LanguageUtil.instance().getString("wallet.reindex.restart.message"),
-									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
-									JOptionPane.INFORMATION_MESSAGE);
-							this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-							ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true);
-						}
-					}
-					else {
-						int option = JOptionPane.showOptionDialog(null,
-								LanguageUtil.instance().getString("wallet.zelnodes.restart.message"),
-								LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
-								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-						if (option == 0) {
-							JOptionPane.showMessageDialog(null,
-									LanguageUtil.instance().getString("wallet.restart.message"),
-									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
-									JOptionPane.INFORMATION_MESSAGE);
-							this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-							ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false);
-						} 
-					}
+					int option = JOptionPane.showOptionDialog(null,
+							LanguageUtil.instance().getString("wallet.zelnodes.restart.message"),
+							LanguageUtil.instance().getString("wallet.zelnodes.restart.title"),
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					if (option == 0) {
+						JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("wallet.restart.message"),
+								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
+								JOptionPane.INFORMATION_MESSAGE);
+						this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false);
+					} 
 				}
 			}
+
 			restartUI();
 		}
 		catch (WalletCallException wce)
