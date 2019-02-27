@@ -342,6 +342,23 @@ public class ZelNodesPanel extends WalletTabPanel {
 			    	    {
 							ZelCashZelNodeDialog.removeZelNode(zelNodeAlias);
 							refreshZelNodesTables();
+							option = JOptionPane.showOptionDialog(null,
+									LanguageUtil.instance().getString("wallet.zelnodes.delete.restart.message"),
+									LanguageUtil.instance().getString("wallet.zelnodes.delete.restart.title"),
+									JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+							if (option == 0) {
+								JOptionPane.showMessageDialog(null,
+										LanguageUtil.instance().getString("wallet.restart.message"),
+										LanguageUtil.instance().getString("wallet.reindex.restart.title"),
+										JOptionPane.INFORMATION_MESSAGE);
+								ZelNodesPanel.this.parentFrame.restartDaemon(false);
+								try {
+									restartUI();
+								} catch (IOException | InterruptedException | WalletCallException e1) {
+									Log.error("Error restarting the UI, the wallet will be closed. Error:"+e1.getMessage());
+									System.exit(1);
+								}
+							}
 			    	    }
 					} else
 					{
@@ -508,6 +525,17 @@ public class ZelNodesPanel extends WalletTabPanel {
 			dtm.fireTableDataChanged();
 			Log.info("gelZelNodeList end - count:" + totalNodes);
 		}
+	}
+	
+	public void restartUI() throws IOException, InterruptedException, WalletCallException {
+		Log.info("Restarting the UI.");
+		ZCashUI z = new ZCashUI(null);
+		this.parentFrame.setVisible(false);
+		this.parentFrame.dispose();
+		this.parentFrame = z;	
+		this.parentFrame.repaint();
+		this.parentFrame.setVisible(true);
+		this.setVisible(false);
 	}
 
 }

@@ -500,7 +500,8 @@ public class ZelCashZelNodeDialog
 								LanguageUtil.instance().getString("wallet.reindex.restart.message"),
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
-						this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						this.setVisible(false);
+						this.dispose();
 						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true);
 					}
 				}
@@ -514,7 +515,8 @@ public class ZelCashZelNodeDialog
 								LanguageUtil.instance().getString("wallet.restart.message"),
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
-						this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						this.setVisible(false);
+						this.dispose();
 						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false);
 					} 
 				}
@@ -575,8 +577,6 @@ public class ZelCashZelNodeDialog
 		this.parentFrame = z;	
 		this.parentFrame.repaint();
 		this.parentFrame.setVisible(true);
-		this.setVisible(false);
-		this.dispose();
 	}
 	
 	public void disposeMenu() {
