@@ -19,6 +19,7 @@ import java.net.Inet6Address;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -412,6 +413,48 @@ public class ZelCashZelNodeDialog
 			else {
 				Log.info("File zelnode.conf found");
 			}
+			
+			if(this.aliastoEdit==null) {
+				//checking for duplications
+			    Scanner scanner = new Scanner(zelnodeConf);
+	
+			    while (scanner.hasNextLine()) {
+			        String line = scanner.nextLine();
+			        if(!line.startsWith("#") && line.contains(zelNodeOutput.getSelectedItem().toString())) { 
+			        	JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.output.duplicated"),
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+								JOptionPane.ERROR_MESSAGE);
+						return;
+			        }
+			        
+			        if(!line.startsWith("#") && line.toLowerCase().contains(zelNodeName.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
+			        	JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.alias.duplicated"),
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+								JOptionPane.ERROR_MESSAGE);
+						return;
+			        }
+			        
+			        if(!line.startsWith("#") && line.toLowerCase().contains(zelNodeIP.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
+			        	JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.ip.duplicated"),
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+								JOptionPane.ERROR_MESSAGE);
+						return;
+			        }
+			        
+			        if(!line.startsWith("#") && line.contains(zelNodeKey.getText())) { 
+			        	JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.key.duplicated"),
+								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+								JOptionPane.ERROR_MESSAGE);
+						return;
+			        }
+			    }
+			}
+
+
 			Log.info("Now adding info needed to run zelNode to zelcash conf file if needed");
 			File zelcashConf = new File(blockchainDir + File.separator + "zelcash.conf");
 			Properties confProps = new Properties();
@@ -500,7 +543,6 @@ public class ZelCashZelNodeDialog
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
 						this.setVisible(false);
-						this.dispose();
 						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true);
 					}
 				}
@@ -515,7 +557,6 @@ public class ZelCashZelNodeDialog
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
 						this.setVisible(false);
-						this.dispose();
 						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false);
 					} 
 				}
@@ -570,12 +611,15 @@ public class ZelCashZelNodeDialog
 	
 	public void restartUI() throws IOException, InterruptedException, WalletCallException {
 		Log.info("Restarting the UI.");
+		this.parentFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		this.setVisible(false);
 		ZCashUI z = new ZCashUI(null);
 		this.parentFrame.setVisible(false);
 		this.parentFrame.dispose();
 		this.parentFrame = z;	
 		this.parentFrame.repaint();
 		this.parentFrame.setVisible(true);
+		this.dispose();
 	}
 	
 	public void disposeMenu() {
