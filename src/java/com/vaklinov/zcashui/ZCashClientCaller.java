@@ -1253,6 +1253,51 @@ public class ZCashClientCaller
 	    	return objResponse;
 		}
 
+	public synchronized JsonArray getCollectableZelNodeRewardsInformation()
+			throws WalletCallException, IOException, InterruptedException
+		{
+			return executeCommandAndGetJsonArray("listunspent", "0");
+ 
+		}
+	
+	public synchronized JsonObject zShieldCoinBase(String to, int utxoSize)
+			throws WalletCallException, IOException, InterruptedException
+		{
+			
+			String[] zShieldCoinBaseParameters = new String[]
+		    {
+			    this.zcashcli.getCanonicalPath(), 
+			    "z_shieldcoinbase", 
+			    "*",
+			    wrapStringParameter(to),
+			    "0.0001",
+			    String.valueOf(utxoSize)
+			};
+			
+			Log.info("The following zSchieldCoinBase command will be issued: " +
+					zShieldCoinBaseParameters[0] + " " + zShieldCoinBaseParameters[1] + " " +
+					zShieldCoinBaseParameters[2] + " " + zShieldCoinBaseParameters[3] + " " +
+					zShieldCoinBaseParameters[4] + ".");
+			
+			// Create caller to send cash
+		    CommandExecutor caller = new CommandExecutor(zShieldCoinBaseParameters);
+		    String strResponse = caller.execute();
+
+			if (strResponse.trim().toLowerCase(Locale.ROOT).startsWith("error:") ||
+				strResponse.trim().toLowerCase(Locale.ROOT).startsWith("error code:"))
+			{
+			  	throw new WalletCallException("Error response from wallet: " + strResponse);
+			}
+
+			Log.info("zSchieldCoinBase with the following command: " +
+					zShieldCoinBaseParameters[0] + " " + zShieldCoinBaseParameters[1] + " " +
+					zShieldCoinBaseParameters[2] + " " + zShieldCoinBaseParameters[3] + " " +
+					zShieldCoinBaseParameters[4] + " " + zShieldCoinBaseParameters[5] + "." +
+	                " Got result: [" + strResponse + "]");
+
+			return Json.parse(strResponse).asObject();
+		}
+		
 	private JsonObject executeCommandAndGetJsonObject(String command1, String command2)
 		throws WalletCallException, IOException, InterruptedException
 	{

@@ -2,6 +2,8 @@ package com.cabecinha84.zelcashui;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,11 +15,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -26,7 +32,6 @@ import javax.swing.table.DefaultTableModel;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import com.vaklinov.zcashui.AddressesPanel;
 import com.vaklinov.zcashui.LabelStorage;
 import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
@@ -66,6 +71,11 @@ public class ZelNodesPanel extends WalletTabPanel {
 	protected ZelCashJPopupMenu popupMenu;
 	
 	ZelCashJButton refresh;
+	ZelCashJButton collectZelNodeReward;
+	
+	private int utxoRewardCount = 0;
+	private static double zelnodeRewardAvailable = 0;
+	private static int MAX_UTXO_TXN = 100;
 
 	public ZelNodesPanel(ZCashUI parentFrame, ZelCashJTabbedPane parentTabs, ZCashClientCaller clientCaller,
 			StatusUpdateErrorReporter errorReporter, LabelStorage labelStorage)
@@ -142,6 +152,8 @@ public class ZelNodesPanel extends WalletTabPanel {
 		// Build panel of buttons
 		ZelCashJPanel buttonPanel = new ZelCashJPanel();
 		buttonPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		collectZelNodeReward = new ZelCashJButton(langUtil.getString("panel.zelnodespanel.button.colletReward"));
+		buttonPanel.add(collectZelNodeReward);
 		refresh = new ZelCashJButton(langUtil.getString("panel.address.button.refresh"));
 		buttonPanel.add(refresh);
 		zelNodesPanel.add(buttonPanel,BorderLayout.SOUTH);
@@ -152,12 +164,12 @@ public class ZelNodesPanel extends WalletTabPanel {
 				Cursor oldCursor = ZelNodesPanel.this.getCursor();
 				try {
 					ZelNodesPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
 					refresh.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
 					refresh.setEnabled(false);
 					refreshZelNodesTables();
 					refresh.setText(langUtil.getString("panel.address.button.refresh"));
-					refresh.setEnabled(true);	
+					refresh.setEnabled(true);
+					
 				}
 				finally {
 					ZelNodesPanel.this.setCursor(oldCursor);
@@ -166,6 +178,129 @@ public class ZelNodesPanel extends WalletTabPanel {
 				
 			}
 		});
+		
+		collectZelNodeReward.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Cursor oldCursor = ZelNodesPanel.this.getCursor();
+				try {
+					ZelNodesPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					getZelNodesRewards();	
+				}
+				finally {
+					ZelNodesPanel.this.setCursor(oldCursor);
+				}
+				
+				
+			}
+		});
+	}
+	
+	private void getZelNodesRewards() {
+		try {
+			JsonArray ja = clientCaller.getCollectableZelNodeRewardsInformation();
+			utxoRewardCount = 0;
+			zelnodeRewardAvailable = 0;
+			boolean generated = false;
+			boolean spendable = false;
+			for(int i=0; i < ja.size(); ++i) {
+				JsonObject jsonObj = ja.get(i).asObject();
+				generated = Boolean.parseBoolean(jsonObj.get("generated").toString());
+				spendable = Boolean.parseBoolean(jsonObj.get("spendable").toString());
+				if(generated && spendable) {
+					utxoRewardCount++;
+					zelnodeRewardAvailable+= Double.parseDouble(jsonObj.get("amount").toString().replaceAll("[\n\r\"]", ""));
+				}
+				
+			}
+			
+			if(utxoRewardCount == 0) {
+				JOptionPane.showMessageDialog(null,
+						LanguageUtil.instance().getString("panel.zelnodespanel.no.utxo.to.collect"),
+						LanguageUtil.instance().getString("panel.zelnodespanel.no.utxo.to.collect.title"),
+						JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			// Z Addresses - they are OK
+			String[] zAddresses = clientCaller.getWalletZAddresses();
+			if(zAddresses.length == 0) {
+				JOptionPane.showMessageDialog(null,
+						LanguageUtil.instance().getString("panel.zelnodespanel.no.zaddress.collect"),
+						LanguageUtil.instance().getString("panel.zelnodespanel.no.zaddress.collect.title"),
+						JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			String [] comboBoxItems = new String[zAddresses.length];
+			String label;
+			String address;
+			for (int i = 0; i < zAddresses.length; i++)
+			{
+				label = this.labelStorage.getLabel(zAddresses[i]);
+				address = zAddresses[i];
+				if ((label != null) && (label.length() > 0))
+				{
+					address = label + " - " + address;
+				}
+				comboBoxItems[i] = address;
+			}
+			
+			ZelCashJComboBox zAddressesCombo = new ZelCashJComboBox<>(comboBoxItems);
+				
+			ZelCashJPanel myPanel = new ZelCashJPanel();
+        	myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
+        	
+        	ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
+    		tempPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+    		ZelCashJLabel infoLabel = new ZelCashJLabel(langUtil.getString("panel.zelnodespanel.collect.zelnodereward.info", new DecimalFormat("########0.00######").format(zelnodeRewardAvailable), utxoRewardCount));
+        	tempPanel.add(infoLabel, BorderLayout.CENTER);
+    	    
+    	    ZelCashJPanel detailsPanel = new ZelCashJPanel();
+    		detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
+    	    
+        	zAddressesCombo.setPreferredSize(new Dimension(600,zAddressesCombo.getPreferredSize().height));
+        	detailsPanel.add(zAddressesCombo, BorderLayout.CENTER);
+
+        	myPanel.add(tempPanel);
+        	myPanel.add(detailsPanel);
+        	
+            int result = JOptionPane.showConfirmDialog(ZelNodesPanel.this,
+            		myPanel,
+                    langUtil.getString("panel.zelnodespanel.collect.zelnodereward.info.title"),
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.CANCEL_OPTION);
+            if (result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION) {
+            	return;
+            }
+            
+            String amountShielded;
+            try {
+            	String zAddressSelected = zAddresses[zAddressesCombo.getSelectedIndex()];
+            	JsonObject shieldResult = clientCaller.zShieldCoinBase(zAddressSelected, MAX_UTXO_TXN);
+            	amountShielded = shieldResult.get("shieldingValue").toString();
+            }
+            catch (Exception e) {
+            	JOptionPane.showMessageDialog(null,
+            			LanguageUtil.instance().getString("panel.zelnodespanel.shielding.error", e.getMessage()),
+    					LanguageUtil.instance().getString("panel.zelnodespanel.shielding.error.title"),
+    					JOptionPane.ERROR_MESSAGE);
+            	throw e;
+			}
+            
+            String message = "";
+            if(utxoRewardCount<MAX_UTXO_TXN) {
+            	message = LanguageUtil.instance().getString("panel.zelnodespanel.shielding.success");
+            }
+            else {
+            	message = LanguageUtil.instance().getString("panel.zelnodespanel.shielding.success.more", amountShielded, utxoRewardCount - MAX_UTXO_TXN);
+            }
+            JOptionPane.showMessageDialog(null,
+            		message,
+					LanguageUtil.instance().getString("panel.zelnodespanel.shielding.success.title"),
+					JOptionPane.INFORMATION_MESSAGE);
+
+		} catch (WalletCallException | IOException | InterruptedException e ) {
+			Log.error("Error on getZelNodesRewards:" +e.getMessage());
+		}
+
 	}
 	
 	private void refreshZelNodesTables() {
@@ -525,6 +660,18 @@ public class ZelNodesPanel extends WalletTabPanel {
 			dtm.fireTableDataChanged();
 			Log.info("gelZelNodeList end - count:" + totalNodes);
 		}
+	}
+	
+	private void addFormField(ZelCashJPanel detailsPanel, String name, JComponent field)
+	{
+		ZelCashJPanel tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+		ZelCashJLabel tempLabel = new ZelCashJLabel(name, JLabel.RIGHT);
+		// TODO: hard sizing of labels may not scale!
+		final int width = new ZelCashJLabel("Sender identification T address:").getPreferredSize().width + 10;
+		tempLabel.setPreferredSize(new Dimension(width, tempLabel.getPreferredSize().height));
+		tempPanel.add(tempLabel);
+		tempPanel.add(field);
+		detailsPanel.add(tempPanel);
 	}
 	
 	public void restartUI() throws IOException, InterruptedException, WalletCallException {
