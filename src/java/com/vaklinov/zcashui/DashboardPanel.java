@@ -584,6 +584,7 @@ public class DashboardPanel extends WalletTabPanel {
 						String vout;
 						String category;
 						String detailAmount="0"; 
+						boolean addressFound = false;
 						for(int i=0; i< details.size(); ++i) {
 							JsonObject obj = details.get(i).asObject();
 							vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
@@ -591,7 +592,21 @@ public class DashboardPanel extends WalletTabPanel {
 							if(vout.equals(zelNodeInfo[4]) && "send".equals(category)) {
 								detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
 								zelNodesAmountLockedAux+=Float.parseFloat(detailAmount);
+								addressFound = true;
 								break;
+							}
+						}
+						if(!addressFound) {
+							for(int i=0; i< details.size(); ++i) {
+								JsonObject obj = details.get(i).asObject();
+								vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
+								category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
+
+								if(vout.equals(zelNodeInfo[4]) && "receive".equals(category)) {
+									detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "");
+									zelNodesAmountLockedAux+=Float.parseFloat(detailAmount);
+									break;
+								}
 							}
 						}
 						

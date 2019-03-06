@@ -138,6 +138,7 @@ public class ZelCashZelNodeDialog
 								String category;
 								String detailAmount="0"; 
 								String address ="";
+								boolean addressFound = false;
 								for(int i=0; i< details.size(); ++i) {
 									JsonObject obj = details.get(i).asObject();
 									vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
@@ -145,10 +146,23 @@ public class ZelCashZelNodeDialog
 									if(vout.equals(zelNodeInfo[4]) && "send".equals(category)) {
 										detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
 										address = obj.get("address").toString().replaceAll("[\n\r\"]", "");
+										addressFound = true;
 										break;
 									}
 								}
-								
+								if(!addressFound) {
+									for(int i=0; i< details.size(); ++i) {
+										JsonObject obj = details.get(i).asObject();
+										vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
+										category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
+
+										if(vout.equals(zelNodeInfo[4]) && "receive".equals(category)) {
+											detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "");
+											address = obj.get("address").toString().replaceAll("[\n\r\"]", "");
+											break;
+										}
+									}
+								}
 								if ((address != null) && (address.length() > 0))
 								{
 									String label = this.labelStorage.getLabel(address);
