@@ -83,7 +83,9 @@ public class AddressTable
 
 				try
 				{
-					String address = AddressTable.this.getModel().getValueAt(AddressTable.this.getSelectedRow(), 3).toString();
+					int row = AddressTable.this.convertRowIndexToModel(AddressTable.this.getSelectedRow());
+					
+					String address = AddressTable.this.getModel().getValueAt(row, 3).toString();
 					boolean isZAddress = Util.isZAddress(address);
 					
 					// Check for encrypted wallet
@@ -141,8 +143,9 @@ public class AddressTable
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-
-				String address = AddressTable.this.getModel().getValueAt(AddressTable.this.getSelectedRow(), 3).toString();
+				int row = AddressTable.this.convertRowIndexToModel(AddressTable.this.getSelectedRow());
+				
+				String address = AddressTable.this.getModel().getValueAt(row, 3).toString();
 				ZelCashQRCodeDialog ad;
 				try {
 					ad = new ZelCashQRCodeDialog(address, AddressTable.this.parentFrame);
@@ -168,8 +171,9 @@ public class AddressTable
 				try
 				{
 		            TableModel model = AddressTable.this.getModel();
-		            
-		            String oldLabel = (String)model.getValueAt(AddressTable.this.getSelectedRow(), 0);
+		            int row = AddressTable.this.convertRowIndexToModel(AddressTable.this.getSelectedRow());
+					
+		            String oldLabel = (String)model.getValueAt(row, 0);
 					String label = (String) JOptionPane.showInputDialog(AddressTable.this,
 		                    "Please enter a label for the address:",
 		                    "Label of the address...",
@@ -177,7 +181,7 @@ public class AddressTable
 
 					if (!Util.stringIsEmpty(label))
 					{
-						model.setValueAt(label, AddressTable.this.getSelectedRow(), 0);
+						model.setValueAt(label, row, 0);
 					}
 		            
 		            AddressTable.this.invalidate();
@@ -208,7 +212,8 @@ public class AddressTable
 
 				try
 				{
-					String address = AddressTable.this.getModel().getValueAt(AddressTable.this.getSelectedRow(), 3).toString();
+					int row = AddressTable.this.convertRowIndexToModel(AddressTable.this.getSelectedRow());
+					String address = AddressTable.this.getModel().getValueAt(row, 3).toString();
 					address = address.replaceAll("\"", ""); // In case it has quotes
 					
 					if ((!AddressTable.this.installationObserver.isOnTestNet()) && Util.isZAddress(address))
