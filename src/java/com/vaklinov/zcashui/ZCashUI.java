@@ -211,11 +211,10 @@ public class ZCashUI extends ZelCashJFrame {
 		wallet.setMnemonic(KeyEvent.VK_W);
 		wallet.add(menuItemBackup = new ZelCashJMenuItem(langUtil.getString("menu.label.backup"), KeyEvent.VK_B));
 		menuItemBackup.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, accelaratorKeyMask));
-		// Encryption menu item is hidden since encryption is not possible
-		// wallet.add(menuItemEncrypt = new
-		// ZelCashJMenuItem(langUtil.getString("menu.label.encrypt"), KeyEvent.VK_E));
-		// menuItemEncrypt.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
-		// accelaratorKeyMask));
+		wallet.add(menuItemEncrypt = new
+		ZelCashJMenuItem(langUtil.getString("menu.label.encrypt"), KeyEvent.VK_E));
+		menuItemEncrypt.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
+		accelaratorKeyMask));
 		wallet.add(menuItemExportKeys = new ZelCashJMenuItem(langUtil.getString("menu.label.export.private.keys"),
 				KeyEvent.VK_K));
 		menuItemExportKeys.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, accelaratorKeyMask));
@@ -372,13 +371,12 @@ public class ZCashUI extends ZelCashJFrame {
 			}
 		});
 
-		/**
-		 * Encrypt menu item is not initiliazed menuItemEncrypt.addActionListener( new
-		 * ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 *           ZCashUI.this.walletOps.encryptWallet(); } } );
-		 */
+		
+		 menuItemEncrypt.addActionListener( new ActionListener() {  
+			 @Override 
+			 public void actionPerformed(ActionEvent e) {
+		            ZCashUI.this.walletOps.encryptWallet(); } } );
+
 
 		menuItemExportKeys.addActionListener(new ActionListener() {
 			@Override
@@ -551,6 +549,17 @@ public class ZCashUI extends ZelCashJFrame {
 		ZCashUI.this.dispose();
 
 		System.exit(0);
+	}
+	
+	public void stopTimers() {
+		Log.info("stopTimers ...");
+
+		this.dashboard.stopThreadsAndTimers();
+		this.transactionDetailsPanel.stopThreadsAndTimers();
+		this.addresses.stopThreadsAndTimers();
+		this.sendPanel.stopThreadsAndTimers();
+		this.messagingPanel.stopThreadsAndTimers();
+
 	}
 	
 	public void restartDaemon(boolean reindex) {

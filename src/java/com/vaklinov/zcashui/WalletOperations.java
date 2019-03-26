@@ -31,15 +31,19 @@ package com.vaklinov.zcashui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -136,10 +140,10 @@ public class WalletOperations
 			{
 				
 				this.parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				
-				this.dashboard.stopThreadsAndTimers();
-				this.sendCash.stopThreadsAndTimers();
-				
+				this.parent.stopTimers();
+				if(!this.checkExperimentalFeaturesOn()) {
+					this.parent.restartDaemon(false);
+				}
 				this.clientCaller.encryptWallet(pd.getPassword());
 				
 				this.parent.setCursor(oldCursor);
@@ -153,7 +157,7 @@ public class WalletOperations
 					langUtil.getString("wallet.operations.option.pane.encryption.error.text", wce.getMessage().replace(",", ",\n")),
 					langUtil.getString("wallet.operations.option.pane.encryption.error.title"),
 					JOptionPane.ERROR_MESSAGE);
-				return;
+				this.parent.exitProgram();
 			}
 			
 			JOptionPane.showMessageDialog(
@@ -170,7 +174,44 @@ public class WalletOperations
 		}
 	}
 	
-	
+	private boolean checkExperimentalFeaturesOn() throws IOException {
+		boolean experimentalFeaturesOn = true;
+		String blockchainDir = OSUtil.getBlockchainDirectory();
+		File zelcashConf = new File(blockchainDir + File.separator + "zelcash.conf");
+		Properties confProps = new Properties();
+		FileInputStream fis = null;
+		String property = null;
+		FileWriter fw = null;
+		try
+		{
+			fis = new FileInputStream(zelcashConf);
+			fw = new FileWriter(zelcashConf,true); //the true will append the new data
+			confProps.load(fis);
+			property = confProps.getProperty("experimentalfeatures");
+			if(property == null) {
+				fw.write(System.getProperty("line.separator") + "experimentalfeatures=1"); 
+				experimentalFeaturesOn = false;
+				Log.info("Adding experimentalfeatures=1");
+			}
+			property = confProps.getProperty("developerencryptwallet");
+			if(property == null) {
+				fw.write(System.getProperty("line.separator") + "developerencryptwallet=1"); 
+				experimentalFeaturesOn = false;
+				Log.info("Adding developerencryptwallet=1");
+			}		
+		} finally
+		{
+			if (fw != null) {
+				fw.close();
+			}
+			if (fis != null)
+			{
+				fis.close();
+			}
+		}
+		return experimentalFeaturesOn;
+		
+	}
 	public void backupWallet()
 	{
 		try
@@ -230,10 +271,40 @@ public class WalletOperations
 	
 	public void exportWalletPrivateKeys()
 	{
-		// TODO: Will need corrections once encryption is reenabled!!!
-		
 		try
 		{
+			if (this.clientCaller.isWalletEncrypted())
+			{
+				boolean passwordOk = false;
+				int retrys = 0;
+				while(!passwordOk && retrys<3) {
+					++retrys;
+					PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(this.parent));
+					pd.setVisible(true);
+
+					if (!pd.isOKPressed())
+					{
+						return;
+					}
+					try {
+						this.clientCaller.unlockWallet(pd.getPassword());
+						passwordOk = true;
+					}
+					catch (Exception ex) {
+						Log.error("Error unlocking wallet:"+ex.getMessage());
+						JOptionPane.showMessageDialog(
+								this.parent, 
+								langUtil.getString("encryption.error.unlocking.message", ex.getMessage()),
+								langUtil.getString("encryption.error.unlocking.title"),
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				if(!passwordOk) {
+					Log.info("Failed to enter correct password for third time, wallet will close.");
+					System.exit(1);
+				}
+			}
+			
 			this.issueBackupDirectoryWarning();
 			
 			ZelCashJFileChooser fileChooser = new ZelCashJFileChooser();
@@ -289,7 +360,41 @@ public class WalletOperations
 	
 	public void importWalletPrivateKeys()
 	{
-		// TODO: Will need corrections once encryption is re-enabled!!!
+		try {
+			if (this.clientCaller.isWalletEncrypted())
+			{
+				boolean passwordOk = false;
+				int retrys = 0;
+				while(!passwordOk && retrys<3) {
+					++retrys;
+					PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(this.parent));
+					pd.setVisible(true);
+
+					if (!pd.isOKPressed())
+					{
+						return;
+					}
+					try {
+						this.clientCaller.unlockWallet(pd.getPassword());
+						passwordOk = true;
+					}
+					catch (Exception ex) {
+						Log.error("Error unlocking wallet:"+ex.getMessage());
+						JOptionPane.showMessageDialog(
+								this.parent, 
+								langUtil.getString("encryption.error.unlocking.message", ex.getMessage()),
+								langUtil.getString("encryption.error.unlocking.title"),
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				if(!passwordOk) {
+					Log.info("Failed to enter correct password for third time, wallet will close.");
+					System.exit(1);
+				}
+			}
+		} catch (HeadlessException | WalletCallException | IOException | InterruptedException e1) {
+			this.errorReporter.reportError(e1, false);
+		}
 		Object[] options = 
         	{ 
         		langUtil.getString("button.option.yes"),
@@ -389,15 +494,34 @@ public class WalletOperations
 			final boolean bEncryptedWallet = this.clientCaller.isWalletEncrypted();
 			if (bEncryptedWallet)
 			{
-				PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(this.parent));
-				pd.setVisible(true);
-				
-				if (!pd.isOKPressed())
-				{
-					return;
+				boolean passwordOk = false;
+				int retrys = 0;
+				while(!passwordOk && retrys<3) {
+					++retrys;
+					PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(this.parent));
+					pd.setVisible(true);
+
+					if (!pd.isOKPressed())
+					{
+						return;
+					}
+					try {
+						this.clientCaller.unlockWallet(pd.getPassword());
+						passwordOk = true;
+					}
+					catch (Exception ex) {
+						Log.error("Error unlocking wallet:"+ex.getMessage());
+						JOptionPane.showMessageDialog(
+								this.parent, 
+								langUtil.getString("encryption.error.unlocking.message", ex.getMessage()),
+								langUtil.getString("encryption.error.unlocking.title"),
+								JOptionPane.ERROR_MESSAGE);
+					}
 				}
-				
-				this.clientCaller.unlockWallet(pd.getPassword());
+				if(!passwordOk) {
+					Log.info("Failed to enter correct password for third time, wallet will close.");
+					System.exit(1);
+				}
 			}
 			
 			boolean isZAddress = Util.isZAddress(address);
@@ -408,7 +532,7 @@ public class WalletOperations
 			// Lock the wallet again 
 			if (bEncryptedWallet)
 			{
-				this.clientCaller.lockWallet();
+				//this.clientCaller.lockWallet();
 			}
 				
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -430,6 +554,37 @@ public class WalletOperations
 	{
 		try
 		{
+			if (this.clientCaller.isWalletEncrypted())
+			{
+				boolean passwordOk = false;
+				int retrys = 0;
+				while(!passwordOk && retrys<3) {
+					++retrys;
+					PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(this.parent));
+					pd.setVisible(true);
+
+					if (!pd.isOKPressed())
+					{
+						return;
+					}
+					try {
+						this.clientCaller.unlockWallet(pd.getPassword());
+						passwordOk = true;
+					}
+					catch (Exception ex) {
+						Log.error("Error unlocking wallet:"+ex.getMessage());
+						JOptionPane.showMessageDialog(
+								this.parent, 
+								langUtil.getString("encryption.error.unlocking.message", ex.getMessage()),
+								langUtil.getString("encryption.error.unlocking.title"),
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				if(!passwordOk) {
+					Log.info("Failed to enter correct password for third time, wallet will close.");
+					System.exit(1);
+				}
+			}
 			SingleKeyImportDialog kd = new SingleKeyImportDialog(this.parent, this.clientCaller);
 			kd.setVisible(true);
 			
