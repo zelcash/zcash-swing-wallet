@@ -264,7 +264,8 @@ public class DashboardPanel extends WalletTabPanel {
 
 					if (!pd.isOKPressed())
 					{
-						continue;
+						Log.info("User pressed x or cancel on wallet startup - Wallet will be closed.");
+						System.exit(1);
 					}
 					try {
 						this.clientCaller.unlockWallet(pd.getPassword());
