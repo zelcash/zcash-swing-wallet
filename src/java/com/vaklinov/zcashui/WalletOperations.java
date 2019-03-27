@@ -55,6 +55,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.cabecinha84.zelcashui.ChangePasswordEncryptionDialog;
 import com.cabecinha84.zelcashui.ZelCashJDialog;
 import com.cabecinha84.zelcashui.ZelCashJFileChooser;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
@@ -112,6 +113,68 @@ public class WalletOperations
 		this.langUtil = LanguageUtil.instance();
 	}
 
+	
+	public void changeWalletPassword()
+	{
+		try
+		{			
+			if (!this.clientCaller.isWalletEncrypted())
+			{
+		        JOptionPane.showMessageDialog(
+		            this.parent,
+		            langUtil.getString("wallet.operations.option.pane.wallet.not.encryppted.error.text"),
+		            langUtil.getString("wallet.operations.option.pane.wallet.not.encryppted.error.title"),
+		            JOptionPane.ERROR_MESSAGE);
+		        return;
+			}
+			
+			ChangePasswordEncryptionDialog pd = new ChangePasswordEncryptionDialog(this.parent);
+			pd.setVisible(true);
+			
+			if (!pd.isOKPressed())
+			{
+				return;
+			}
+			
+			Cursor oldCursor = this.parent.getCursor();
+			try
+			{
+				
+				this.parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				this.parent.stopTimers();
+				if(!this.checkExperimentalFeaturesOn()) {
+					this.parent.restartDaemon(false);
+				}
+				this.clientCaller.passPhraseChangeWallet(pd.getPassword(), pd.getNewPassword());
+				
+				this.parent.setCursor(oldCursor);
+			} catch (WalletCallException wce)
+			{
+				this.parent.setCursor(oldCursor);
+				Log.error("Unexpected error: ", wce);
+				
+				JOptionPane.showMessageDialog(
+					this.parent, 
+					langUtil.getString("encryption.error.change.password.message", wce.getMessage().replace(",", ",\n")),
+					langUtil.getString("encryption.error.change.password.title"),
+					JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			JOptionPane.showMessageDialog(
+				this.parent, 
+				langUtil.getString("wallet.operations.option.pane.change.password.success.text"),
+				langUtil.getString("wallet.operations.option.pane.change.password.success.title"),
+				JOptionPane.INFORMATION_MESSAGE);
+			
+			this.parent.exitProgram();
+			
+		} catch (Exception e)
+		{
+			this.errorReporter.reportError(e, false);
+		}
+	}
+	
 	
 	public void encryptWallet()
 	{

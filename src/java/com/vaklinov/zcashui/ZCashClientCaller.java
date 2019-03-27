@@ -1073,6 +1073,15 @@ public class ZCashClientCaller
 		// If no exception - obviously successful
 	}
 	
+	public synchronized void passPhraseChangeWallet(String oldPassword, String newPassword)
+			throws WalletCallException, IOException, InterruptedException
+		{
+			String response = this.executeCommandAndGetSingleStringResponse(
+				"walletpassphrasechange", wrapStringParameter(oldPassword), wrapStringParameter(newPassword));
+			Log.info("Result of encryption password change is: \n" + response);
+			// If no exception - obviously successful
+		}
+	
 	
 	public synchronized String backupWallet(String fileName)
 		throws WalletCallException, IOException, InterruptedException

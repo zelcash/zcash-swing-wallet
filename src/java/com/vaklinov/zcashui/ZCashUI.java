@@ -104,6 +104,7 @@ public class ZCashUI extends ZelCashJFrame {
 	private ZelCashJMenuItem menuItemAbout;
 	private ZelCashJMenuItem menuItemZelcashUI;
 	private ZelCashJMenuItem menuItemEncrypt;
+	private ZelCashJMenuItem menuItemChangePassword;
 	private ZelCashJMenuItem menuItemBackup;
 	private ZelCashJMenuItem menuItemExportKeys;
 	private ZelCashJMenuItem menuItemImportKeys;
@@ -215,6 +216,10 @@ public class ZCashUI extends ZelCashJFrame {
 		ZelCashJMenuItem(langUtil.getString("menu.label.encrypt"), KeyEvent.VK_E));
 		menuItemEncrypt.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
 		accelaratorKeyMask));
+		wallet.add(menuItemChangePassword = new
+				ZelCashJMenuItem(langUtil.getString("menu.label.changepassword"), KeyEvent.VK_J));
+		menuItemChangePassword.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J,
+				accelaratorKeyMask));
 		wallet.add(menuItemExportKeys = new ZelCashJMenuItem(langUtil.getString("menu.label.export.private.keys"),
 				KeyEvent.VK_K));
 		menuItemExportKeys.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, accelaratorKeyMask));
@@ -377,7 +382,11 @@ public class ZCashUI extends ZelCashJFrame {
 			 public void actionPerformed(ActionEvent e) {
 		            ZCashUI.this.walletOps.encryptWallet(); } } );
 
-
+		 menuItemChangePassword.addActionListener( new ActionListener() {  
+			 @Override 
+			 public void actionPerformed(ActionEvent e) {
+		            ZCashUI.this.walletOps.changeWalletPassword(); } } );
+		 
 		menuItemExportKeys.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
