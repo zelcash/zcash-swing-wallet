@@ -62,19 +62,19 @@ public class ChangePasswordEncryptionDialog
 		
 		ZelCashJLabel newLabel = new ZelCashJLabel(langUtil.getString("dialog.change.password.new.password"));
 		this.freeSlotPanel.add(newLabel);
-		this.freeSlotPanel.add(newPasswordConfirmationField = new ZelCashJPasswordField(30));
+		this.freeSlotPanel.add(newPasswordConfirmationField = new ZelCashJPasswordField(50));
 		newLabel.setPreferredSize(passwordLabel.getPreferredSize());
 		
 		ZelCashJLabel confLabel = new ZelCashJLabel(langUtil.getString("dialog.password.encryption.confirmation.label.text"));
-		this.freeSlotPanel2.add(confLabel);
-		this.freeSlotPanel2.add(passwordConfirmationField = new ZelCashJPasswordField(30));
+		this.freeSlotPanel3.add(confLabel);
+		this.freeSlotPanel3.add(passwordConfirmationField = new ZelCashJPasswordField(50));
 		confLabel.setPreferredSize(passwordLabel.getPreferredSize());
 		
 		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
 		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
 		this.freeSlotPanel2.add(dividerLabel);
 		
-		this.setSize(460, 270);
+		this.setSize(620, 220);
 		this.validate();
 		this.repaint();
 	}

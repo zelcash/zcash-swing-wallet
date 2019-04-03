@@ -33,6 +33,7 @@ import java.awt.Font;
 
 import javax.swing.JOptionPane;
 
+import com.cabecinha84.zelcashui.ZelCashJCheckBox;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPasswordField;
@@ -48,6 +49,8 @@ public class PasswordEncryptionDialog
 
 	private LanguageUtil langUtil;
 	
+	private ZelCashJCheckBox  acceptExperimentalFeatures = null;
+	
 	public PasswordEncryptionDialog(ZelCashJFrame parent)
 	{
 		super(parent);
@@ -56,14 +59,13 @@ public class PasswordEncryptionDialog
 		
 		ZelCashJLabel confLabel = new ZelCashJLabel(langUtil.getString("dialog.password.encryption.confirmation.label.text"));
 		this.freeSlotPanel.add(confLabel);
-		this.freeSlotPanel.add(passwordConfirmationField = new ZelCashJPasswordField(30));
+		this.freeSlotPanel.add(passwordConfirmationField = new ZelCashJPasswordField(50));
 		this.passwordLabel.setPreferredSize(confLabel.getPreferredSize());
 		
-		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
-		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
-		this.freeSlotPanel2.add(dividerLabel);
+		acceptExperimentalFeatures = new ZelCashJCheckBox(langUtil.getString("encryption.accept.experimental"));
+		this.freeSlotPanel3.add(acceptExperimentalFeatures);
 		
-		this.setSize(460, 270);
+		this.setSize(850, 270);
 		this.validate();
 		this.repaint();
 	}
@@ -71,6 +73,15 @@ public class PasswordEncryptionDialog
 	
 	protected void processOK()
 	{
+		boolean acceptExperimental = this.acceptExperimentalFeatures.isSelected();
+		if(!acceptExperimental) {
+			JOptionPane.showMessageDialog(
+				this.getParent(), 
+				langUtil.getString("encryption.accept.experimental.message"),
+				langUtil.getString("encryption.accept.experimental.title")	,
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		String password     = this.passwordField.getText();
 		String confirmation = this.passwordConfirmationField.getText(); 
 		
