@@ -75,7 +75,7 @@ public class OSUtil
 		} else if (name.contains("sunos") || name.contains("solaris"))
 		{
 			return OS_TYPE.SOLARIS;
-		} else if (name.contains("darwin") || name.contains("macOS") || name.contains("macos"))
+		} else if (name.contains("darwin") || name.contains("macos") || name.contains("mac os"))
 		{
 			return OS_TYPE.MAC_OS;
 		} else if (name.contains("free") && name.contains("bsd"))
