@@ -26,46 +26,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  **********************************************************************************/
-package com.vaklinov.zcashui;
+package com.cabecinha84.zelcashui;
 
 
 import java.awt.Font;
 
 import javax.swing.JOptionPane;
 
-import com.cabecinha84.zelcashui.ZelCashJCheckBox;
 import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJPasswordField;
+import com.vaklinov.zcashui.LanguageUtil;
+import com.vaklinov.zcashui.PasswordDialog;
 
 
 /**
  * Dialog to get the user password - to encrypt a wallet.
  */
-public class PasswordEncryptionDialog
+public class ChangePasswordEncryptionDialog
 	extends PasswordDialog
 {
+	protected ZelCashJPasswordField newPasswordConfirmationField = null;
 	protected ZelCashJPasswordField passwordConfirmationField = null;
+	protected String  newPassword    = null;
 
 	private LanguageUtil langUtil;
 	
-	private ZelCashJCheckBox  acceptExperimentalFeatures = null;
-	
-	public PasswordEncryptionDialog(ZelCashJFrame parent)
+	public ChangePasswordEncryptionDialog(ZelCashJFrame parent)
 	{
 		super(parent);
 		langUtil = LanguageUtil.instance();
-		this.upperLabel.setText(langUtil.getString("dialog.password.encryption.upper.label.text"));
+		this.passwordLabel.setText(langUtil.getString("dialog.change.password.current.password"));
+		
+		this.upperLabel.setText(langUtil.getString("dialog.change.password.encryption.upper.label.text"));
+		
+		ZelCashJLabel newLabel = new ZelCashJLabel(langUtil.getString("dialog.change.password.new.password"));
+		this.freeSlotPanel.add(newLabel);
+		this.freeSlotPanel.add(newPasswordConfirmationField = new ZelCashJPasswordField(50));
+		newLabel.setPreferredSize(passwordLabel.getPreferredSize());
 		
 		ZelCashJLabel confLabel = new ZelCashJLabel(langUtil.getString("dialog.password.encryption.confirmation.label.text"));
-		this.freeSlotPanel.add(confLabel);
-		this.freeSlotPanel.add(passwordConfirmationField = new ZelCashJPasswordField(50));
-		this.passwordLabel.setPreferredSize(confLabel.getPreferredSize());
+		this.freeSlotPanel3.add(confLabel);
+		this.freeSlotPanel3.add(passwordConfirmationField = new ZelCashJPasswordField(50));
+		confLabel.setPreferredSize(passwordLabel.getPreferredSize());
 		
-		acceptExperimentalFeatures = new ZelCashJCheckBox(langUtil.getString("encryption.accept.experimental"));
-		this.freeSlotPanel3.add(acceptExperimentalFeatures);
+		ZelCashJLabel dividerLabel = new ZelCashJLabel("   ");
+		dividerLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
+		this.freeSlotPanel2.add(dividerLabel);
 		
-		this.setSize(850, 270);
+		this.setSize(620, 220);
 		this.validate();
 		this.repaint();
 	}
@@ -73,16 +82,7 @@ public class PasswordEncryptionDialog
 	
 	protected void processOK()
 	{
-		boolean acceptExperimental = this.acceptExperimentalFeatures.isSelected();
-		if(!acceptExperimental) {
-			JOptionPane.showMessageDialog(
-				this.getParent(), 
-				langUtil.getString("encryption.accept.experimental.message"),
-				langUtil.getString("encryption.accept.experimental.title")	,
-				JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		String password     = this.passwordField.getText();
+		String password     = this.newPasswordConfirmationField.getText();
 		String confirmation = this.passwordConfirmationField.getText(); 
 		
 		if (password == null)
@@ -104,8 +104,21 @@ public class PasswordEncryptionDialog
 				JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+		if(password.length()==0) {
+			JOptionPane.showMessageDialog(
+					this.getParent(), 
+					langUtil.getString("dialog.password.option.pane.process.text"),
+					langUtil.getString("dialog.password.option.pane.process.title"),
+					JOptionPane.ERROR_MESSAGE);
+				return;
+		}
 
 		super.processOK();
+		this.newPassword = password;
 	}
 	
+	public String getNewPassword()
+	{
+		return this.newPassword;
+	}
 }

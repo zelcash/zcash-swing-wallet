@@ -36,6 +36,8 @@ import com.vaklinov.zcashui.LabelStorage;
 import com.vaklinov.zcashui.LanguageUtil;
 import com.vaklinov.zcashui.Log;
 import com.vaklinov.zcashui.OSUtil;
+import com.vaklinov.zcashui.PasswordDialog;
+import com.vaklinov.zcashui.SendCashPanel;
 import com.vaklinov.zcashui.StatusUpdateErrorReporter;
 import com.vaklinov.zcashui.WalletTabPanel;
 import com.vaklinov.zcashui.ZCashClientCaller;
@@ -274,6 +276,39 @@ public class ZelNodesPanel extends WalletTabPanel {
             String amountShielded;
             try {
             	String zAddressSelected = zAddresses[zAddressesCombo.getSelectedIndex()];
+            	// Check for encrypted wallet
+    			final boolean bEncryptedWallet = this.clientCaller.isWalletEncrypted();
+    			if (bEncryptedWallet)
+    			{
+    				boolean passwordOk = false;
+    				int retrys = 0;
+    				while(!passwordOk && retrys<3) {
+    					++retrys;
+    					PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(ZelNodesPanel.this.getRootPane().getParent()));
+    					pd.setVisible(true);
+
+    					if (!pd.isOKPressed())
+    					{
+    						return;
+    					}
+    					try {
+    						this.clientCaller.unlockWallet(pd.getPassword());
+    						passwordOk = true;
+    					}
+    					catch (Exception ex) {
+    						Log.error("Error unlocking wallet:"+ex.getMessage());
+    						JOptionPane.showMessageDialog(
+    								ZelNodesPanel.this.getRootPane().getParent(), 
+    								langUtil.getString("encryption.error.unlocking.message", ex.getMessage()),
+    								langUtil.getString("encryption.error.unlocking.title"),
+    								JOptionPane.ERROR_MESSAGE);
+    					}
+    				}
+    				if(!passwordOk) {
+    					Log.info("Failed to enter correct password for third time, wallet will close.");
+    					System.exit(1);
+    				}
+    			}
             	JsonObject shieldResult = clientCaller.zShieldCoinBase(zAddressSelected, MAX_UTXO_TXN);
             	amountShielded = shieldResult.get("shieldingValue").toString();
             }

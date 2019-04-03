@@ -64,6 +64,7 @@ public class PasswordDialog
 	
 	protected ZelCashJPanel freeSlotPanel;
 	protected ZelCashJPanel freeSlotPanel2;
+	protected ZelCashJPanel freeSlotPanel3;
 	private LanguageUtil langUtil;
 	
 	public PasswordDialog(ZelCashJFrame parent)
@@ -89,7 +90,7 @@ public class PasswordDialog
 		
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(passwordLabel = new ZelCashJLabel(langUtil.getString("dialog.password.temp.panel.password.label.text")));
-		tempPanel.add(passwordField = new ZelCashJPasswordField(30));
+		tempPanel.add(passwordField = new ZelCashJPasswordField(50));
 		controlsPanel.add(tempPanel);
 		
 		dividerLabel = new ZelCashJLabel("   ");
@@ -101,6 +102,9 @@ public class PasswordDialog
 		
 		this.freeSlotPanel2 = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		controlsPanel.add(this.freeSlotPanel2);
+		
+		this.freeSlotPanel3 = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		controlsPanel.add(this.freeSlotPanel3);
 
 		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.add(this.lowerLabel = new ZelCashJLabel(langUtil.getString("dialog.password.temp.panel.lower.label.text")), BorderLayout.CENTER);
