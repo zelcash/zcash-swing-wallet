@@ -453,7 +453,7 @@ public class ZelCashZelNodeDialog
 						return;
 			        }
 			        
-			        if(!line.startsWith("#") && line.toLowerCase().contains(zelNodeName.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
+			        if(!line.startsWith("#") && line.toLowerCase().startsWith(zelNodeName.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
 			        	JOptionPane.showMessageDialog(null,
 								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.alias.duplicated"),
 								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
