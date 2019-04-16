@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -74,6 +75,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 	
 	ZelCashJButton refresh;
 	ZelCashJButton collectZelNodeReward;
+	ZelCashJButton clearCache;
 	
 	private int utxoRewardCount = 0;
 	private static double zelnodeRewardAvailable = 0;
@@ -158,6 +160,8 @@ public class ZelNodesPanel extends WalletTabPanel {
 		buttonPanel.add(collectZelNodeReward);
 		refresh = new ZelCashJButton(langUtil.getString("panel.address.button.refresh"));
 		buttonPanel.add(refresh);
+		clearCache = new ZelCashJButton(langUtil.getString("panel.address.button.clear.cache"));
+		buttonPanel.add(clearCache);
 		zelNodesPanel.add(buttonPanel,BorderLayout.SOUTH);
 
 		refresh.addActionListener(new ActionListener() {
@@ -172,6 +176,38 @@ public class ZelNodesPanel extends WalletTabPanel {
 					refresh.setText(langUtil.getString("panel.address.button.refresh"));
 					refresh.setEnabled(true);
 					
+				}
+				finally {
+					ZelNodesPanel.this.setCursor(oldCursor);
+				}
+				
+				
+			}
+		});
+		
+		clearCache.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Cursor oldCursor = ZelNodesPanel.this.getCursor();
+				try {
+					ZelNodesPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					clearCache.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
+					clearCache.setEnabled(false);
+					String blockchainDir = OSUtil.getBlockchainDirectory();
+					File zelnodecache = new File(blockchainDir + File.separator + "zelnodecache.dat");
+					if(zelnodecache.exists()) {
+						zelnodecache.delete();
+						ZelNodesPanel.this.parentFrame.restartDaemon(false);
+						try {
+							restartUI();
+						} catch (IOException | InterruptedException | WalletCallException e1) {
+							Log.error("Error restarting the UI, the wallet will be closed. Error:"+e1.getMessage());
+							System.exit(1);
+						}
+					}
+					
+				} catch (IOException e1) {
+					Log.error("Error clearing chache:"+e1.getMessage());
 				}
 				finally {
 					ZelNodesPanel.this.setCursor(oldCursor);
