@@ -99,6 +99,7 @@ public class ZelCashZelNodeDialog
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.amount"),  zelNodeAmount = new ZelCashJTextField(50));
 		zelNodeName.setEditable(true);
 		zelNodeIP.setEditable(true);
+		zelNodeIP.setText(":16125");
 		zelNodeKey.setEditable(false);
 		zelNodeOutput.setEnabled(false);
 		zelNodeAmount.setEditable(false);
@@ -254,21 +255,31 @@ public class ZelCashZelNodeDialog
 
 				String ip = zelNodeIP.getText().replaceAll(":16125", "").replaceAll(":26125", "");
 
-				try {
-					Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
-				}
-				catch (Exception ex1) {
+				if(!ip.endsWith(".onion")) {
 					try {
-						Inet6Address address = (Inet6Address) Inet6Address.getByName(ip);
+						Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
 					}
-					catch (Exception ex) {
-						JOptionPane.showMessageDialog(null,
-								LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					}							
+					catch (Exception ex1) {
+						try {
+							Inet6Address address = (Inet6Address) Inet6Address.getByName(ip);
+							if(!ip.startsWith("[") || !ip.endsWith("]")) {
+								JOptionPane.showMessageDialog(null,
+										LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
+										LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
+						catch (Exception ex) {
+							JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}							
+					}
 				}
+				
 				saveSettings();
 			}
 		});

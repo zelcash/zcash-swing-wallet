@@ -721,24 +721,32 @@ public class ZCashUI extends ZelCashJFrame {
 							}
 							
 							String ip = zelNodeInfo[1].replaceAll(":16125", "").replaceAll(":26125", "");
-
-							try {
-								Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
-							}
-							catch (Exception e) {
+							if(!ip.endsWith(".onion")) {
 								try {
-									Inet6Address address = (Inet6Address) Inet6Address.getByName(ip);
+									Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
 								}
-								catch (Exception ex) {
-									Log.error("Zelnode.conf file not ok. ip not valid for ipv4 and ipv6:"+ip);
-									JOptionPane.showMessageDialog(null,
-											LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
-											LanguageUtil.instance().getString("parsing.error.zelnodesconf.title"),
-											JOptionPane.ERROR_MESSAGE);
-									System.exit(1);
-								}							
-							}
-							
+								catch (Exception e) {
+									try {
+										Inet6Address address = (Inet6Address) Inet6Address.getByName(ip);
+										if(!ip.startsWith("[") || !ip.endsWith("]")) {
+											Log.error("Zelnode.conf file not ok. ip not valid for ipv4, ipv6 and onion:"+ip);
+											JOptionPane.showMessageDialog(null,
+													LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
+													LanguageUtil.instance().getString("parsing.error.zelnodesconf.title"),
+													JOptionPane.ERROR_MESSAGE);
+											System.exit(1);
+										}
+									}
+									catch (Exception ex) {
+										Log.error("Zelnode.conf file not ok. ip not valid for ipv4, ipv6 and onion:"+ip);
+										JOptionPane.showMessageDialog(null,
+												LanguageUtil.instance().getString("parsing.error.zelnodesconf.wrong.ip", ip),
+												LanguageUtil.instance().getString("parsing.error.zelnodesconf.title"),
+												JOptionPane.ERROR_MESSAGE);
+										System.exit(1);
+									}							
+								}
+							}				
 							
 						}
 					}
