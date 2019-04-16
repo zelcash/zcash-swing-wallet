@@ -559,7 +559,7 @@ public class DashboardPanel extends WalletTabPanel {
 		String formattedCurrencyVal = "N/A";
 		if (currencyBalance != null) {
 			currencyBalance = currencyBalance * (balance.totalUnconfirmedBalance + zelNodeAmountLocked);
-			DecimalFormat currencyDF = new DecimalFormat("########0.00");
+			DecimalFormat currencyDF = new DecimalFormat("###,###,##0.00");
 			formattedCurrencyVal = currencyDF.format(currencyBalance);
 
 			// make sure the ZEL and currency are aligned
@@ -764,7 +764,7 @@ public class DashboardPanel extends WalletTabPanel {
 
 							return exchangeData;
 						}
-					}, errorReporter, 60000, true);
+					}, errorReporter, 120000, true);
 
 			this.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 18));
 			this.recreateExchangeTable();
