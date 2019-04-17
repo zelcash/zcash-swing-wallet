@@ -445,37 +445,47 @@ public class ZelCashZelNodeDialog
 	
 			    while (scanner.hasNextLine()) {
 			        String line = scanner.nextLine();
-			        if(!line.startsWith("#") && line.contains(zelNodeOutput.getSelectedItem().toString())) { 
-			        	JOptionPane.showMessageDialog(null,
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.output.duplicated"),
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
-								JOptionPane.ERROR_MESSAGE);
-						return;
+			        if(!line.startsWith("#")){
+			        	String[] zelNodeInfo;
+			        	zelNodeInfo = line.split("\\s+");
+			        	String alias = zelNodeInfo[0];
+			        	String ip = zelNodeInfo[1];
+						String zelnodekey= zelNodeInfo[2];
+						String output = zelNodeInfo[3] + " " + zelNodeInfo[4];
+						
+						if(output.equals(zelNodeOutput.getSelectedItem().toString())) { 
+				        	JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.output.duplicated"),
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+									JOptionPane.ERROR_MESSAGE);
+							return;
+				        }
+						
+			        	if(alias.toLowerCase().equals(zelNodeName.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
+				        	JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.alias.duplicated"),
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+									JOptionPane.ERROR_MESSAGE);
+							return;
+				        }
+			        	
+			        	if(ip.toLowerCase().equals(zelNodeIP.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
+				        	JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.ip.duplicated"),
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+									JOptionPane.ERROR_MESSAGE);
+							return;
+				        }
+				        
+				        if(zelnodekey.equals(zelNodeKey.getText())) { 
+				        	JOptionPane.showMessageDialog(null,
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.key.duplicated"),
+									LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+									JOptionPane.ERROR_MESSAGE);
+							return;
+				        }
 			        }
 			        
-			        if(!line.startsWith("#") && line.toLowerCase().startsWith(zelNodeName.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
-			        	JOptionPane.showMessageDialog(null,
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.alias.duplicated"),
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
-								JOptionPane.ERROR_MESSAGE);
-						return;
-			        }
-			        
-			        if(!line.startsWith("#") && line.toLowerCase().contains(zelNodeIP.getText().toLowerCase().replaceAll(" ", "").replaceAll("[\n\r\"]", ""))) { 
-			        	JOptionPane.showMessageDialog(null,
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.ip.duplicated"),
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
-								JOptionPane.ERROR_MESSAGE);
-						return;
-			        }
-			        
-			        if(!line.startsWith("#") && line.contains(zelNodeKey.getText())) { 
-			        	JOptionPane.showMessageDialog(null,
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.key.duplicated"),
-								LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
-								JOptionPane.ERROR_MESSAGE);
-						return;
-			        }
 			    }
 			}
 
