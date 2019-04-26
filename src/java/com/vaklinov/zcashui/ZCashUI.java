@@ -644,7 +644,7 @@ public class ZCashUI extends ZelCashJFrame {
 			new ZelCashUI();
 			OS_TYPE os = OSUtil.getOSType();
 
-			if ((os == OS_TYPE.WINDOWS) || (os == OS_TYPE.MAC_OS)) {
+			if ((os == OS_TYPE.WINDOWS) || (os == OS_TYPE.MAC_OS) || (os == OS_TYPE.LINUX)) {
 				possiblyCreateZelCashConfigFile();
 			}
 
