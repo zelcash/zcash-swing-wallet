@@ -193,9 +193,9 @@ public class DashboardPanel extends WalletTabPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI("https://zel.cash/"));
+                    Desktop.getDesktop().browse(new URI("https://zel.network/"));
                 } catch (Exception ex) {
-                	Log.warning("Error oppening https://zel.cash/ due to: {0} {1}",
+                	Log.warning("Error oppening https://zel.network/ due to: {0} {1}",
         					ex.getClass().getName(), ex.getMessage());
                 }
             }
