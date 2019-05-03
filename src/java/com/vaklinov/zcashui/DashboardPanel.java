@@ -116,7 +116,7 @@ public class DashboardPanel extends WalletTabPanel {
 	// Confirmation symbols
 	private static String confirmedSymbol = "\u2690";
 	private static String notConfirmedSymbol = "\u2691";
-	
+
 	private static float zelNodesAmountLocked = 0;
 
 	static {
@@ -190,16 +190,16 @@ public class DashboardPanel extends WalletTabPanel {
 				this.getClass().getClassLoader().getResource("images/ZelCash-yellow.orange-logo-small.png")));
 		logoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		logoLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI("https://zel.network/"));
-                } catch (Exception ex) {
-                	Log.warning("Error oppening https://zel.network/ due to: {0} {1}",
-        					ex.getClass().getName(), ex.getMessage());
-                }
-            }
-        });
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					Desktop.getDesktop().browse(new URI("https://zel.network/"));
+				} catch (Exception ex) {
+					Log.warning("Error oppening https://zel.network/ due to: {0} {1}", ex.getClass().getName(),
+							ex.getMessage());
+				}
+			}
+		});
 		tempPanel.add(logoLabel);
 		ZelCashJLabel zcLabel = new ZelCashJLabel(langUtil.getString("panel.dashboard.main.label"));
 		tempPanel.add(zcLabel);
@@ -213,7 +213,7 @@ public class DashboardPanel extends WalletTabPanel {
 		leftInsidePanel.setLayout(new BorderLayout(8, 8));
 		leftInsidePanel.add(walletBalanceLabel = new ZelCashJLabel(), BorderLayout.NORTH);
 		roundedLeftPanel.add(leftInsidePanel);
-		
+
 		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.add(roundedLeftPanel, BorderLayout.NORTH);
 		tempPanel.add(this.exchangeRatePanel = new ExchangeRatePanel(errorReporter), BorderLayout.CENTER);
@@ -251,40 +251,35 @@ public class DashboardPanel extends WalletTabPanel {
 		dashboard.add(installationStatusPanel, BorderLayout.SOUTH);
 
 		if (this.walletIsEncrypted == null) {
-			this.walletIsEncrypted = this.clientCaller
-					.isWalletEncrypted();
-			
-			if(this.walletIsEncrypted) {
+			this.walletIsEncrypted = this.clientCaller.isWalletEncrypted();
+
+			if (this.walletIsEncrypted) {
 				boolean passwordOk = false;
 				int retrys = 0;
-				while(!passwordOk && retrys<3) {
+				while (!passwordOk && retrys < 3) {
 					++retrys;
 					PasswordDialog pd = new PasswordDialog(this.parentFrame);
 					pd.setVisible(true);
 
-					if (!pd.isOKPressed())
-					{
+					if (!pd.isOKPressed()) {
 						Log.info("User pressed x or cancel on wallet startup - Wallet will be closed.");
 						System.exit(1);
 					}
 					try {
 						this.clientCaller.unlockWallet(pd.getPassword());
 						passwordOk = true;
-					}
-					catch (Exception e) {
-						Log.error("Error unlocking wallet:"+e.getMessage());
-						JOptionPane.showMessageDialog(
-								this, 
+					} catch (Exception e) {
+						Log.error("Error unlocking wallet:" + e.getMessage());
+						JOptionPane.showMessageDialog(this,
 								langUtil.getString("encryption.error.unlocking.message", e.getMessage()),
-								langUtil.getString("encryption.error.unlocking.title"),
-								JOptionPane.ERROR_MESSAGE);
+								langUtil.getString("encryption.error.unlocking.title"), JOptionPane.ERROR_MESSAGE);
 					}
 				}
-				if(!passwordOk) {
+				if (!passwordOk) {
 					Log.info("Failed to enter correct password for third time, wallet will close.");
 					System.exit(1);
 				}
-				
+
 			}
 		}
 
@@ -347,7 +342,7 @@ public class DashboardPanel extends WalletTabPanel {
 				}, this.errorReporter, 20000, true);
 		this.threads.add(this.netInfoGatheringThread);
 	}
-	
+
 	public void setDetailsPanelForSelection(TransactionsDetailPanel detailsPanel) {
 		this.detailsPabelForSelection = detailsPanel;
 	}
@@ -361,7 +356,8 @@ public class DashboardPanel extends WalletTabPanel {
 		return this.transactionGatheringThread;
 	}
 
-	private void updateDaemonStatusLabel(DaemonInfo daemonInfo) throws IOException, InterruptedException, WalletCallException {
+	private void updateDaemonStatusLabel(DaemonInfo daemonInfo)
+			throws IOException, InterruptedException, WalletCallException {
 		// It is possible there has been no gathering initially
 		if (daemonInfo == null) {
 			return;
@@ -408,7 +404,7 @@ public class DashboardPanel extends WalletTabPanel {
 					+ langUtil.getString("panel.dashboard.deamon.status.encrypted");
 
 			walletEncryption = langUtil.getString("panel.dashboard.deamon.status.walletencrypted.text", encryptionText);
-			
+
 		}
 
 		String text = langUtil.getString("panel.dashboard.deamon.status.text", daemonStatus, runtimeInfo,
@@ -419,7 +415,8 @@ public class DashboardPanel extends WalletTabPanel {
 
 	}
 
-	private void updateNetworkAndBlockchainLabel(NetworkAndBlockchainInfo info) throws IOException, InterruptedException {
+	private void updateNetworkAndBlockchainLabel(NetworkAndBlockchainInfo info)
+			throws IOException, InterruptedException {
 		// It is possible there has been no gathering initially
 		if (info == null) {
 			return;
@@ -527,7 +524,8 @@ public class DashboardPanel extends WalletTabPanel {
 		}
 	}
 
-	private void updateWalletStatusLabel(WalletBalance balance ) throws WalletCallException, IOException, InterruptedException {
+	private void updateWalletStatusLabel(WalletBalance balance)
+			throws WalletCallException, IOException, InterruptedException {
 
 		// It is possible there has been no gathering initially
 		if (balance == null) {
@@ -544,16 +542,14 @@ public class DashboardPanel extends WalletTabPanel {
 
 		String transparentUCBalance = df.format(balance.transparentUnconfirmedBalance);
 		String privateUCBalance = df.format(balance.privateUnconfirmedBalance);
-		
+
 		String totalUCBalance = df.format(balance.totalUnconfirmedBalance + zelNodeAmountLocked);
-		String zelNodesBalance= df.format(zelNodeAmountLocked);
+		String zelNodesBalance = df.format(zelNodeAmountLocked);
 
 		String color1 = transparentBalance.equals(transparentUCBalance) ? "" : "color:#cc3300;";
 		String color2 = privateBalance.equals(privateUCBalance) ? "" : "color:#cc3300;";
 		String color3 = totalBalance.equals(totalUCBalance) ? "" : "color:#cc3300;";
 
-
-		
 		Double currencyBalance = (this.exchangeRatePanel != null) ? this.exchangeRatePanel.getCurrencyPrice() : null;
 
 		String formattedCurrencyVal = "N/A";
@@ -567,9 +563,10 @@ public class DashboardPanel extends WalletTabPanel {
 			while (diff-- > 0) {
 				formattedCurrencyVal += "&nbsp;";
 			}
-			
+
 		}
-		String currencyBalanceStr = langUtil.getString("panel.dashboard.marketcap.currency.balance.string", color3, formattedCurrencyVal, ZelCashUI.currency);
+		String currencyBalanceStr = langUtil.getString("panel.dashboard.marketcap.currency.balance.string", color3,
+				formattedCurrencyVal, ZelCashUI.currency);
 
 		String text = langUtil.getString("panel.dashboard.marketcap.usd.balance.text", color1, transparentUCBalance,
 				color2, privateUCBalance, zelNodesBalance, color3, totalUCBalance, currencyBalanceStr);
@@ -594,63 +591,61 @@ public class DashboardPanel extends WalletTabPanel {
 			this.backupTracker.handleWalletBalanceUpdate(balance.totalBalance);
 		}
 	}
-	
+
 	private void getZelNodesAmountLocked() {
 		Float zelNodesAmountLockedAux = Float.valueOf("0");
 		try {
 			String blockchainDir = OSUtil.getBlockchainDirectory();
 			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
-			if (zelnodeConf.exists())
-			{
-				BufferedReader br = new BufferedReader(new FileReader(zelnodeConf)); 
-				String st; 
+			if (zelnodeConf.exists()) {
+				BufferedReader br = new BufferedReader(new FileReader(zelnodeConf));
+				String st;
 				String emptyLine;
 				while ((st = br.readLine()) != null) {
-					emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
-					if(st.startsWith("#") || emptyLine.equals("")) {
+					emptyLine = st.replaceAll(" ", "")
+							.replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");
+					if (st.startsWith("#") || emptyLine.equals("")) {
 						continue;
-					}
-					else {
+					} else {
 						String[] zelNodeInfo = st.split("\\s+");
 						JsonObject txinfo = clientCaller.getTransactionInfo(zelNodeInfo[3]);
 						JsonArray details = txinfo.get("details").asArray();
 						String vout;
 						String category;
-						String detailAmount="0"; 
+						String detailAmount = "0";
 						boolean addressFound = false;
-						for(int i=0; i< details.size(); ++i) {
+						for (int i = 0; i < details.size(); ++i) {
 							JsonObject obj = details.get(i).asObject();
 							vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
 							category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
-							if(vout.equals(zelNodeInfo[4]) && "send".equals(category)) {
+							if (vout.equals(zelNodeInfo[4]) && "send".equals(category)) {
 								detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "").substring(1);
-								zelNodesAmountLockedAux+=Float.parseFloat(detailAmount);
+								zelNodesAmountLockedAux += Float.parseFloat(detailAmount);
 								addressFound = true;
 								break;
 							}
 						}
-						if(!addressFound) {
-							for(int i=0; i< details.size(); ++i) {
+						if (!addressFound) {
+							for (int i = 0; i < details.size(); ++i) {
 								JsonObject obj = details.get(i).asObject();
 								vout = obj.get("vout").toString().replaceAll("[\n\r\"]", "");
 								category = obj.get("category").toString().replaceAll("[\n\r\"]", "");
 
-								if(vout.equals(zelNodeInfo[4]) && "receive".equals(category)) {
+								if (vout.equals(zelNodeInfo[4]) && "receive".equals(category)) {
 									detailAmount = obj.get("amount").toString().replaceAll("[\n\r\"]", "");
-									zelNodesAmountLockedAux+=Float.parseFloat(detailAmount);
+									zelNodesAmountLockedAux += Float.parseFloat(detailAmount);
 									break;
 								}
 							}
 						}
-						
+
 					}
 				}
 			}
+		} catch (WalletCallException | IOException | InterruptedException e) {
+			Log.error("Error on getZelNodesAmountLocked:" + e.getMessage());
 		}
-		catch (WalletCallException | IOException | InterruptedException e) {
-			Log.error("Error on getZelNodesAmountLocked:"+e.getMessage());
-		}
-		zelNodesAmountLocked =  zelNodesAmountLockedAux;
+		zelNodesAmountLocked = zelNodesAmountLockedAux;
 	}
 
 	private String[][] getTransactionsDataFromWallet() throws WalletCallException, IOException, InterruptedException {
@@ -747,12 +742,12 @@ public class DashboardPanel extends WalletTabPanel {
 		private ZelCashJScrollPane tablePane;
 
 		private Double lastCurrencyPrice;
-		
+
 		private String zelRatesInfoPosition;
 		private String lastLoadedCurrency;
 
 		public ExchangeRatePanel(StatusUpdateErrorReporter errorReporter) {
-			//obtain currency
+			// obtain currency
 			// Start the thread to gather the exchange data
 			this.zelcashDataGatheringThread = new DataGatheringThread<JsonObject>(
 					new DataGatheringThread.DataGatherer<JsonObject>() {
@@ -764,7 +759,7 @@ public class DashboardPanel extends WalletTabPanel {
 
 							return exchangeData;
 						}
-					}, errorReporter, 120000, true);
+					}, errorReporter, 300000, true);
 
 			this.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 18));
 			this.recreateExchangeTable();
@@ -805,12 +800,11 @@ public class DashboardPanel extends WalletTabPanel {
 		private Object[][] getExchangeDataInTableForm() {
 			JsonObject data = this.zelcashDataGatheringThread.getLastData();
 			JsonObject rates = new JsonObject();
-			JsonObject cmc = new JsonObject();	
-			if (data == null)
-			{
+			JsonObject cmc = new JsonObject();
+			if (data == null) {
 				data = new JsonObject();
 				rates = new JsonObject();
-				cmc = new JsonObject(); 
+				cmc = new JsonObject();
 			} else {
 				if (data.get("rates") == null) {
 					rates = new JsonObject();
@@ -825,39 +819,39 @@ public class DashboardPanel extends WalletTabPanel {
 				}
 			}
 
-			//JsonObject rates = data.getJSONObject("rates");
-			//Log.info(rates.toString());
+			// JsonObject rates = data.getJSONObject("rates");
+			// Log.info(rates.toString());
 			Double price = rates.getDouble("rate", Double.MIN_VALUE);
-			if(price == Double.MIN_VALUE) {
+			if (price == Double.MIN_VALUE) {
 				this.lastCurrencyPrice = null;
-			}
-			else {
-				try
-				{
+			} else {
+				try {
 					String priceX = String.format("%.3f", price);
 					Double priceD = Double.parseDouble(priceX);
 					price = priceD;
 					this.lastCurrencyPrice = priceD;
-				} catch (NumberFormatException nfe) { /* Do nothing */ }
+				} catch (NumberFormatException nfe) {
+					/* Do nothing */ }
 			}
-			
+
 			String usdMarketCap = cmc.getString("market_cap_usd", "N/A");
-			try
-			{
+			try {
 				Double usdMarketCapD = Double.parseDouble(usdMarketCap) / 1000000;
 				usdMarketCap = new DecimalFormat("########0.000").format(usdMarketCapD) + " million";
-			} catch (NumberFormatException nfe) { /* Do nothing */ }
-			
+			} catch (NumberFormatException nfe) {
+				/* Do nothing */ }
+
 			// Query the object for individual fields
-			String currencyMessage = langUtil.getString("panel.dashboard.marketcap.price.currency") + ZelCashUI.currency + ":";
-			String tableData[][] = new String[][]
-			{
-				{ currencyMessage,     lastCurrencyPrice == null ? "N/A" : Double.toString(price)},
-				{ langUtil.getString("panel.dashboard.marketcap.price.btc"),     cmc.getString("price_btc",          "N/A") },
-				{ langUtil.getString("panel.dashboard.marketcap.capitalisation"), usdMarketCap },
-				{ langUtil.getString("panel.dashboard.marketcap.daily.change"), cmc.getString("percent_change_24h", "N/A") + "%"},
-				{ langUtil.getString("panel.dashboard.marketcap.weekly.change"), cmc.getString("percent_change_7d", "N/A") + "%"},
-			};
+			String currencyMessage = langUtil.getString("panel.dashboard.marketcap.price.currency") + ZelCashUI.currency
+					+ ":";
+			String tableData[][] = new String[][] {
+					{ currencyMessage, lastCurrencyPrice == null ? "N/A" : Double.toString(price) },
+					{ langUtil.getString("panel.dashboard.marketcap.price.btc"), cmc.getString("price_btc", "N/A") },
+					{ langUtil.getString("panel.dashboard.marketcap.capitalisation"), usdMarketCap },
+					{ langUtil.getString("panel.dashboard.marketcap.daily.change"),
+							cmc.getString("percent_change_24h", "N/A") + "%" },
+					{ langUtil.getString("panel.dashboard.marketcap.weekly.change"),
+							cmc.getString("percent_change_7d", "N/A") + "%" }, };
 
 			return tableData;
 		}
@@ -867,13 +861,11 @@ public class DashboardPanel extends WalletTabPanel {
 		}
 
 		// Obtains the ZEL exchange data as a JsonObject
-		private JsonObject getExchangeDataFromRemoteService()
-		{
+		private JsonObject getExchangeDataFromRemoteService() {
 			JsonObject data = new JsonObject();
 			String currency = ZelCashUI.currency;
-			
-			try
-			{
+
+			try {
 				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zelcash");
 				HttpURLConnection huc = (HttpURLConnection) u.openConnection();
 				huc.setConnectTimeout(2019);
@@ -881,20 +873,17 @@ public class DashboardPanel extends WalletTabPanel {
 
 				if (responseCode != HttpURLConnection.HTTP_OK) {
 					Log.warning("Could not connect to https://api.coinmarketcap.com/v1/ticker/zelcash");
-				}
-				else {
+				} else {
 					Reader r = new InputStreamReader(u.openStream(), "UTF-8");
 					JsonArray ar = Json.parse(r).asArray();
 					data.add("cmc", ar.get(0).asObject());
 				}
-			} catch (Exception ioe)
-			{
-				Log.warning("Could not obtain ZEL exchange information from coinmarketcap.com due to: {0} {1}", 
-						    ioe.getClass().getName(), ioe.getMessage());
+			} catch (Exception ioe) {
+				Log.warning("Could not obtain ZEL exchange information from coinmarketcap.com due to: {0} {1}",
+						ioe.getClass().getName(), ioe.getMessage());
 			}
 
-			try
-			{
+			try {
 				URL u = new URL("https://rates.zel.cash");
 				HttpURLConnection huc = (HttpURLConnection) u.openConnection();
 				huc.setConnectTimeout(2019);
@@ -905,33 +894,31 @@ public class DashboardPanel extends WalletTabPanel {
 				} else {
 					Reader r = new InputStreamReader(u.openStream(), "UTF-8");
 					JsonArray ar = Json.parse(r).asArray();
-					Log.info("Looking in https://rates.zel.cash for currency: "+currency);
-					if(this.zelRatesInfoPosition != null && currency.equals(this.lastLoadedCurrency)) {
+					Log.info("Looking in https://rates.zel.cash for currency: " + currency);
+					if (this.zelRatesInfoPosition != null && currency.equals(this.lastLoadedCurrency)) {
 						JsonObject obj = ar.get(Integer.parseInt(this.zelRatesInfoPosition)).asObject();
 						String id = obj.get("code").toString().replaceAll("\"", "");
-						data.add("rates",obj);
-					}
-					else {
+						data.add("rates", obj);
+					} else {
 						this.lastLoadedCurrency = currency;
 						for (int i = 0; i < ar.size(); ++i) {
 							JsonObject obj = ar.get(i).asObject();
 							String id = obj.get("code").toString().replaceAll("\"", "");
 							if (id.equals(currency)) {
-								this.zelRatesInfoPosition= Integer.toString(i); 
-								data.add("rates",obj);
+								this.zelRatesInfoPosition = Integer.toString(i);
+								data.add("rates", obj);
 								break;
 							}
-							if(i+1 == ar.size()) {
+							if (i + 1 == ar.size()) {
 								Log.warning("Could not find the currency in https://rates.zel.cash");
 							}
 						}
 					}
 				}
-				
-			} catch (Exception ioe)
-			{
-				Log.warning("Could not obtain ZEL exchange information from rates.zel.cash due to: {0} {1}", 
-						    ioe.getClass().getName(), ioe.getMessage());
+
+			} catch (Exception ioe) {
+				Log.warning("Could not obtain ZEL exchange information from rates.zel.cash due to: {0} {1}",
+						ioe.getClass().getName(), ioe.getMessage());
 			}
 			Log.info(data.toString());
 			return data;
@@ -946,7 +933,8 @@ public class DashboardPanel extends WalletTabPanel {
 		public LatestTransactionsPanel() throws InterruptedException, IOException, WalletCallException {
 			final ZelCashJPanel content = new ZelCashJPanel();
 			content.setLayout(new BorderLayout(3, 3));
-			content.add(new ZelCashJLabel(langUtil.getString("panel.dashboard.transactions.label")), BorderLayout.NORTH);
+			content.add(new ZelCashJLabel(langUtil.getString("panel.dashboard.transactions.label")),
+					BorderLayout.NORTH);
 			transactionList = new LatestTransactionsList();
 			ZelCashJPanel tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 			tempPanel.add(transactionList, BorderLayout.NORTH);
@@ -1083,9 +1071,9 @@ public class DashboardPanel extends WalletTabPanel {
 				this.add(new ZelCashJLabel("<html>&nbsp;</html>"));
 
 				// Set the transaction information
-				ZelCashJLabel transacitonInfo = new ZelCashJLabel(langUtil.getString("panel.dashboard.transactions.info",
-						transactionFields[0], transactionFields[1], transactionFields[2], transactionFields[3],
-						transactionFields[4], destinationAddress));
+				ZelCashJLabel transacitonInfo = new ZelCashJLabel(langUtil.getString(
+						"panel.dashboard.transactions.info", transactionFields[0], transactionFields[1],
+						transactionFields[2], transactionFields[3], transactionFields[4], destinationAddress));
 				this.add(transacitonInfo);
 			}
 		}
