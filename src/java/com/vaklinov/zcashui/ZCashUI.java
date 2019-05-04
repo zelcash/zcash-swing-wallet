@@ -106,6 +106,8 @@ public class ZCashUI extends ZelCashJFrame {
 	private ZelCashJMenuItem menuItemEncrypt;
 	private ZelCashJMenuItem menuItemChangePassword;
 	private ZelCashJMenuItem menuItemBackup;
+	private ZelCashJMenuItem menuItemReindex;
+	private ZelCashJMenuItem menuItemRescan;
 	private ZelCashJMenuItem menuItemExportKeys;
 	private ZelCashJMenuItem menuItemImportKeys;
 	private ZelCashJMenuItem menuItemShowPrivateKey;
@@ -232,6 +234,10 @@ public class ZCashUI extends ZelCashJFrame {
 		wallet.add(menuItemImportOnePrivateKey = new ZelCashJMenuItem(
 				langUtil.getString("menu.label.import.one.private.key"), KeyEvent.VK_N));
 		menuItemImportOnePrivateKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelaratorKeyMask));
+		wallet.add(menuItemReindex = new ZelCashJMenuItem(langUtil.getString("menu.label.reindex"), KeyEvent.VK_1));
+		menuItemReindex.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, accelaratorKeyMask));
+		wallet.add(menuItemRescan = new ZelCashJMenuItem(langUtil.getString("menu.label.rescan"), KeyEvent.VK_2));
+		menuItemRescan.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, accelaratorKeyMask));
 		// wallet.add(menuItemExportToArizen = new
 		// ZelCashJMenuItem(langUtil.getString("menu.label.export.to.arizen"),
 		// KeyEvent.VK_A));
@@ -415,6 +421,21 @@ public class ZCashUI extends ZelCashJFrame {
 			}
 		});
 
+
+		menuItemReindex.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ZCashUI.this.walletOps.reindexWallet();
+			}
+		});
+		
+		menuItemRescan.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ZCashUI.this.walletOps.rescanWallet();
+			}
+		});
+		
 		menuItemOwnIdentity.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -571,7 +592,12 @@ public class ZCashUI extends ZelCashJFrame {
 
 	}
 	
-	public void restartDaemon(boolean reindex) {
+	/**
+	 * if both are true only reindex will be executed.
+	 * @param reindex
+	 * @param rescan
+	 */
+	public void restartDaemon(boolean reindex, boolean rescan) {
 		Log.info("restartDaemon ...");
 
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -597,7 +623,7 @@ public class ZCashUI extends ZelCashJFrame {
 				}
 				Thread.sleep(ZCashUI.THREAD_WAIT_1_SECOND);
 			}
-			this.clientCaller.startDaemon(reindex);
+			this.clientCaller.startDaemon(reindex, rescan);
 			for (int i = 0; i < 10; ++i) {
 				Log.info("Check if Daemon is running");
 				initialInstallationObserver = new ZCashInstallationObserver(OSUtil.getProgramDirectory());
