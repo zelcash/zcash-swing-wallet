@@ -197,7 +197,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 					File zelnodecache = new File(blockchainDir + File.separator + "zelnodecache.dat");
 					if(zelnodecache.exists()) {
 						zelnodecache.delete();
-						ZelNodesPanel.this.parentFrame.restartDaemon(false);
+						ZelNodesPanel.this.parentFrame.restartDaemon(false, false);
 						try {
 							restartUI();
 						} catch (IOException | InterruptedException | WalletCallException e1) {
@@ -555,7 +555,7 @@ public class ZelNodesPanel extends WalletTabPanel {
 									LanguageUtil.instance().getString("wallet.restart.message"),
 									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 									JOptionPane.INFORMATION_MESSAGE);
-							ZelNodesPanel.this.parentFrame.restartDaemon(false);
+							ZelNodesPanel.this.parentFrame.restartDaemon(false, false);
 							try {
 								restartUI();
 							} catch (IOException | InterruptedException | WalletCallException e1) {
