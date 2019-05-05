@@ -578,7 +578,7 @@ public class ZelCashZelNodeDialog
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
 						this.setVisible(false);
-						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true);
+						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(true, false);
 					}
 				}
 				else {
@@ -592,7 +592,7 @@ public class ZelCashZelNodeDialog
 								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
 								JOptionPane.INFORMATION_MESSAGE);
 						this.setVisible(false);
-						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false);
+						ZelCashZelNodeDialog.this.parentFrame.restartDaemon(false, false);
 					} 
 				}
 			}
