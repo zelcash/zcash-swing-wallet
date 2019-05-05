@@ -99,6 +99,7 @@ public class SendCashPanel
 	
 	private ZelCashJCheckBox  sendChangeBackToSourceAddress = null;
 	
+	private ZelCashJButton    maxAmountButton         = null;
 	private ZelCashJButton    sendButton              = null;
 	
 	private ZelCashJPanel       operationStatusPanel        = null;
@@ -181,6 +182,7 @@ public class SendCashPanel
 		tempPanel.add(destinationAmountField = new ZelCashJTextField(13));
 		destinationAmountField.setHorizontalAlignment(SwingConstants.RIGHT);
 		tempPanel.add(new ZelCashJLabel(" ZEL    "));
+		tempPanel.add(maxAmountButton = new ZelCashJButton(langUtil.getString("send.cash.panel.button.maxamount")));
 		amountPanel.add(tempPanel, BorderLayout.SOUTH);
 
 		ZelCashJPanel feePanel = new ZelCashJPanel(new BorderLayout());
@@ -251,6 +253,34 @@ public class SendCashPanel
 		operationStatusPanel.add(dividerLabel);
 		
 		// Wire the buttons
+		maxAmountButton.addActionListener(new ActionListener() 
+		{	
+			public void actionPerformed(ActionEvent e) 
+			{
+				try
+				{
+				  String balance = lastAddressBalanceData[balanceAddressCombo.getSelectedIndex()][0];
+				  String fee = transactionFeeField.getText();
+				  String max = new DecimalFormat("########0.00######").format(Double.parseDouble(balance) - Double.parseDouble(fee));
+				  destinationAmountField.setText(max);
+				} catch (Exception ex)
+				{
+					Log.error("Unexpected error: ", ex);
+					
+					String errMessage = "";
+					if (ex instanceof WalletCallException)
+					{
+						errMessage = ((WalletCallException)ex).getMessage().replace(",", ",\n");
+					}
+					
+					JOptionPane.showMessageDialog(
+							SendCashPanel.this.getRootPane().getParent(), 
+							langUtil.getString("send.cash.panel.option.pane.error.text",errMessage),
+							langUtil.getString("send.cash.panel.option.pane.error.title"),
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		sendButton.addActionListener(new ActionListener() 
 		{	
 			public void actionPerformed(ActionEvent e) 
