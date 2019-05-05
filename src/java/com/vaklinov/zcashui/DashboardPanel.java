@@ -455,7 +455,7 @@ public class DashboardPanel extends WalletTabPanel {
 		}
 
 		String text = langUtil.getString("panel.dashboard.network.blockchain.label", percentage,
-				info.lastBlockDate.toLocaleString(), info.numConnections);
+				info.lastBlockDate.toLocaleString(), info.numConnections, info.blockNumber);
 
 		this.networkAndBlockchainLabel.setText(text);
 
