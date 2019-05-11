@@ -161,6 +161,8 @@ public class DashboardPanel extends WalletTabPanel {
 
 	private DataGatheringThread<String[][]> transactionGatheringThread = null;
 	private LanguageUtil langUtil;
+	
+	private LatestTransactionsPanel latestTransactionsPanel = null;
 
 	public DashboardPanel(ZelCashJFrame parentFrame, ZCashInstallationObserver installationObserver,
 			ZCashClientCaller clientCaller, StatusUpdateErrorReporter errorReporter, BackupTracker backupTracker,
@@ -222,7 +224,7 @@ public class DashboardPanel extends WalletTabPanel {
 		// List of transactions
 		tempPanel = new ZelCashJPanel(new BorderLayout(0, 0));
 		tempPanel.setBorder(BorderFactory.createEmptyBorder(0, 14, 8, 4));
-		tempPanel.add(new LatestTransactionsPanel(), BorderLayout.CENTER);
+		tempPanel.add(latestTransactionsPanel = new LatestTransactionsPanel(), BorderLayout.CENTER);
 		dashboard.add(tempPanel, BorderLayout.CENTER);
 
 		// Lower panel with installation status
@@ -319,6 +321,7 @@ public class DashboardPanel extends WalletTabPanel {
 					public String[][] gatherData() throws Exception {
 						long start = System.currentTimeMillis();
 						String[][] data = DashboardPanel.this.getTransactionsDataFromWallet();
+						DashboardPanel.this.latestTransactionsPanel.transactions = data;
 						long end = System.currentTimeMillis();
 						Log.info("Gathering of dashboard wallet transactions table data done in " + (end - start)
 								+ "ms.");
@@ -947,15 +950,14 @@ public class DashboardPanel extends WalletTabPanel {
 			ActionListener al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					LatestTransactionsPanel.this.transactions = transactionGatheringThread.getLastData();
 					if (LatestTransactionsPanel.this.transactions != null) {
 						transactionList.updateTransactions(LatestTransactionsPanel.this.transactions);
 					}
 				}
 			};
 
-			Timer latestTransactionsTimer = new Timer(8000, al);
-			latestTransactionsTimer.setInitialDelay(8000);
+			Timer latestTransactionsTimer = new Timer(20000, al);
+			latestTransactionsTimer.setInitialDelay(20000);
 			latestTransactionsTimer.start();
 
 			this.setLayout(new GridLayout(1, 1));
