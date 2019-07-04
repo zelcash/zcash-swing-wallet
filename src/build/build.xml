@@ -119,7 +119,7 @@
 
 	<target name="ubuntuPackage" depends="jar,copyothers">
 		<mkdir dir="${ubuntu.package.dir}" />
-		<deb destfile="${ubuntu.package.dir}/zelcashSwingWallet-7.4.0.deb" control="${deb.dir}/control" verbose="true">
+		<deb destfile="${ubuntu.package.dir}/zelcashSwingWallet-7.5.0.deb" control="${deb.dir}/control" verbose="true">
 
 			<data src="${jar.dir}/${ant.project.name}.jar" type="file">
 				<mapper type="perm" filemode="755" prefix="/usr/lib/zelcash-gui-wallet" />
