@@ -108,6 +108,7 @@ public class ZCashUI extends ZelCashJFrame {
 	private ZelCashJMenuItem menuItemBackup;
 	private ZelCashJMenuItem menuItemReindex;
 	private ZelCashJMenuItem menuItemRescan;
+	private ZelCashJMenuItem menuItemSproutToSapling;
 	private ZelCashJMenuItem menuItemExportKeys;
 	private ZelCashJMenuItem menuItemImportKeys;
 	private ZelCashJMenuItem menuItemShowPrivateKey;
@@ -194,7 +195,7 @@ public class ZCashUI extends ZelCashJFrame {
 		contentPane.add(tabs);
 
 		this.walletOps = new WalletOperations(this, tabs, dashboard, addresses, sendPanel, installationObserver,
-				clientCaller, errorReporter, backupTracker);
+				clientCaller, errorReporter, backupTracker, labelStorage);
 
 		// Build menu
 		ZelCashJMenuBar mb = new ZelCashJMenuBar();
@@ -238,6 +239,8 @@ public class ZCashUI extends ZelCashJFrame {
 		menuItemReindex.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, accelaratorKeyMask));
 		wallet.add(menuItemRescan = new ZelCashJMenuItem(langUtil.getString("menu.label.rescan"), KeyEvent.VK_2));
 		menuItemRescan.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, accelaratorKeyMask));
+		wallet.add(menuItemSproutToSapling = new ZelCashJMenuItem(langUtil.getString("menu.label.sprouttosapling"), KeyEvent.VK_3));
+		menuItemSproutToSapling.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, accelaratorKeyMask));
 		// wallet.add(menuItemExportToArizen = new
 		// ZelCashJMenuItem(langUtil.getString("menu.label.export.to.arizen"),
 		// KeyEvent.VK_A));
@@ -433,6 +436,13 @@ public class ZCashUI extends ZelCashJFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ZCashUI.this.walletOps.rescanWallet();
+			}
+		});
+		
+		menuItemSproutToSapling.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ZCashUI.this.walletOps.sproutToSaplingMigrationTool();
 			}
 		});
 		
