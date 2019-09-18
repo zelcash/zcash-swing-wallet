@@ -41,8 +41,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -63,6 +65,7 @@ import com.cabecinha84.zelcashui.ZelCashJFrame;
 import com.cabecinha84.zelcashui.ZelCashJLabel;
 import com.cabecinha84.zelcashui.ZelCashJProgressBar;
 import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
+import com.cabecinha84.zelcashui.ZelCashSproutToSaplingDialog;
 import com.cabecinha84.zelcashui.ZelCashZelNodeDialog;
 import com.cabecinha84.zelcashui.ZelNodesPanel;
 import com.eclipsesource.json.JsonObject;
@@ -86,6 +89,7 @@ public class WalletOperations
 	private DashboardPanel dashboard;
 	private SendCashPanel  sendCash;
 	private AddressesPanel addresses;
+	private LabelStorage labelStorage;
 	
 	private ZCashInstallationObserver installationObserver;
 	private ZCashClientCaller         clientCaller;
@@ -104,7 +108,8 @@ public class WalletOperations
 			                ZCashInstallationObserver installationObserver, 
 			                ZCashClientCaller clientCaller,
 			                StatusUpdateErrorReporter errorReporter,
-			                BackupTracker             backupTracker) 
+			                BackupTracker             backupTracker,
+			                LabelStorage labelStorage) 
         throws IOException, InterruptedException, WalletCallException 
 	{
 		this.parent    = parent;
@@ -119,6 +124,7 @@ public class WalletOperations
 		
 		this.backupTracker = backupTracker;
 		this.langUtil = LanguageUtil.instance();
+		this.labelStorage = labelStorage;
 	}
 
 	
@@ -498,6 +504,52 @@ public class WalletOperations
 				System.exit(1);
 			}
 	    }
+	}
+	
+	public void sproutToSaplingMigrationTool() {
+		try {
+			String[] zAddresses = this.clientCaller.getWalletZAddresses();
+			List<String> listOfSapling = new ArrayList<String>();
+			List<String> listOfSaplingWithLabels = new ArrayList<String>();
+			if(zAddresses.length == 0) {
+				JOptionPane.showMessageDialog(
+						this.parent, 
+						langUtil.getString("wallet.operations.dialog.sprouttosapling.nosapling.message"),
+						langUtil.getString("wallet.operations.dialog.sprouttosapling.nosapling.title"),
+						JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			String label;
+			String address;
+			listOfSapling.add(langUtil.getString("dialog.zelcashsprouttosaplingdialog.select"));
+			listOfSaplingWithLabels.add(langUtil.getString("dialog.zelcashsprouttosaplingdialog.select"));
+			for(int i = 0; i<zAddresses.length; ++i) {
+				if(zAddresses[i].startsWith("za")) {
+					listOfSapling.add(zAddresses[i]);
+					label = this.labelStorage.getLabel(zAddresses[i]);
+					address = zAddresses[i];
+					if ((label != null) && (label.length() > 0))
+					{
+						address = label + " - " + address;
+					}
+					listOfSaplingWithLabels.add(address);
+				}
+			}
+			if(zAddresses.length == 0) {
+				JOptionPane.showMessageDialog(
+						this.parent, 
+						langUtil.getString("wallet.operations.dialog.sprouttosapling.nosapling.message"),
+						langUtil.getString("wallet.operations.dialog.sprouttosapling.nosapling.title"),
+						JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+
+			ZelCashSproutToSaplingDialog ad = new ZelCashSproutToSaplingDialog(this.parent, clientCaller, installationObserver, listOfSapling, listOfSaplingWithLabels);
+			ad.setVisible(true);
+
+		} catch (HeadlessException | WalletCallException | IOException | InterruptedException e1) {
+			this.errorReporter.reportError(e1, false);
+		}
 	}
 	
 	public void importWalletPrivateKeys()

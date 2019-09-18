@@ -456,9 +456,16 @@ public class DashboardPanel extends WalletTabPanel {
 			// TODO: write log that we fix minimum date! - this condition should not occur
 			info.lastBlockDate = startDate;
 		}
+		
+		String migrationStatus = "";
+		if("TRUE".equals(info.sproutToSaplingEnabled)) {
+			migrationStatus = langUtil.getString("zelcashsprouttosapling.enabled");	
+		}
+		else {
+			migrationStatus = langUtil.getString("zelcashsprouttosapling.disabled");
+		}
 
-		String text = langUtil.getString("panel.dashboard.network.blockchain.label", percentage,
-				info.lastBlockDate.toLocaleString(), info.numConnections, info.blockNumber);
+		String text = langUtil.getString("panel.dashboard.network.blockchain.label", percentage, info.lastBlockDate.toLocaleString(), info.numConnections, info.blockNumber, migrationStatus);
 
 		this.networkAndBlockchainLabel.setText(text);
 
