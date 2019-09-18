@@ -988,8 +988,6 @@ public class ZCashUI extends ZelCashJFrame {
 			configOut.println("txindex=1");
 			configOut.println("logtimestamps=1");
 			configOut.println("maxconnections=256");
-			configOut.println("experimentalfeatures=1");
-			configOut.println("developerencryptwallet=1");
 			configOut.println("addnode=node.zel.cash");
 			configOut.println("addnode=explorer.zel.cash");
 			configOut.println("addnode=explorer2.zel.cash");
