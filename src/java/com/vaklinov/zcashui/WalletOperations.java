@@ -68,6 +68,7 @@ import com.cabecinha84.zelcashui.ZelCashJTabbedPane;
 import com.cabecinha84.zelcashui.ZelCashSproutToSaplingDialog;
 import com.cabecinha84.zelcashui.ZelCashZelNodeDialog;
 import com.cabecinha84.zelcashui.ZelNodesPanel;
+import com.cabecinha84.zelcashui.ZelcashRescanDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.vaklinov.zcashui.ZCashClientCaller.WalletCallException;
@@ -471,39 +472,46 @@ public class WalletOperations
 	}
 	
 	public void rescanWallet() {
-		Object[] options = 
-        	{ 
-        		langUtil.getString("send.cash.panel.option.pane.confirm.operation.button.yes"),
-        		langUtil.getString("send.cash.panel.option.pane.confirm.operation.button.no")
-        	};
-		int option;
-		option = JOptionPane.showOptionDialog(
-				this.parent, 
-				langUtil.getString("wallet.operations.dialog.rescan.message"),
-                langUtil.getString("wallet.operations.dialog.rescan.title"),
-			    JOptionPane.DEFAULT_OPTION, 
-			    JOptionPane.QUESTION_MESSAGE,
-			    null, 
-			    options, 
-			    options[1]);
-		
-		if (option == 0)
-	    {
-			this.parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			parent.restartDaemon(false, true);
-			try {
-				restartAfterRescan();
-			} catch (IOException | InterruptedException | InvocationTargetException | WalletCallException e1) {
-				Log.error("Error restarting the UI, the wallet will be closed. Error:"+e1.getMessage());
-				JOptionPane.showMessageDialog(null,
-						LanguageUtil.instance().getString("main.frame.option.pane.wallet.critical.error.2.text",
-								e1.getMessage()),
-						LanguageUtil.instance()
-								.getString("main.frame.option.pane.wallet.critical.error.2.title"),
-						JOptionPane.ERROR_MESSAGE);
-				System.exit(1);
+		try
+		{
+			if (this.clientCaller.isWalletEncrypted())
+			{
+				boolean passwordOk = false;
+				int retrys = 0;
+				while(!passwordOk && retrys<3) {
+					++retrys;
+					PasswordDialog pd = new PasswordDialog((ZelCashJFrame)(this.parent));
+					pd.setVisible(true);
+
+					if (!pd.isOKPressed())
+					{
+						return;
+					}
+					try {
+						this.clientCaller.unlockWallet(pd.getPassword());
+						passwordOk = true;
+					}
+					catch (Exception ex) {
+						Log.error("Error unlocking wallet:"+ex.getMessage());
+						JOptionPane.showMessageDialog(
+								this.parent, 
+								langUtil.getString("encryption.error.unlocking.message", ex.getMessage()),
+								langUtil.getString("encryption.error.unlocking.title"),
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				if(!passwordOk) {
+					Log.info("Failed to enter correct password for third time, wallet will close.");
+					System.exit(1);
+				}
 			}
-	    }
+			ZelcashRescanDialog kd = new ZelcashRescanDialog(this.parent, this.clientCaller);
+			kd.setVisible(true);
+			
+		} catch (Exception ex)
+		{
+			this.errorReporter.reportError(ex, false);
+		}
 	}
 	
 	public void sproutToSaplingMigrationTool() {
