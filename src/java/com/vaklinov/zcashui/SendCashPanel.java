@@ -199,6 +199,7 @@ public class SendCashPanel
 		tempPanel = new ZelCashJPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		tempPanel.add(new ZelCashJLabel("      "));
 		tempPanel.add(sendChangeBackToSourceAddress = new ZelCashJCheckBox(langUtil.getString("send.cash.panel.checkbox.send.change.back")));
+		sendChangeBackToSourceAddress.setSelected(true);
 		sendChangeBoxPanel.add(tempPanel, BorderLayout.SOUTH);
 
 		amountAndFeePanel.add(amountPanel);
