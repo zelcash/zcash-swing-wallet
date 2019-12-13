@@ -17,7 +17,7 @@
     <installer-output-filename>zelcash-wallet-installer</installer-output-filename>
     <zcash.project.url>https://github.com</zcash.project.url>
     <zcash.binaries.file.name.windows>zelcash/zelcash/releases/download/v2.0.0/Windows.zip</zcash.binaries.file.name.windows>
-    <izpack.version>5.0.6</izpack.version>
+    <izpack.version>5.1.3</izpack.version>
   </properties>
 
   <dependencies>
