@@ -1242,7 +1242,7 @@ public class ZCashClientCaller
 			throws WalletCallException, IOException, InterruptedException
 		{
 
-			String objResponse = this.executeCommandAndGetSingleStringResponse("startzelnode", "alias", "false", zelNodeAlias);
+			String objResponse = this.executeCommandAndGetSingleStringResponse("startdeterministiczelnode", zelNodeAlias, "false");
 			JsonValue response = null;
 			try
 			{
@@ -1274,16 +1274,15 @@ public class ZCashClientCaller
 			throws WalletCallException, IOException, InterruptedException
 		{
 
-			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodes", null);
+			JsonArray objResponse = this.executeCommandAndGetJsonArray("viewdeterministiczelnodelist", null);
 	    	return objResponse;
 		}
 	
-	
-	public synchronized JsonArray getZelNodeStatus(String txHash)
+	public synchronized JsonArray getMyZelNodeList()
 			throws WalletCallException, IOException, InterruptedException
 		{
 
-			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodes", txHash);
+			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodeconf", null);
 	    	return objResponse;
 		}
 
