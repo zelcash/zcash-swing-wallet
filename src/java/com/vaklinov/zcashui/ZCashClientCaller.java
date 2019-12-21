@@ -323,7 +323,7 @@ public class ZCashClientCaller
 		{
 		    JsonArray jsonTransactions = executeCommandAndGetJsonArray(
 		    	"z_listreceivedbyaddress", wrapStringParameter(zAddress), "0");
-		    for (int i = 0; i < 100; i++)
+		    for (int i = 0; i < jsonTransactions.size() && i < 100; i++)
 		    {
 		    	String[] currentTransaction = new String[7];
 		    	JsonObject trans = jsonTransactions.get(i).asObject();
