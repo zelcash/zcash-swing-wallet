@@ -343,7 +343,7 @@ public class ZCashClientCaller
 		    	String confirmations = this.transactionConfirmations.get(txID);
 		    	if ((confirmations == null) || confirmations.equals("0"))
 		    	{
-		    		currentTransaction[2] = this.getWalletTransactionConfirmations(txID);
+		    		currentTransaction[2] = trans.get("confirmations").toString();;
 		    		this.transactionConfirmations.put(txID, currentTransaction[2]);
 		    	} else
 		    	{
@@ -361,7 +361,7 @@ public class ZCashClientCaller
 		    	String time = this.transactionTimes.get(txID);
 		    	if ((time == null) || (time.equals("-1")))
 		    	{
-		    		currentTransaction[4] = this.getWalletTransactionTime(txID);
+		    		currentTransaction[4] = String.valueOf(trans.getLong("time", -1));
 		    		this.transactionTimes.put(txID, currentTransaction[4]);
 		    	} else
 		    	{
