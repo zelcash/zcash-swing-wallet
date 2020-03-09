@@ -111,7 +111,6 @@ public class ZelNodesPanel extends WalletTabPanel {
 		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.tier"));
 		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.activetime"));
 		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.laspaid"));
-		columnNames.add(langUtil.getString("zelnodespanel.zelnodes.rank"));
 		
 		myZelNodesTable = new ZelCashJTable(dataList, columnNames);
 		myZelNodesTable.setAutoCreateRowSorter(true);
@@ -392,272 +391,225 @@ public class ZelNodesPanel extends WalletTabPanel {
 		String format = null;
 		Vector<Vector<String>> dataList = new Vector<>();
 		int myZelNodeCount = 0;
+
+
+		DefaultTableModel dtm = (DefaultTableModel) myZelNodesTable.getModel();
+		
 		try {
-			String blockchainDir = OSUtil.getBlockchainDirectory();
-			File zelnodeConf = new File(blockchainDir + File.separator + "zelnode.conf");
-			if (!zelnodeConf.exists())
-			{
-				Log.info("Could not find file: {0} !", zelnodeConf.getAbsolutePath());
-			} 
-			else {
-				Log.info("File zelnode.conf found");
-				BufferedReader br = new BufferedReader(new FileReader(zelnodeConf)); 
-				DefaultTableModel dtm = (DefaultTableModel) myZelNodesTable.getModel();
-				
-				try {
-					String st; 
-					String emptyLine;
-					String alias;
-					String zelnodekey;
-					String[] zelNodeInfo;
-					Vector<String> data;
-					dtm.setRowCount(0);
-					while ((st = br.readLine()) != null) {
-						emptyLine = st.replaceAll(" ", "").replaceAll("(?m)^\\\\s*\\\\r?\\\\n|\\\\r?\\\\n\\\\s*(?!.*\\\\r?\\\\n)", "");						
-						if(st.startsWith("#") || emptyLine.equals("")) {
-							continue;
-						}
-						else {
-							++myZelNodeCount;
-							data = new Vector<>();
-							zelNodeInfo = st.split("\\s+");
-							data.add(zelNodeInfo[0]);
-							data.add(zelNodeInfo[1]);
-							gelZelNodeStatus(zelNodeInfo[0], zelNodeInfo[3], data);
-							dtm.addRow(data);
-							dataList.add(data);
-						}
+			Vector<String> data;
+			dtm.setRowCount(0);
+			JsonArray ja = clientCaller.getMyZelNodeList();
+			//Log.debug(ja.toString());
+			//Log.debug(""+ja.size());
+			if(ja.size()>0) {
+				for(int i = 0; i < ja.size(); i++) {
+					JsonObject jsonObj = ja.get(i).asObject();
+					Log.debug(jsonObj.toString());
+					++myZelNodeCount;
+					data = new Vector<>();
+					data.add(jsonObj.get("alias").toString().replaceAll("[\n\r\"]", ""));
+					data.add(jsonObj.get("address").toString().replaceAll("[\n\r\"]", ""));
+					data.add(jsonObj.get("status").toString().replaceAll("[\n\r\"]", ""));
+					data.add(jsonObj.get("tier").toString().replaceAll("[\n\r\"]", ""));
+					String activeTime = jsonObj.get("activesince").toString().replaceAll("[\n\r\"]", "");
+					if(activeTime == null || activeTime.equals("") || activeTime.equals("0")) {
+						data.add("-1");
 					}
-				}
-				finally {
-					dtm.fireTableDataChanged();
-					if(br!=null) {
-						br.close();
+					else {
+						Date aux = new Date(Long.parseLong(activeTime) * 1000);
+						format = formatter.format(aux);
+						data.add(format);
 					}
-				}
-				
-			} 
-			
-			
-			myzelnodescount.setText(langUtil.getString("zelnodespanel.myzelnodes.count",dataList.size()));
-			
-			popupMenu = new ZelCashJPopupMenu();
-			int accelaratorKeyMask = Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask();
-			
-			ZelCashJMenuItem startZelnode = new ZelCashJMenuItem(langUtil.getString("zelnodespanel.myzelnodes.mouse.start"));
-	        popupMenu.add(startZelnode);
-	        
-	        startZelnode.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelaratorKeyMask));
-	        startZelnode.addActionListener(new ActionListener() 
-	        {	
-				@Override
-				public void actionPerformed(ActionEvent e) 
-				{
-					int row = ZelNodesPanel.this.myZelNodesTable.getSelectedRow();
-					String zelNodeALias = ZelNodesPanel.this.myZelNodesTable.getValueAt(row, 0).toString();
-				
-					try {
-						long start = System.currentTimeMillis();
-						JsonObject response = clientCaller.startZelNode(zelNodeALias);
-						long end = System.currentTimeMillis();
-						Log.info("Start zelnodealias: "+zelNodeALias+" done in " + (end - start) + "ms.");
-						JsonArray detailResponse = response.get("detail").asArray();
-						JsonObject jsonObj = detailResponse.get(0).asObject();
-						String result = jsonObj.get("result").toString().toUpperCase().replaceAll("[\n\r\"]", "");
-						if(result.contains("FAILED")) {
-							String error = jsonObj.get("errorMessage").toString().replaceAll("[\n\r\"]", "");
-							JOptionPane.showMessageDialog(
-			                        null,
-			                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.error", zelNodeALias, error),
-			                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.title"),
-			                        JOptionPane.ERROR_MESSAGE);
-						}
-						else {
-							JOptionPane.showMessageDialog(
-			                        null,
-			                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.success", zelNodeALias),
-			                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.title"),
-			                        JOptionPane.INFORMATION_MESSAGE);
-						}
-						getMyZelNodeList();
-						ZelNodesPanel.this.revalidate();
-						ZelNodesPanel.this.repaint();
-					} catch (WalletCallException | IOException | InterruptedException e1) {
-						Log.error("Error calling startZelNode: "+e1.getMessage());
+					String lastPaid = jsonObj.get("lastpaid").toString().replaceAll("[\n\r\"]", "");
+					if(lastPaid == null || lastPaid.equals("") || lastPaid.equals("0")) {
+						data.add("-1");
 					}
-				}
-			});
-	        
-	        ZelCashJMenuItem edit = new ZelCashJMenuItem(langUtil.getString("zelnodespanel.myzelnodes.mouse.edit"));
-	        popupMenu.add(edit);
-	        
-	        edit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelaratorKeyMask));
-	        edit.addActionListener(new ActionListener() 
-	        {	
-				@Override
-				public void actionPerformed(ActionEvent e) 
-				{
-					int row = ZelNodesPanel.this.myZelNodesTable.getSelectedRow();
-					String zelNodeAlias = ZelNodesPanel.this.myZelNodesTable.getValueAt(row, 0).toString();
-					try {
-						ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZelNodesPanel.this.parentFrame, clientCaller, installationObserver, zelNodeAlias, labelStorage);
-						ad.setVisible(true);
-						getMyZelNodeList();
-						ZelNodesPanel.this.revalidate();
-						ZelNodesPanel.this.repaint();
-					} catch (Exception uee) {
-						Log.error("Unexpected error: ", uee);
+					else {
+						Date aux = new Date(Long.parseLong(lastPaid) * 1000);
+						format = formatter.format(aux);
+						data.add(format);
 					}
-
+					dtm.addRow(data);
+					dataList.add(data);
 				}
-			});
-	        
-	        ZelCashJMenuItem delete = new ZelCashJMenuItem(langUtil.getString("zelnodespanel.myzelnodes.mouse.delete"));
-	        popupMenu.add(delete);
-	        
-	        delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelaratorKeyMask));
-	        delete.addActionListener(new ActionListener() 
-	        {	
-				@Override
-				public void actionPerformed(ActionEvent e) 
-				{
-					int row = ZelNodesPanel.this.myZelNodesTable.getSelectedRow();
-					String zelNodeAlias = ZelNodesPanel.this.myZelNodesTable.getValueAt(lastRow, 0).toString();
-					Object[] options = 
-			        	{ 
-			        		langUtil.getString("send.cash.panel.option.pane.confirm.operation.button.yes"),
-			        		langUtil.getString("send.cash.panel.option.pane.confirm.operation.button.no")
-			        	};
-					int option;
-					option = JOptionPane.showOptionDialog(
-		    				ZelNodesPanel.this.getRootPane().getParent(), 
-		    				langUtil.getString("dialog.zelcashnewzelnode.delete.message", 
-		    						           zelNodeAlias), 
-		    			    langUtil.getString("zelnodespanel.myzelnodes.mouse.delete"),
-		    			    JOptionPane.DEFAULT_OPTION, 
-		    			    JOptionPane.QUESTION_MESSAGE,
-		    			    null, 
-		    			    options, 
-		    			    options[1]);
-					
-					if (option == 0)
-		    	    {
-						ZelCashZelNodeDialog.removeZelNode(zelNodeAlias);
-						getMyZelNodeList();
-						ZelNodesPanel.this.revalidate();
-						ZelNodesPanel.this.repaint();
-						option = JOptionPane.showOptionDialog(null,
-								LanguageUtil.instance().getString("wallet.zelnodes.delete.restart.message"),
-								LanguageUtil.instance().getString("wallet.zelnodes.delete.restart.title"),
-								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-						if (option == 0) {
-							JOptionPane.showMessageDialog(null,
-									LanguageUtil.instance().getString("wallet.restart.message"),
-									LanguageUtil.instance().getString("wallet.reindex.restart.title"),
-									JOptionPane.INFORMATION_MESSAGE);
-							ZelNodesPanel.this.parentFrame.restartDaemon(false, false);
-							try {
-								restartUI();
-							} catch (IOException | InterruptedException | WalletCallException e1) {
-								Log.error("Error restarting the UI, the wallet will be closed. Error:"+e1.getMessage());
-								System.exit(1);
-							}
-						}
-		    	    }
-				}
-			});
-	              
-	        
-	        ZelNodesPanel.this.myZelNodesTable.addMouseListener(new MouseAdapter()
-	        {
-	        	public void mousePressed(MouseEvent e)
-	        	{
-	                if ((!e.isConsumed()) && e.isPopupTrigger())
-	                {
-	                	ZelCashJTable table = (ZelCashJTable)e.getSource();
-	                    lastColumn = table.columnAtPoint(e.getPoint());
-	                    lastRow = table.rowAtPoint(e.getPoint());
-	                    
-	                    if (!table.isRowSelected(lastRow))
-	                    {
-	                        table.changeSelection(lastRow, lastColumn, false, false);
-	                    }
-
-	                	popupMenu.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
-	                    e.consume();
-	                    
-	                } else
-	                {
-	                	lastColumn = -1;
-	                	lastRow    = -1;
-	                }
-	        	}
-	        	
-	            public void mouseReleased(MouseEvent e)
-	            {
-	            	if ((!e.isConsumed()) && e.isPopupTrigger())
-	            	{
-	            		mousePressed(e);
-	            	}
-	            }
-	        });
-		} catch (IOException e1) {
-			Log.error("Error obtaining zelNodeList. " + e1.getMessage());
+			}
 		}
+		catch (WalletCallException | IOException | InterruptedException e1) {
+			Log.error("Error obtaining myzelnodelist. Error:" + e1.getMessage());
+			return;
+		}
+		finally {
+			dtm.fireTableDataChanged();
+		}
+			
+		
+		myzelnodescount.setText(langUtil.getString("zelnodespanel.myzelnodes.count",dataList.size()));
+		
+		popupMenu = new ZelCashJPopupMenu();
+		int accelaratorKeyMask = Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask();
+		
+		ZelCashJMenuItem startZelnode = new ZelCashJMenuItem(langUtil.getString("zelnodespanel.myzelnodes.mouse.start"));
+        popupMenu.add(startZelnode);
+        
+        startZelnode.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelaratorKeyMask));
+        startZelnode.addActionListener(new ActionListener() 
+        {	
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				int row = ZelNodesPanel.this.myZelNodesTable.getSelectedRow();
+				String zelNodeALias = ZelNodesPanel.this.myZelNodesTable.getValueAt(row, 0).toString();
+			
+				try {
+					long start = System.currentTimeMillis();
+					JsonObject response = clientCaller.startZelNode(zelNodeALias);
+					long end = System.currentTimeMillis();
+					Log.info("Start zelnodealias: "+zelNodeALias+" done in " + (end - start) + "ms.");
+					JsonArray detailResponse = response.get("detail").asArray();
+					JsonObject jsonObj = detailResponse.get(0).asObject();
+					String result = jsonObj.get("result").toString().toUpperCase().replaceAll("[\n\r\"]", "");
+					if(result.contains("FAILED")) {
+						String error = jsonObj.get("errorMessage").toString().replaceAll("[\n\r\"]", "");
+						JOptionPane.showMessageDialog(
+		                        null,
+		                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.error", zelNodeALias, error),
+		                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.title"),
+		                        JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						JOptionPane.showMessageDialog(
+		                        null,
+		                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.success", zelNodeALias),
+		                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.start.title"),
+		                        JOptionPane.INFORMATION_MESSAGE);
+					}
+					getMyZelNodeList();
+					ZelNodesPanel.this.revalidate();
+					ZelNodesPanel.this.repaint();
+				} catch (WalletCallException | IOException | InterruptedException e1) {
+					Log.error("Error calling startZelNode: "+e1.getMessage());
+				}
+			}
+		});
+        
+        ZelCashJMenuItem edit = new ZelCashJMenuItem(langUtil.getString("zelnodespanel.myzelnodes.mouse.edit"));
+        popupMenu.add(edit);
+        
+        edit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelaratorKeyMask));
+        edit.addActionListener(new ActionListener() 
+        {	
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				int row = ZelNodesPanel.this.myZelNodesTable.getSelectedRow();
+				String zelNodeAlias = ZelNodesPanel.this.myZelNodesTable.getValueAt(row, 0).toString();
+				try {
+					ZelCashZelNodeDialog ad = new ZelCashZelNodeDialog(ZelNodesPanel.this.parentFrame, clientCaller, installationObserver, zelNodeAlias, labelStorage);
+					ad.setVisible(true);
+					getMyZelNodeList();
+					ZelNodesPanel.this.revalidate();
+					ZelNodesPanel.this.repaint();
+				} catch (Exception uee) {
+					Log.error("Unexpected error: ", uee);
+				}
+
+			}
+		});
+        
+        ZelCashJMenuItem delete = new ZelCashJMenuItem(langUtil.getString("zelnodespanel.myzelnodes.mouse.delete"));
+        popupMenu.add(delete);
+        
+        delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelaratorKeyMask));
+        delete.addActionListener(new ActionListener() 
+        {	
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				int row = ZelNodesPanel.this.myZelNodesTable.getSelectedRow();
+				String zelNodeAlias = ZelNodesPanel.this.myZelNodesTable.getValueAt(lastRow, 0).toString();
+				Object[] options = 
+		        	{ 
+		        		langUtil.getString("send.cash.panel.option.pane.confirm.operation.button.yes"),
+		        		langUtil.getString("send.cash.panel.option.pane.confirm.operation.button.no")
+		        	};
+				int option;
+				option = JOptionPane.showOptionDialog(
+	    				ZelNodesPanel.this.getRootPane().getParent(), 
+	    				langUtil.getString("dialog.zelcashnewzelnode.delete.message", 
+	    						           zelNodeAlias), 
+	    			    langUtil.getString("zelnodespanel.myzelnodes.mouse.delete"),
+	    			    JOptionPane.DEFAULT_OPTION, 
+	    			    JOptionPane.QUESTION_MESSAGE,
+	    			    null, 
+	    			    options, 
+	    			    options[1]);
+				
+				if (option == 0)
+	    	    {
+					ZelCashZelNodeDialog.removeZelNode(zelNodeAlias);
+					getMyZelNodeList();
+					ZelNodesPanel.this.revalidate();
+					ZelNodesPanel.this.repaint();
+					option = JOptionPane.showOptionDialog(null,
+							LanguageUtil.instance().getString("wallet.zelnodes.delete.restart.message"),
+							LanguageUtil.instance().getString("wallet.zelnodes.delete.restart.title"),
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					if (option == 0) {
+						JOptionPane.showMessageDialog(null,
+								LanguageUtil.instance().getString("wallet.restart.message"),
+								LanguageUtil.instance().getString("wallet.reindex.restart.title"),
+								JOptionPane.INFORMATION_MESSAGE);
+						ZelNodesPanel.this.parentFrame.restartDaemon(false, false);
+						try {
+							restartUI();
+						} catch (IOException | InterruptedException | WalletCallException e1) {
+							Log.error("Error restarting the UI, the wallet will be closed. Error:"+e1.getMessage());
+							System.exit(1);
+						}
+					}
+	    	    }
+			}
+		});
+              
+        
+        ZelNodesPanel.this.myZelNodesTable.addMouseListener(new MouseAdapter()
+        {
+        	public void mousePressed(MouseEvent e)
+        	{
+                if ((!e.isConsumed()) && e.isPopupTrigger())
+                {
+                	ZelCashJTable table = (ZelCashJTable)e.getSource();
+                    lastColumn = table.columnAtPoint(e.getPoint());
+                    lastRow = table.rowAtPoint(e.getPoint());
+                    
+                    if (!table.isRowSelected(lastRow))
+                    {
+                        table.changeSelection(lastRow, lastColumn, false, false);
+                    }
+
+                	popupMenu.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
+                    e.consume();
+                    
+                } else
+                {
+                	lastColumn = -1;
+                	lastRow    = -1;
+                }
+        	}
+        	
+            public void mouseReleased(MouseEvent e)
+            {
+            	if ((!e.isConsumed()) && e.isPopupTrigger())
+            	{
+            		mousePressed(e);
+            	}
+            }
+        });
 		
 		long end = System.currentTimeMillis();
 		Log.info("refresh MyZelNodeList data done in " + (end - start) + "ms. myZelNodeCount:"+myZelNodeCount);
 		
 	}
-	
-	private void gelZelNodeStatus(String zelnodeAlias, String zelNodeTxHash, Vector<String> data) {
-		long start = System.currentTimeMillis();
-		ZelCashJTable table = null;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		String format = null;
-		try {
-			JsonArray ja = clientCaller.getZelNodeStatus(zelNodeTxHash.trim());
-			if(ja.size()>0) {
-				JsonObject jsonObj = ja.get(0).asObject();
-				data.add(jsonObj.get("status").toString().replaceAll("[\n\r\"]", ""));
-				data.add(jsonObj.get("tier").toString().replaceAll("[\n\r\"]", ""));
-				String activeTime = jsonObj.get("activetime").toString().replaceAll("[\n\r\"]", "");
-				if(activeTime == null || activeTime == "" || activeTime == "0") {
-					data.add("-1");
-				}
-				else {
-					Date aux = new Date( System.currentTimeMillis() - (Long.parseLong(activeTime) * 1000));
-					format = formatter.format(aux);
-					data.add(format);
-				}
-				String lastPaid = jsonObj.get("lastpaid").toString().replaceAll("[\n\r\"]", "");
-				if(lastPaid == null || lastPaid == "" || lastPaid == "0") {
-					data.add("-1");
-				}
-				else {
-					Date aux = new Date(Long.parseLong(lastPaid) * 1000);
-					format = formatter.format(aux);
-					data.add(format);
-				}
-				data.add(jsonObj.get("rank").toString().replaceAll("[\n\r\"]", ""));
-				return;
-			}
-
-			data.add(langUtil.getString("zelnodespanel.myzelnodes.status.missing"));
-			data.add("-1");
-			data.add("-1");
-			data.add("-1");
-			data.add("-1");
-
-		} catch (WalletCallException | IOException | InterruptedException e1) {
-			Log.error("Error obtaining zelnode "+zelnodeAlias+" status. Error:" + e1.getMessage());
-		}
-		finally {
-			long end = System.currentTimeMillis();
-			Log.info("gelZelNodeStatus "+zelnodeAlias+" status refresh in " + (end - start) + "ms." );
-		}	
-	}
-
 	
 	private void gelZelNodeList() {
 		long start = System.currentTimeMillis();
@@ -680,20 +632,20 @@ public class ZelNodesPanel extends WalletTabPanel {
 				Vector<String> data = new Vector<>();
 				
 				//data.add(jsonObj.get("rank").toString().replaceAll("[\n\r\"]", ""));
-				data.add(jsonObj.get("ipaddress").toString().replaceAll("[\n\r\"]", ""));
+				data.add(jsonObj.get("ip").toString().replaceAll("[\n\r\"]", ""));
 				
-				data.add(jsonObj.get("status").toString().replaceAll("[\n\r\"]", ""));
+				data.add("CONFIRMED");
 				//data.add(jsonObj.get("version").toString().replaceAll("[\n\r\"]", ""));
 				
 				tier = jsonObj.get("tier").toString().replaceAll("[\n\r\"]", "");
 				data.add(tier);
 				
-				String activeTime = jsonObj.get("activetime").toString().replaceAll("[\n\r\"]", "");
-				if(activeTime == null || activeTime == "" || activeTime == "0") {
+				String activeTime = jsonObj.get("activesince").toString().replaceAll("[\n\r\"]", "");
+				if(activeTime == null || activeTime.equals("") || activeTime.equals("0")) {
 					data.add("-1");
 				}
 				else {
-					Date aux = new Date( System.currentTimeMillis() - (Long.parseLong(activeTime) * 1000));
+					Date aux = new Date(Long.parseLong(activeTime) * 1000);
 					format = formatter.format(aux);
 					data.add(format);
 				}

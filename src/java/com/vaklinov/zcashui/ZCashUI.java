@@ -757,7 +757,15 @@ public class ZCashUI extends ZelCashJFrame {
 							}
 							
 							String ip = zelNodeInfo[1].replaceAll(":16125", "").replaceAll(":26125", "");
-							if(!ip.endsWith(".onion")) {
+							if(ip.isEmpty()) {
+								JOptionPane.showMessageDialog(
+				                        null,
+				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.ip.notset"),
+				                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+				                        JOptionPane.ERROR_MESSAGE);
+								System.exit(1);
+							}
+							else if(!ip.endsWith(".onion")) {
 								try {
 									Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
 								}

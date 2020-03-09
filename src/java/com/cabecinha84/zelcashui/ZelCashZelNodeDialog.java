@@ -53,6 +53,8 @@ public class ZelCashZelNodeDialog
 	protected ZelCashJTextField zelNodeOutputText;
 	protected ZelCashJTextField zelNodeAmount;
 	protected ZelCashJTextField zelNodeAddress;
+	protected ZelCashJTextField zelNodeOutputTxid;
+	protected ZelCashJTextField zelNodeOutputindex;
 
 	private ZCashUI parentFrame;
 	
@@ -95,6 +97,8 @@ public class ZelCashZelNodeDialog
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.ip"),  zelNodeIP = new ZelCashJTextField(50));
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.key"),  zelNodeKey = new ZelCashJTextField(50));
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.output"),  zelNodeOutput = new ZelCashJComboBox<String>());
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.output.txid"),  zelNodeOutputTxid = new ZelCashJTextField(50));
+		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.output.index"),  zelNodeOutputindex = new ZelCashJTextField(50));
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.address"),  zelNodeAddress = new ZelCashJTextField(50));
 		addFormField(detailsPanel, langUtil.getString("dialog.zelcashnewzelnode.amount"),  zelNodeAmount = new ZelCashJTextField(50));
 		zelNodeName.setEditable(true);
@@ -104,6 +108,8 @@ public class ZelCashZelNodeDialog
 		zelNodeOutput.setEnabled(false);
 		zelNodeAmount.setEditable(false);
 		zelNodeAddress.setEditable(false);
+		zelNodeOutputTxid.setEditable(false);
+		zelNodeOutputindex.setEditable(false);
 		
 		getZelNodeOutputs();
 		if(this.aliastoEdit != null) {
@@ -130,6 +136,8 @@ public class ZelCashZelNodeDialog
 						if(zelNodeInfo[0].equals(this.aliastoEdit)) {
 							zelNodeIP.setText(zelNodeInfo[1]);
 							zelNodeKey.setText(zelNodeInfo[2]);
+							zelNodeOutputTxid.setText(zelNodeInfo[3]);
+							zelNodeOutputindex.setText(zelNodeInfo[4]);
 							String output = zelNodeInfo[3] + " " + zelNodeInfo[4];
 							zelNodeOutput.setSelectedItem(output);
 							try {
@@ -254,8 +262,15 @@ public class ZelCashZelNodeDialog
 				}
 
 				String ip = zelNodeIP.getText().replaceAll(":16125", "").replaceAll(":26125", "");
-
-				if(!ip.endsWith(".onion")) {
+				if(ip.isEmpty()) {
+					JOptionPane.showMessageDialog(
+	                        null,
+	                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.ip.notset"),
+	                        LanguageUtil.instance().getString("dialog.zelcashnewzelnode.fields.error.adding.title"),
+	                        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				else if(!ip.endsWith(".onion")) {
 					try {
 						Inet4Address address = (Inet4Address) Inet4Address.getByName(ip);
 					}
@@ -296,8 +311,12 @@ public class ZelCashZelNodeDialog
 		            	if(index!=0) {
 		            		zelNodeAmount.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
 		            		zelNodeAddress.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
+		            		zelNodeOutputindex.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
+		            		zelNodeOutputTxid.setText(langUtil.getString("zelnodespanel.zelnodes.button.loading"));
 		            		String[] outputinfo = cb.getSelectedItem().toString().split(" ");
 			                try {
+			                	zelNodeOutputTxid.setText(outputinfo[0]);
+			                	zelNodeOutputindex.setText(outputinfo[1]);
 			                	JsonObject txinfo = clientCaller.getTransactionInfo(outputinfo[0]);
 			                	JsonArray details = txinfo.get("details").asArray();
 								String vout;

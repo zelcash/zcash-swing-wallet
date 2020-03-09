@@ -275,7 +275,7 @@ public class ZCashClientCaller
 		}
 		
 	    JsonArray jsonTransactions = executeCommandAndGetJsonArray(
-	    	"listtransactions", wrapStringParameter(""), "300");
+	    	"listtransactions", wrapStringParameter(""), "100");
 	    String strTransactions[][] = new String[jsonTransactions.size()][];
 	    for (int i = 0; i < jsonTransactions.size(); i++)
 	    {
@@ -323,7 +323,7 @@ public class ZCashClientCaller
 		{
 		    JsonArray jsonTransactions = executeCommandAndGetJsonArray(
 		    	"z_listreceivedbyaddress", wrapStringParameter(zAddress), "0");
-		    for (int i = 0; i < jsonTransactions.size(); i++)
+		    for (int i = 0; i < jsonTransactions.size() && i < 100; i++)
 		    {
 		    	String[] currentTransaction = new String[7];
 		    	JsonObject trans = jsonTransactions.get(i).asObject();
@@ -343,7 +343,7 @@ public class ZCashClientCaller
 		    	String confirmations = this.transactionConfirmations.get(txID);
 		    	if ((confirmations == null) || confirmations.equals("0"))
 		    	{
-		    		currentTransaction[2] = this.getWalletTransactionConfirmations(txID);
+		    		currentTransaction[2] = trans.get("confirmations").toString();;
 		    		this.transactionConfirmations.put(txID, currentTransaction[2]);
 		    	} else
 		    	{
@@ -361,7 +361,7 @@ public class ZCashClientCaller
 		    	String time = this.transactionTimes.get(txID);
 		    	if ((time == null) || (time.equals("-1")))
 		    	{
-		    		currentTransaction[4] = this.getWalletTransactionTime(txID);
+		    		currentTransaction[4] = String.valueOf(trans.getLong("time", -1));
 		    		this.transactionTimes.put(txID, currentTransaction[4]);
 		    	} else
 		    	{
@@ -1242,7 +1242,7 @@ public class ZCashClientCaller
 			throws WalletCallException, IOException, InterruptedException
 		{
 
-			String objResponse = this.executeCommandAndGetSingleStringResponse("startzelnode", "alias", "false", zelNodeAlias);
+			String objResponse = this.executeCommandAndGetSingleStringResponse("startdeterministiczelnode", zelNodeAlias, "false");
 			JsonValue response = null;
 			try
 			{
@@ -1274,16 +1274,15 @@ public class ZCashClientCaller
 			throws WalletCallException, IOException, InterruptedException
 		{
 
-			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodes", null);
+			JsonArray objResponse = this.executeCommandAndGetJsonArray("viewdeterministiczelnodelist", null);
 	    	return objResponse;
 		}
 	
-	
-	public synchronized JsonArray getZelNodeStatus(String txHash)
+	public synchronized JsonArray getMyZelNodeList()
 			throws WalletCallException, IOException, InterruptedException
 		{
 
-			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodes", txHash);
+			JsonArray objResponse = this.executeCommandAndGetJsonArray("listzelnodeconf", null);
 	    	return objResponse;
 		}
 
