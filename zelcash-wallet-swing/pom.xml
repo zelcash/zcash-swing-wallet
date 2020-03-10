@@ -7,7 +7,7 @@
     <parent>
         <groupId>zel.cash</groupId>
         <artifactId>ZelCashOfficialSwingWalletUI</artifactId>
-        <version>7.7.0</version>
+        <version>8.0.0</version>
     </parent>
 
     <artifactId>zelcash-wallet-swing</artifactId>
