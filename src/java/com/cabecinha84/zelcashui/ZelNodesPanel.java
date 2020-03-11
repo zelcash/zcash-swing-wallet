@@ -406,29 +406,45 @@ public class ZelNodesPanel extends WalletTabPanel {
 					JsonObject jsonObj = ja.get(i).asObject();
 					Log.debug(jsonObj.toString());
 					++myZelNodeCount;
+					String tier = jsonObj.get("tier") == null ? "Unknown" : jsonObj.get("tier").toString().replaceAll("[\n\r\"]", "");
+					String address = jsonObj.get("address") == null ? "Unknown" : jsonObj.get("address").toString().replaceAll("[\n\r\"]", "");
+					String alias = jsonObj.get("alias") == null ? "Unknown" : jsonObj.get("alias").toString().replaceAll("[\n\r\"]", "");
+					String status = jsonObj.get("status") == null ? "Unknown" : jsonObj.get("status").toString().replaceAll("[\n\r\"]", "");
 					data = new Vector<>();
-					data.add(jsonObj.get("alias").toString().replaceAll("[\n\r\"]", ""));
-					data.add(jsonObj.get("address").toString().replaceAll("[\n\r\"]", ""));
-					data.add(jsonObj.get("status").toString().replaceAll("[\n\r\"]", ""));
-					data.add(jsonObj.get("tier").toString().replaceAll("[\n\r\"]", ""));
-					String activeTime = jsonObj.get("activesince").toString().replaceAll("[\n\r\"]", "");
-					if(activeTime == null || activeTime.equals("") || activeTime.equals("0")) {
+					data.add(alias);
+					data.add(address);
+					data.add(status);
+					data.add(tier);
+					if(jsonObj.get("activesince") == null) {
 						data.add("-1");
 					}
 					else {
-						Date aux = new Date(Long.parseLong(activeTime) * 1000);
-						format = formatter.format(aux);
-						data.add(format);
+						String activeTime = jsonObj.get("activesince").toString().replaceAll("[\n\r\"]", "");
+						if(activeTime == null || activeTime.equals("") || activeTime.equals("0")) {
+							data.add("-1");
+						}
+						else {
+							Date aux = new Date(Long.parseLong(activeTime) * 1000);
+							format = formatter.format(aux);
+							data.add(format);
+						}
 					}
-					String lastPaid = jsonObj.get("lastpaid").toString().replaceAll("[\n\r\"]", "");
-					if(lastPaid == null || lastPaid.equals("") || lastPaid.equals("0")) {
+					
+					if(jsonObj.get("lastpaid") == null) {
 						data.add("-1");
 					}
 					else {
-						Date aux = new Date(Long.parseLong(lastPaid) * 1000);
-						format = formatter.format(aux);
-						data.add(format);
+						String lastPaid = jsonObj.get("lastpaid").toString().replaceAll("[\n\r\"]", "");
+						if(lastPaid == null || lastPaid.equals("") || lastPaid.equals("0")) {
+							data.add("-1");
+						}
+						else {
+							Date aux = new Date(Long.parseLong(lastPaid) * 1000);
+							format = formatter.format(aux);
+							data.add(format);
+						}
 					}
+					
 					dtm.addRow(data);
 					dataList.add(data);
 				}
