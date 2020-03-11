@@ -876,13 +876,13 @@ public class DashboardPanel extends WalletTabPanel {
 			String currency = ZelCashUI.currency;
 
 			try {
-				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zelcash");
+				URL u = new URL("https://api.coinmarketcap.com/v1/ticker/zel");
 				HttpURLConnection huc = (HttpURLConnection) u.openConnection();
 				huc.setConnectTimeout(2019);
 				int responseCode = huc.getResponseCode();
 
 				if (responseCode != HttpURLConnection.HTTP_OK) {
-					Log.warning("Could not connect to https://api.coinmarketcap.com/v1/ticker/zelcash");
+					Log.warning("Could not connect to https://api.coinmarketcap.com/v1/ticker/zel");
 				} else {
 					Reader r = new InputStreamReader(u.openStream(), "UTF-8");
 					JsonArray ar = Json.parse(r).asArray();
